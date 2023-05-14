@@ -1,5 +1,11 @@
 {
+  "itemGroup.kindergartening.gem_group": "Kindergartening: Gems",
+
   "item.kindergartening.ruby_gem": "Ruby Gem",
 
-  "entity.kindergartening.ruby": "Ruby"
+  "entity.kindergartening.ruby": "Ruby",
+
+  "kinder.gem.movement.interact.wander": " Will now wander.",
+  "kinder.gem.movement.interact.stay": " Will now stay.",
+  "kinder.gem.movement.interact.follow": " Will now follow you."
 }

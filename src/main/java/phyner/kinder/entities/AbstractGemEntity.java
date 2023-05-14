@@ -6,7 +6,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -23,36 +24,59 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import phyner.kinder.entities.goals.GemAttackWithOwnerGoal;
+import phyner.kinder.entities.goals.GemTrackOwnerAttackerGoal;
+import phyner.kinder.entities.goals.GemWanderAroundGoal;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static software.bernie.geckolib.constant.DefaultAnimations.IDLE;
-import static software.bernie.geckolib.constant.DefaultAnimations.WALK;
-
 public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEntity, Tameable {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    protected static final TrackedData<Byte> TAMABLE_FLAGS = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.BYTE);
+    public static final TrackedData<Byte> TAMABLE_FLAGS = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.BYTE);
+    public static int MOVEMENT_TYPE = 0;
+    public static UUID FOLLOW_ID;
+
     protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+
     public AbstractGemEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
+
     @Override
-    protected void initDataTracker() {
+    protected void initGoals() {
+        this.initGemGoals();
+    }
+    public static DefaultAttributeContainer.Builder createDefaultGemAttributes() {
+        return LivingEntity.createLivingAttributes()
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK);
+    }
+
+    public void initGemGoals() {
+        this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
+        this.goalSelector.add(9, new LookAroundGoal(this));
+        //Movement Types
+        this.goalSelector.add(6, new GemWanderAroundGoal(this,this.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED)));
+        if (this.IsSoliderGem())
+        {
+            this.goalSelector.add(5, new GemAttackWithOwnerGoal(this));
+            this.goalSelector.add(5, new GemTrackOwnerAttackerGoal(this));
+        }
+    }
+    public abstract boolean IsSoliderGem();
+
+
+    @Override
+    public void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(TAMABLE_FLAGS, (byte)0);
         this.dataTracker.startTracking(OWNER_UUID, Optional.empty());
-    }
-    @Override
-    protected void initGoals() {
-        this.goalSelector.add(10, new WanderAroundGoal(this,0.3F));
-        this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
-        this.goalSelector.add(10, new LookAroundGoal(this));
     }
 
     @Override
@@ -64,7 +88,7 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
             nbt.putString("id",EntityType.getId(this.getType()).toString());
             this.writeNbt(nbt);
             item.getOrCreateNbt().put("gem",nbt);
-            this.dropStack(item);
+            Objects.requireNonNull(this.dropStack(item)).setNeverDespawn();
         }
         super.onDeath(source);
     }
@@ -77,13 +101,24 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
                 player.sendMessage(Text.of(this.getName().getString()+" has been claimed."));
                 return ActionResult.SUCCESS;
             }
+            if (player.isSneaking() && player == getOwner() && hand == Hand.MAIN_HAND)
+            {
+                MOVEMENT_TYPE = (MOVEMENT_TYPE + 1) % 3;
+                FOLLOW_ID = (MOVEMENT_TYPE == 2) ? player.getUuid() : null;
+                switch (MOVEMENT_TYPE) {
+                    case 0 -> player.sendMessage(Text.literal(this.getDisplayName().getString()).append(Text.translatable("kinder.gem.movement.interact.wander")));
+                    case 1 -> player.sendMessage(Text.literal(this.getDisplayName().getString()).append(Text.translatable("kinder.gem.movement.interact.stay")));
+                    case 2 -> player.sendMessage(Text.literal(this.getDisplayName().getString()).append(Text.translatable("kinder.gem.movement.interact.follow")));
+                }
+                return ActionResult.SUCCESS;
+            }
         }
         return super.interactMob(player, hand);
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "Walk/Idle", 2, state -> state.setAndContinue(state.isMoving() ? WALK : IDLE)));
+        controllerRegistrar.add(GemDefaultAnimations.genericGemWalkController(this));
     }
 
     @Override
@@ -92,34 +127,51 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
     }
 
     abstract public ItemStack gemItem();
-    //TAMING
+
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         if (this.getOwnerUuid() != null) {
             nbt.putUuid("Owner", this.getOwnerUuid());
         }
+        nbt.putInt("MovementType", this.getMovementType());
+        if (FOLLOW_ID != null)
+        {
+            nbt.putUuid("FollowID",FOLLOW_ID);
+        }
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
-        UUID uUID;
+        UUID uuid;
         super.readCustomDataFromNbt(nbt);
         if (nbt.containsUuid("Owner")) {
-            uUID = nbt.getUuid("Owner");
+            uuid = nbt.getUuid("Owner");
         } else {
             String string = nbt.getString("Owner");
-            uUID = ServerConfigHandler.getPlayerUuidByName(this.getServer(), string);
+            uuid = ServerConfigHandler.getPlayerUuidByName(this.getServer(), string);
         }
-        if (uUID != null) {
+        if (uuid != null) {
             try {
-                this.setOwnerUuid(uUID);
+                this.setOwnerUuid(uuid);
                 this.setTamed(true);
             } catch (Throwable throwable) {
                 this.setTamed(false);
             }
         }
+        MOVEMENT_TYPE = nbt.getInt("MovementType");
+        if (nbt.containsUuid("FollowID")) {
+            FOLLOW_ID = nbt.getUuid("FollowID");
+        }
     }
+
+    public int getMovementType()
+    {
+        return MOVEMENT_TYPE;
+    }
+
+
+    // TAMING STUFF
 
     @Nullable
     public UUID getOwnerUuid() {
@@ -157,7 +209,7 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
         this.onTamedChanged();
     }
 
-    public boolean canAttackWithOwner(LivingEntity target, LivingEntity owner) {
+    public boolean canAttackWithOwner() {
         return true;
     }
 
@@ -188,10 +240,12 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
         return (this.dataTracker.get(TAMABLE_FLAGS) & 4) != 0;
     }
 
-    protected void onTamedChanged() {
+    public void onTamedChanged() {
     }
     @Override
-    public /* synthetic */ EntityView method_48926() {
+    public EntityView method_48926() {
         return super.getWorld();
     }
+
+    // TAMING STUFF DONE
 }

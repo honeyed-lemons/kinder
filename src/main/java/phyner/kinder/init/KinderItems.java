@@ -9,7 +9,7 @@ import phyner.kinder.KinderMod;
 import phyner.kinder.items.GemItem;
 
 public class KinderItems {
-    public static final Item RUBY_GEM = new GemItem(new FabricItemSettings());
+    public static final Item RUBY_GEM = new GemItem(KinderGemEntities.RUBY,new FabricItemSettings().maxCount(1).fireproof());
 
     public static void registerItems()
     {

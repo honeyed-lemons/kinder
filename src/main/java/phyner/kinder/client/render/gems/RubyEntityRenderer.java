@@ -1,10 +1,8 @@
 package phyner.kinder.client.render.gems;
 
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
 import phyner.kinder.client.models.gems.RubyEntityModel;
 import phyner.kinder.entities.gems.RubyEntity;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class RubyEntityRenderer extends GeoEntityRenderer<RubyEntity> {

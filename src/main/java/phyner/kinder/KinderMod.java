@@ -2,10 +2,10 @@ package phyner.kinder;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import phyner.kinder.init.KinderEntities;
+import phyner.kinder.init.KinderGemEntities;
+import phyner.kinder.init.KinderItemGroups;
 import phyner.kinder.init.KinderItems;
 
 public class KinderMod implements ModInitializer {
@@ -16,7 +16,8 @@ public class KinderMod implements ModInitializer {
     public void onInitialize() {
         LOGGER.info("Starting up.");
         KinderItems.registerItems();
-        KinderEntities.registerEntities();
-        KinderEntities.registerAttributes();
+        KinderItemGroups.addItems();
+        KinderGemEntities.registerEntities();
+        KinderGemEntities.registerAttributes();
     }
 }
