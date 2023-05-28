@@ -9,8 +9,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -18,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import phyner.kinder.KinderMod;
 import phyner.kinder.entities.AbstractGemEntity;
 
+import javax.swing.text.AttributeSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,7 +29,7 @@ import java.util.Optional;
 public class GemItem extends Item {
     private final EntityType<?> type;
 
-    public GemItem(EntityType<? extends MobEntity> type, Settings settings) {
+    public GemItem(EntityType<? extends AbstractGemEntity> type,Settings settings) {
         super(settings);
         this.type = type;
     }
@@ -47,7 +51,7 @@ public class GemItem extends Item {
                 Optional<Entity> entity = EntityType.getEntityFromNbt(nbt, world);
                 if (entity.isPresent()) {
                     AbstractGemEntity gem = (AbstractGemEntity) entity.get();
-                    gem.setPos(pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5F);
+                    gem.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5F);
                     gem.fallDistance = 0;
                     gem.speed = 0;
                     gem.setOnFire(false);
@@ -55,9 +59,9 @@ public class GemItem extends Item {
                     gem.clearStatusEffects();
                     gem.setVelocity(0, 0, 0);
                     KinderMod.LOGGER.info("Spawning Gem, Name is " + gem.getName().getString());
-                    itemStack.setCount(0);
-                    gem.lookAtEntity(context.getPlayer(),90,90);
                     world.spawnEntity(gem);
+                    gem.lookAtEntity(context.getPlayer(),90,90);
+                    itemStack.setCount(0);
                 }
             }
             else

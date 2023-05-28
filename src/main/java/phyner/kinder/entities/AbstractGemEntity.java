@@ -18,14 +18,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.server.ServerConfigHandler;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import phyner.kinder.entities.goals.GemAttackWithOwnerGoal;
-import phyner.kinder.entities.goals.GemTrackOwnerAttackerGoal;
+import phyner.kinder.entities.goals.GemFollowOwnerGoal;
 import phyner.kinder.entities.goals.GemWanderAroundGoal;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -39,7 +41,8 @@ import java.util.UUID;
 public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEntity, Tameable {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final TrackedData<Byte> TAMABLE_FLAGS = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.BYTE);
-    public static int MOVEMENT_TYPE = 0;
+    public static final TrackedData<Byte> MOVEMENT_TYPE = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.BYTE);
+    public static final TrackedData<Boolean> REBEL = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     public static UUID FOLLOW_ID;
 
     protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
@@ -52,31 +55,38 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
     protected void initGoals() {
         this.initGemGoals();
     }
+
     public static DefaultAttributeContainer.Builder createDefaultGemAttributes() {
         return LivingEntity.createLivingAttributes()
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 16.0)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK);
     }
 
     public void initGemGoals() {
         this.goalSelector.add(8, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
-        this.goalSelector.add(9, new LookAroundGoal(this));
+        this.goalSelector.add(8, new LookAroundGoal(this));
         //Movement Types
-        this.goalSelector.add(6, new GemWanderAroundGoal(this,this.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED)));
-        if (this.IsSoliderGem())
-        {
-            this.goalSelector.add(5, new GemAttackWithOwnerGoal(this));
-            this.goalSelector.add(5, new GemTrackOwnerAttackerGoal(this));
-        }
+        this.goalSelector.add(7, new GemWanderAroundGoal(this,getWanderSpeed(), 0.0005f));
+        this.goalSelector.add(7, new GemFollowOwnerGoal(this,getFollowSpeed(), 0,32,true));
     }
-    public abstract boolean IsSoliderGem();
-
+    public abstract double getWanderSpeed();
+    public abstract double getFollowSpeed();
+    public abstract boolean isSoliderGem();
+    public boolean canFight(){
+        return false;
+    }
+    public boolean isRebel()
+    {
+        return this.dataTracker.get(REBEL);
+    }
 
     @Override
     public void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(TAMABLE_FLAGS, (byte)0);
         this.dataTracker.startTracking(OWNER_UUID, Optional.empty());
+        this.dataTracker.startTracking(MOVEMENT_TYPE, (byte)0);
+        this.dataTracker.startTracking(REBEL,false);
     }
 
     @Override
@@ -92,41 +102,53 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
         }
         super.onDeath(source);
     }
-
+    /*
+    Movement Type Values
+    0 = Wander
+    1 = Stay
+    2 = Follow
+     */
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (!player.world.isClient) {
+        if (!player.world.isClient && !player.isSpectator()) {
             if (player != getOwner() && getOwner() == null) {
                 setOwner(player);
-                player.sendMessage(Text.of(this.getName().getString()+" has been claimed."));
+                player.sendMessage(Text.of(this.getName().getString() + " has been claimed."));
                 return ActionResult.SUCCESS;
             }
-            if (player.isSneaking() && player == getOwner() && hand == Hand.MAIN_HAND)
-            {
-                MOVEMENT_TYPE = (MOVEMENT_TYPE + 1) % 3;
-                FOLLOW_ID = (MOVEMENT_TYPE == 2) ? player.getUuid() : null;
-                switch (MOVEMENT_TYPE) {
+            if (player.isSneaking() && player == getOwner() && hand == Hand.MAIN_HAND) {
+                Byte movementType = this.dataTracker.get(MOVEMENT_TYPE);
+                movementType = (byte) ((movementType + 1) % 3);
+                FOLLOW_ID = (movementType == 2) ? player.getUuid() : null;
+                switch (movementType) {
                     case 0 -> player.sendMessage(Text.literal(this.getDisplayName().getString()).append(Text.translatable("kinder.gem.movement.interact.wander")));
                     case 1 -> player.sendMessage(Text.literal(this.getDisplayName().getString()).append(Text.translatable("kinder.gem.movement.interact.stay")));
                     case 2 -> player.sendMessage(Text.literal(this.getDisplayName().getString()).append(Text.translatable("kinder.gem.movement.interact.follow")));
                 }
+                this.dataTracker.set(MOVEMENT_TYPE,movementType);
                 return ActionResult.SUCCESS;
             }
         }
         return super.interactMob(player, hand);
     }
 
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(GemDefaultAnimations.genericGemWalkController(this));
+    public UUID getFollowId(){
+        return FOLLOW_ID;
     }
 
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(GemDefaultAnimations.genericGemWalkLegsController(this));
+        controllerRegistrar.add(GemDefaultAnimations.genericGemWalkArmsController(this));
+    }
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
     }
 
     abstract public ItemStack gemItem();
+    abstract public DyeColor gemColor();
 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
@@ -139,6 +161,8 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
         {
             nbt.putUuid("FollowID",FOLLOW_ID);
         }
+        nbt.putByte("MovementType", this.dataTracker.get(MOVEMENT_TYPE));
+        nbt.putBoolean("Rebel", this.dataTracker.get(REBEL));
     }
 
     @Override
@@ -159,15 +183,16 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
                 this.setTamed(false);
             }
         }
-        MOVEMENT_TYPE = nbt.getInt("MovementType");
         if (nbt.containsUuid("FollowID")) {
             FOLLOW_ID = nbt.getUuid("FollowID");
         }
+        this.dataTracker.set(MOVEMENT_TYPE,nbt.getByte("MovementType"));
+        this.dataTracker.set(REBEL,nbt.getBoolean("Rebel"));
     }
 
-    public int getMovementType()
+    public byte getMovementType()
     {
-        return MOVEMENT_TYPE;
+        return this.dataTracker.get(MOVEMENT_TYPE);
     }
 
 
@@ -209,10 +234,6 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
         this.onTamedChanged();
     }
 
-    public boolean canAttackWithOwner() {
-        return true;
-    }
-
     @Override
     public AbstractTeam getScoreboardTeam() {
         LivingEntity livingEntity;
@@ -247,5 +268,25 @@ public abstract class AbstractGemEntity extends PathAwareEntity implements GeoEn
         return super.getWorld();
     }
 
-    // TAMING STUFF DONE
+    public boolean canAttackWithOwner() {
+        return canFight();
+    }
+    // SOUNDS
+    @NotNull
+    public abstract SoundEvent gemInstrument();
+    public float getAmbientVolume()
+    {
+        float volume = 1.0f;
+        int listSize = this.world.getEntitiesByClass(AbstractGemEntity.class, this.getBoundingBox().expand(16,8,16), AbstractGemEntity::isAlive).size();
+        if (listSize > 10) {
+            volume = 0.25f;
+        } else if (listSize > 5) {
+            volume = 0.5f;
+        }
+        return volume;
+    }
+    @Override
+    public void playAmbientSound() {
+        this.playSound(gemInstrument(), getAmbientVolume(), this.getSoundPitch());
+    }
 }

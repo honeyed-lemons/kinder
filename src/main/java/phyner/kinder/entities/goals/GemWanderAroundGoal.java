@@ -1,46 +1,55 @@
-/*
- * Decompiled with CFR 0.2.0 (FabricMC d28b102d).
- */
 package phyner.kinder.entities.goals;
 
+import net.minecraft.entity.ai.FuzzyTargeting;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 import phyner.kinder.entities.AbstractGemEntity;
 
-public class GemWanderAroundGoal
-        extends WanderAroundFarGoal {
-    protected AbstractGemEntity gem = (AbstractGemEntity) mob;
-    public GemWanderAroundGoal(PathAwareEntity pathAwareEntity, double d) {
+public class GemWanderAroundGoal extends WanderAroundFarGoal {
+    protected AbstractGemEntity gem;
+    protected float gemProbability;
+
+    public GemWanderAroundGoal(PathAwareEntity pathAwareEntity, double d, float gemProbability) {
         super(pathAwareEntity, d);
+        gem = (AbstractGemEntity) mob;
+        this.gemProbability = gemProbability;
     }
     @Override
     public boolean shouldContinue() {
-        return !this.mob.getNavigation().isIdle() && !this.mob.hasPassengers() && gem.getMovementType() == 0 && !this.gem.collidedSoftly;
+        return !gem.getNavigation().isIdle() && !gem.hasPassengers() && gem.getMovementType() == 0;
     }
     @Override
     public boolean canStart() {
-        Vec3d vec3d;
-        if (this.mob.hasPassengers()) {
+        if (gem.hasPassengers() || (!ignoringChance && gem.getRandom().nextInt(WanderAroundGoal.toGoalTicks(chance)) != 0)) {
             return false;
         }
-        if (!this.ignoringChance) {
-            if (this.mob.getRandom().nextInt(WanderAroundGoal.toGoalTicks(this.chance)) != 0) {
-                return false;
-            }
-        }
-        if ((vec3d = this.getWanderTarget()) == null) {
+        Vec3d vec3d = getWanderTarget();
+        if (vec3d == null) {
             return false;
         }
         if (gem.getMovementType() != 0) {
             return false;
         }
-        this.targetX = vec3d.x;
-        this.targetY = vec3d.y;
-        this.targetZ = vec3d.z;
-        this.ignoringChance = false;
+        targetX = vec3d.x;
+        targetY = vec3d.y;
+        targetZ = vec3d.z;
+        ignoringChance = false;
         return true;
     }
-}
 
+    @Override
+    @Nullable
+    protected Vec3d getWanderTarget() {
+        if (this.gem.isInsideWaterOrBubbleColumn()) {
+            Vec3d vec3d = FuzzyTargeting.find(this.gem, 15, 7);
+            return vec3d == null ? super.getWanderTarget() : vec3d;
+        }
+        if (this.gem.getRandom().nextFloat() >= this.gemProbability) {
+            return FuzzyTargeting.find(this.gem, 10, 7);
+        }
+        return super.getWanderTarget();
+    }
+}

@@ -5,7 +5,7 @@
 
   "entity.kindergartening.ruby": "Ruby",
 
-  "kinder.gem.movement.interact.wander": " Will now wander.",
-  "kinder.gem.movement.interact.stay": " Will now stay.",
-  "kinder.gem.movement.interact.follow": " Will now follow you."
+  "kinder.gem.movement.interact.wander": " will now wander.",
+  "kinder.gem.movement.interact.stay": " will now stay.",
+  "kinder.gem.movement.interact.follow": " will now follow you."
 }

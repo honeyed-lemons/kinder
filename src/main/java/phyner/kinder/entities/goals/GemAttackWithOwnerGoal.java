@@ -13,36 +13,36 @@ import java.util.EnumSet;
 
 public class GemAttackWithOwnerGoal
         extends TrackTargetGoal {
-    private final AbstractGemEntity tamable;
-    private LivingEntity attacking;
-    private int lastAttackTime;
+    private final AbstractGemEntity tameable;
+    private LivingEntity attacker;
+    private int lastAttackedTime;
 
-    public GemAttackWithOwnerGoal(AbstractGemEntity tamable) {
-        super(tamable, false);
-        this.tamable = tamable;
+    public GemAttackWithOwnerGoal(AbstractGemEntity tameable) {
+        super(tameable, false);
+        this.tameable = tameable;
         this.setControls(EnumSet.of(Goal.Control.TARGET));
     }
 
     @Override
     public boolean canStart() {
-        if (!this.tamable.isTamed()) {
+        if (!this.tameable.isTamed()) {
             return false;
         }
-        LivingEntity livingEntity = this.tamable.getOwner();
+        LivingEntity livingEntity = this.tameable.getOwner();
         if (livingEntity == null) {
             return false;
         }
-        this.attacking = livingEntity.getAttacking();
-        int i = livingEntity.getLastAttackTime();
-        return i != this.lastAttackTime && this.canTrack(this.attacking, TargetPredicate.DEFAULT) && this.tamable.canAttackWithOwner();
+        this.attacker = livingEntity.getAttacker();
+        int i = livingEntity.getLastAttackedTime();
+        return i != this.lastAttackedTime && this.canTrack(this.attacker, TargetPredicate.DEFAULT) && this.tameable.canAttackWithOwner();
     }
 
     @Override
     public void start() {
-        this.mob.setTarget(this.attacking);
-        LivingEntity livingEntity = this.tamable.getOwner();
+        this.mob.setTarget(this.attacker);
+        LivingEntity livingEntity = this.tameable.getOwner();
         if (livingEntity != null) {
-            this.lastAttackTime = livingEntity.getLastAttackTime();
+            this.lastAttackedTime = livingEntity.getLastAttackedTime();
         }
         super.start();
     }

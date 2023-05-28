@@ -18,7 +18,7 @@ public class KinderGemEntities {
 
     public static final EntityType<RubyEntity> RUBY = FabricEntityTypeBuilder.create()
             .entityFactory(RubyEntity::new)
-            .dimensions(EntityDimensions.fixed(0.8F,1.25F))
+            .dimensions(EntityDimensions.changing(0.8F,1.25F))
             .build();
 
     private static void register(String name, EntityType<?> type)

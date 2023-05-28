@@ -6,13 +6,27 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 public final class GemDefaultAnimations {
-    public static final RawAnimation WALK = RawAnimation.begin().thenLoop("move.walk");
+    public static final RawAnimation LEGS_WALK = RawAnimation.begin().thenLoop("legs.walk");
+    public static final RawAnimation ARMS_WALK = RawAnimation.begin().thenLoop("arms.walk");
 
-    public static <T extends GeoAnimatable> AnimationController<T> genericGemWalkController(T animatable) {
-        return new AnimationController<T>(animatable, "Walk", 5, state -> {
-            if (state.isMoving())
-                return state.setAndContinue(WALK);
-            return PlayState.STOP;
+    public static <T extends GeoAnimatable> AnimationController<T> genericGemWalkLegsController(T animatable) {
+        return new AnimationController<T>(animatable, "LegWalk", 1, state -> {
+            if (state.isMoving()) {
+                return state.setAndContinue(LEGS_WALK);
+            }
+            else {
+                return PlayState.STOP;
+            }
+        });
+    }
+    public static <T extends GeoAnimatable> AnimationController<T> genericGemWalkArmsController(T animatable) {
+        return new AnimationController<T>(animatable, "ArmWalk", 1, state -> {
+            if (state.isMoving()) {
+                return state.setAndContinue(ARMS_WALK);
+            }
+            else {
+                return PlayState.STOP;
+            }
         });
     }
 }

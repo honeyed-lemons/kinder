@@ -12,8 +12,7 @@ public class KinderMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Kindergartening");
     public static String MOD_ID = "kindergartening";
 
-    @Override
-    public void onInitialize() {
+    @Override public void onInitialize() {
         LOGGER.info("Starting up.");
         KinderItems.registerItems();
         KinderItemGroups.addItems();
