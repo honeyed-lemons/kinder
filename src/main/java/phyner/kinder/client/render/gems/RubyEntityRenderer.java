@@ -1,10 +1,12 @@
 package phyner.kinder.client.render.gems;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import phyner.kinder.client.models.gems.RubyEntityModel;
 import phyner.kinder.entities.gems.RubyEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-
+@Environment(EnvType.CLIENT)
 public class RubyEntityRenderer extends GeoEntityRenderer<RubyEntity> {
 
     public RubyEntityRenderer(EntityRendererFactory.Context renderManager) {

@@ -11,40 +11,48 @@ import phyner.kinder.entities.AbstractGemEntity;
 
 import java.util.EnumSet;
 
-public class GemAttackWithOwnerGoal
-        extends TrackTargetGoal {
-    private final AbstractGemEntity tameable;
-    private LivingEntity attacker;
-    private int lastAttackedTime;
+public class GemAttackWithOwnerGoal extends TrackTargetGoal {
+    private final AbstractGemEntity gem;
+    private LivingEntity attacking;
+    private int lastAttackTime;
+    private final boolean canFight;
 
-    public GemAttackWithOwnerGoal(AbstractGemEntity tameable) {
-        super(tameable, false);
-        this.tameable = tameable;
+    public GemAttackWithOwnerGoal(AbstractGemEntity gem, boolean canFight) {
+        super(gem, false);
+        this.gem = gem;
+        this.canFight = canFight;
         this.setControls(EnumSet.of(Goal.Control.TARGET));
     }
 
-    @Override
     public boolean canStart() {
-        if (!this.tameable.isTamed()) {
+        if (this.gem.isTamed()) {
+            LivingEntity livingEntity = this.gem.getOwner();
+            if (livingEntity == null) {
+                return false;
+            }
+            if (!canFight)
+            {
+                return false;
+            }
+            else
+            {
+                this.attacking = livingEntity.getAttacking();
+                int i = livingEntity.getLastAttackTime();
+                return i != this.lastAttackTime && this.canTrack(this.attacking, TargetPredicate.DEFAULT) && this.gem.canAttackWithOwner(this.attacking, livingEntity);
+            }
+        }
+        else
+        {
             return false;
         }
-        LivingEntity livingEntity = this.tameable.getOwner();
-        if (livingEntity == null) {
-            return false;
-        }
-        this.attacker = livingEntity.getAttacker();
-        int i = livingEntity.getLastAttackedTime();
-        return i != this.lastAttackedTime && this.canTrack(this.attacker, TargetPredicate.DEFAULT) && this.tameable.canAttackWithOwner();
     }
 
-    @Override
     public void start() {
-        this.mob.setTarget(this.attacker);
-        LivingEntity livingEntity = this.tameable.getOwner();
+        this.mob.setTarget(this.attacking);
+        LivingEntity livingEntity = this.gem.getOwner();
         if (livingEntity != null) {
-            this.lastAttackedTime = livingEntity.getLastAttackedTime();
+            this.lastAttackTime = livingEntity.getLastAttackTime();
         }
         super.start();
     }
 }
-
