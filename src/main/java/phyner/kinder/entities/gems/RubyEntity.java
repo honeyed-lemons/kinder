@@ -59,7 +59,7 @@ public class RubyEntity extends AbstractGemEntity {
     @Override
     public GemPlacements[] getPlacements(){
         return new GemPlacements[]{
-                GemPlacements.FOREHEAD, GemPlacements.CHEST, GemPlacements.BELLY, GemPlacements.BACK_OF_HEAD, GemPlacements.LEFT_CHEEK,GemPlacements.RIGHT_CHEEK, GemPlacements.LEFT_EYE,GemPlacements.RIGHT_EYE
+                GemPlacements.FOREHEAD, GemPlacements.CHEST, GemPlacements.BELLY, GemPlacements.BACK_OF_HEAD, GemPlacements.LEFT_EYE,GemPlacements.RIGHT_EYE
         };
     }
 
