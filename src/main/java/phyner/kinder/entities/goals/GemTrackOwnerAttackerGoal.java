@@ -7,8 +7,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.TrackTargetGoal;
-import net.minecraft.entity.passive.TameableEntity;
-import phyner.kinder.KinderMod;
 import phyner.kinder.entities.AbstractGemEntity;
 
 import java.util.EnumSet;
