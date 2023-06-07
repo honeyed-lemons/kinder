@@ -34,6 +34,14 @@ public class GemOutfitLayer<T extends AbstractGemEntity> extends GeoRenderLayer<
         {
             texture = new Identifier(KinderMod.MOD_ID, "textures/entity/blank.png");
         }
+        if(gem.hasOutfitPlacementVariant()){
+            for(int i : gem.outfitPlacementVariants()){
+                if(i == gem.getGemPlacement().id) {
+                    texture = new Identifier(KinderMod.MOD_ID, "textures/entity/gems/"+gem.getType().getUntranslatedName()+"/outfits/outfit_" + gem.getGemPlacement().name().toLowerCase() + ".png");
+                    break;
+                }
+            }
+        }
         RenderLayer armorRenderType = RenderLayer.getEntityCutoutNoCull(texture);
         getRenderer().reRender(getDefaultBakedModel(gem), poseStack, bufferSource, gem, armorRenderType,bufferSource.getBuffer(armorRenderType), partialTick, packedLight, OverlayTexture.DEFAULT_UV,outfitColors[0], outfitColors[1], outfitColors[2], 1);
     }

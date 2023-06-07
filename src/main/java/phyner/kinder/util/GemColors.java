@@ -18,7 +18,7 @@ public enum GemColors implements StringIdentifiable {
     ORANGE(1, "orange", 16750848),
     MAGENTA(2, "magenta", 16730610),
     LIGHT_BLUE(3, "light_blue", 9889535),
-    YELLOW(4, "yellow", 16772185),
+    YELLOW(4, "yellow", 16764199),
     LIME(5, "lime", 11140914),
     PINK(6, "pink", 16748234),
     GRAY(7, "gray", 5329233),

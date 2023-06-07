@@ -69,7 +69,6 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     private static final TrackedData<Integer> GEM_PLACEMENT = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> GEM_COLOR = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-
     private static UUID FOLLOW_ID;
 
     protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
@@ -161,8 +160,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     }
 
     public abstract int hairVariantCount();
-    public int generateHairVariant()
-    {
+    public int generateHairVariant(){
         if (hairVariantCount()!=0) {
             return this.random.nextBetween(1,hairVariantCount());
         }
@@ -183,6 +181,10 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
             return this.random.nextBetween(1,outfitVariantCount());
         }
         else return 0;
+    }
+    public abstract boolean hasOutfitPlacementVariant();
+    public int[] outfitPlacementVariants(){
+        return new int[]{};
     }
     public void setOutfitVariant(int outfitVariant)
     {
@@ -251,7 +253,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     @Override
     public void onDeath(DamageSource source)
     {
-        if(!this.world.isClient()){
+        if(!this.getWorld().isClient()){
             ItemStack item = gemItem();
             NbtCompound nbt = new NbtCompound();
             nbt.putString("id",EntityType.getId(this.getType()).toString());
@@ -262,13 +264,12 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         super.onDeath(source);
     }
     abstract public ItemStack gemItem();
-
     public int generatePaletteColor(PaletteType type){
         String locString = type.type + "_palette";
         System.out.println("[DEBUG] " + locString);
         ArrayList<Integer> colors = new ArrayList<>();
         Identifier loc = new Identifier(KinderMod.MOD_ID + ":textures/entity/gems/" + this.getType().getUntranslatedName() + "/palettes/" + locString + ".png");
-        BufferedImage palette = null;
+        BufferedImage palette;
         try {
             palette = ImageIO.read(MinecraftClient.getInstance().getResourceManager().getResource(loc).get().getInputStream());
             System.out.println("Palette Read!");
@@ -285,8 +286,6 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         }
         return ColorUtil.lerpHex(colors);
     }
-
-
     /*
     Movement Type Values
     0 = Wander
@@ -295,7 +294,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     */
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (!player.world.isClient && !player.isSpectator()) {
+        if (!player.getWorld().isClient && !player.isSpectator()) {
             if (this.getOwner() == null) {
                 KinderMod.LOGGER.info("There's no owner.");
             }

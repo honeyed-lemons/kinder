@@ -8,8 +8,8 @@ import net.minecraft.util.Identifier;
 import phyner.kinder.KinderMod;
 
 public class KinderItemGroups {
-
-    private static final ItemGroup GEM_GROUP = FabricItemGroup.builder(new Identifier(KinderMod.MOD_ID, "gem_group"))
+    /*
+    private static final ItemGroup GEM_GROUP = FabricItemGroup.builder()
             .icon(() -> new ItemStack(KinderItems.RUBY_GEM))
             .build();
 
@@ -18,5 +18,5 @@ public class KinderItemGroups {
         ItemGroupEvents.modifyEntriesEvent(GEM_GROUP).register(content -> {
             content.add(KinderItems.RUBY_GEM);
         });
-    }
+    }*/
 }

@@ -26,7 +26,7 @@ public class GemFollowOwnerGoal
 
     public GemFollowOwnerGoal(AbstractGemEntity gem,double speed,float minDistance,float maxDistance,boolean leavesAllowed) {
         this.gem = gem;
-        this.world = gem.world;
+        this.world = gem.getWorld();
         this.speed = speed;
         this.navigation = gem.getNavigation();
         this.minDistance = minDistance;

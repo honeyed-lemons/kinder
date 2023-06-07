@@ -50,6 +50,7 @@ public class GemItem extends Item {
                     gem.fallDistance = 0;
                     gem.speed = 0;
                     gem.setOnFire(false);
+                    gem.setFireTicks(0);
                     gem.setHealth(gem.getMaxHealth());
                     gem.clearStatusEffects();
                     gem.setVelocity(0, 0, 0);
