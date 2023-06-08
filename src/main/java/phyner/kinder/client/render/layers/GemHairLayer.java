@@ -13,6 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class GemHairLayer <T extends AbstractGemEntity> extends GeoRenderLayer<T> {
     public GemHairLayer(GeoRenderer<T> entityRenderer) {
@@ -24,7 +25,7 @@ public class GemHairLayer <T extends AbstractGemEntity> extends GeoRenderLayer<T
         Identifier texture;
         if (gem.getHairVariant() != 0)
         {
-            texture = new Identifier(KinderMod.MOD_ID, "textures/entity/gems/"+gem.getType().getUntranslatedName()+"/hair/hair_"+gem.getHairVariant()+".png");
+                texture = new Identifier(KinderMod.MOD_ID,"textures/entity/gems/" + gem.getType().getUntranslatedName() + "/hair/hair_" + gem.getHairVariant() + ".png");
         }
         else
         {

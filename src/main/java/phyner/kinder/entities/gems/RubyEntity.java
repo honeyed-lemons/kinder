@@ -42,7 +42,7 @@ public class RubyEntity extends AbstractGemEntity {
 
     @Override
     public int hairVariantCount(){
-        return 2;
+        return 4;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class RubyEntity extends AbstractGemEntity {
         return new GemPlacements[]{
                 GemPlacements.FOREHEAD, GemPlacements.CHEST, GemPlacements.BELLY, GemPlacements.BACK_OF_HEAD, GemPlacements.LEFT_EYE,
                 GemPlacements.RIGHT_EYE,GemPlacements.LEFT_HAND,GemPlacements.RIGHT_HAND,GemPlacements.LEFT_KNEE,GemPlacements.RIGHT_KNEE,
-                GemPlacements.RIGHT_SHOULDER,GemPlacements.RIGHT_SHOULDER,GemPlacements.BACK
+                GemPlacements.RIGHT_SHOULDER,GemPlacements.RIGHT_SHOULDER,GemPlacements.BACK, GemPlacements.NOSE
         };
     }
 
