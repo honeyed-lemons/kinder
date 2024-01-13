@@ -1,5 +1,7 @@
 package phyner.kinder.client.render.layers;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -14,7 +16,7 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 import java.awt.*;
 import java.io.IOException;
-
+@Environment(value= EnvType.CLIENT)
 public class GemHairLayer <T extends AbstractGemEntity> extends GeoRenderLayer<T> {
     public GemHairLayer(GeoRenderer<T> entityRenderer) {
         super(entityRenderer);

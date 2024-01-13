@@ -5,6 +5,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -78,6 +79,10 @@ public class RubyEntity extends AbstractGemEntity {
                 GemPlacements.RIGHT_SHOULDER,GemPlacements.RIGHT_SHOULDER,GemPlacements.BACK, GemPlacements.NOSE
         };
     }
+    @Override
+    public int generateGemColorVariant(){
+        return 0;
+    }
 
     @Override
     public ItemStack gemItem() {
@@ -92,5 +97,10 @@ public class RubyEntity extends AbstractGemEntity {
     public boolean isFireImmune()
     {
         return true;
+    }
+
+    @Override
+    public void onInventoryChanged(Inventory sender){
+
     }
 }

@@ -1,5 +1,6 @@
 package phyner.kinder.entities;
 
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
@@ -16,10 +17,16 @@ import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.InventoryChangedListener;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.ServerConfigHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
@@ -33,12 +40,14 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import phyner.kinder.KinderMod;
+import phyner.kinder.client.render.screens.handlers.PearlScreenHandler;
 import phyner.kinder.entities.goals.GemAttackWithOwnerGoal;
 import phyner.kinder.entities.goals.GemFollowOwnerGoal;
 import phyner.kinder.entities.goals.GemTrackOwnerAttackerGoal;
 import phyner.kinder.entities.goals.GemWanderAroundGoal;
 import phyner.kinder.util.ColorUtil;
 import phyner.kinder.util.GemPlacements;
+import phyner.kinder.util.InventoryNbtUtil;
 import phyner.kinder.util.PaletteType;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -53,7 +62,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class AbstractGemEntity extends TameableEntity implements GeoEntity, Tameable {
+public abstract class AbstractGemEntity extends TameableEntity implements GeoEntity, InventoryChangedListener, Tameable {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final TrackedData<Byte> TAMABLE_FLAGS = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.BYTE);
     private static final TrackedData<Byte> MOVEMENT_TYPE = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -68,13 +77,17 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     private static final TrackedData<Integer> INSIGNIA_COLOR = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> GEM_PLACEMENT = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final TrackedData<Integer> GEM_COLOR = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
+    public int initalGemColorVariant = 0;
+    public boolean setGemVariantOnInitialSpawn = true;
+    private SimpleInventory inventory;
     private static UUID FOLLOW_ID;
+    private final int inventorySize = 6*9;
 
     protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData(AbstractGemEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
 
     public AbstractGemEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
+        this.updateInventory();
     }
     public void initGoals() {
         //Looking around
@@ -155,8 +168,12 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     {
         return this.dataTracker.get(GEM_COLOR);
     }
-    private int getGemColorVariant(){
+    public int getGemColorVariant(){
         return this.dataTracker.get(GEM_COLOR_VARIANT);
+    }
+    public void setGemColorVariant(int colorVariant)
+    {
+        this.dataTracker.set(GEM_COLOR_VARIANT,colorVariant);
     }
 
     public abstract int hairVariantCount();
@@ -239,17 +256,38 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     @Override
     public EntityData initialize(ServerWorldAccess world,LocalDifficulty difficulty,SpawnReason spawnReason,@Nullable EntityData entityData,@Nullable NbtCompound entityNbt){
         setHairVariant(generateHairVariant());
+        this.setGemColorVariant(this.generateGemColorVariant());
+        if (this.setGemVariantOnInitialSpawn) {
+            this.setGemColorVariant(this.generateGemColorVariant());
+            generateColors();
+        }
+        else this.setGemColorVariant(this.initalGemColorVariant);
         setOutfitVariant(generateOutfitVariant());
         setInsigniaVariant(generateInsigniaVariant());
         setOutfitColor(defaultOutfitColor());
         setInsigniaColor(defaultInsigniaColor());
         setGemPlacement(generateGemPlacement());
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    }
+    public void generateColors()
+    {
         setHairColor(this.generatePaletteColor(PaletteType.HAIR));
         setSkinColor(this.generatePaletteColor(PaletteType.SKIN));
         setGemColor(this.generatePaletteColor(PaletteType.GEM));
-        return entityData;
     }
 
+    public abstract int generateGemColorVariant();
+    public Text getName()
+    {
+        if (this instanceof AbstractVaryingGemEntity)
+        {
+            if (((AbstractVaryingGemEntity) this).UsesUniqueNames())
+            {
+                return Text.translatable("entity.kindergartening."+this.getType().getUntranslatedName()+"_"+this.getGemColorVariant());
+            }
+        }
+        return this.getDefaultName();
+    }
     @Override
     public void onDeath(DamageSource source)
     {
@@ -264,6 +302,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         super.onDeath(source);
     }
     abstract public ItemStack gemItem();
+
     public int generatePaletteColor(PaletteType type){
         String locString = type.type + "_palette";
         System.out.println("[DEBUG] " + locString);
@@ -320,6 +359,10 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
                             movementType);
                     return ActionResult.SUCCESS;
                 }
+                else if (!player.isSneaking() && hand == Hand.MAIN_HAND && player.getStackInHand(Hand.MAIN_HAND) == ItemStack.EMPTY)
+                {
+                    interactGem(player);
+                }
                 if (player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof DyeItem dye) {
                     if (player.isSneaking())
                     {
@@ -334,6 +377,51 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
             }
         }
         return super.interactMob(player, hand);
+    }
+    public void interactGem(PlayerEntity player)
+    {
+    }
+
+    public class GemScreenHandlerFactory implements ExtendedScreenHandlerFactory{
+        private AbstractGemEntity gem() {
+            return AbstractGemEntity.this;
+        }
+        @Override
+        public Text getDisplayName(){
+            return this.gem().getDisplayName();
+        }
+
+        @Override
+        public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+            var gemInv = this.gem().inventory;
+            return new PearlScreenHandler(syncId, inv, gemInv, this.gem());
+        }
+
+        @Override
+        public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+            buf.writeVarInt(this.gem().getId());
+        }
+    }
+    protected void updateInventory() {
+        var previousInventory = this.inventory;
+        this.inventory = new SimpleInventory(this.getInventorySize());
+        if (previousInventory != null) {
+            previousInventory.removeListener(this);
+            int maxSize = Math.min(previousInventory.size(), this.inventory.size());
+
+            for (int slot = 0; slot < maxSize; ++slot) {
+                var stack = previousInventory.getStack(slot);
+                if (!stack.isEmpty()) {
+                    this.inventory.setStack(slot, stack.copy());
+                }
+            }
+        }
+
+        this.inventory.addListener(this);
+    }
+
+    private int getInventorySize(){
+        return this.inventorySize;
     }
 
     public UUID getFollowId(){
@@ -373,6 +461,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         nbt.putInt("InsigniaVariant", this.dataTracker.get(INSIGNIA_VARIANT));
         nbt.putInt("GemPlacement", this.dataTracker.get(GEM_PLACEMENT));
         nbt.putInt("GemColor", this.dataTracker.get(GEM_COLOR));
+        InventoryNbtUtil.writeInventoryNbt(nbt, "inventory", this.inventory,  this.inventory.size());
     }
 
     public void readCustomDataFromNbt(NbtCompound nbt) {
@@ -407,6 +496,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         this.dataTracker.set(INSIGNIA_VARIANT,nbt.getInt("InsigniaVariant"));
         this.dataTracker.set(GEM_PLACEMENT,nbt.getInt("GemPlacement"));
         this.dataTracker.set(GEM_COLOR,nbt.getInt("GemColor"));
+        InventoryNbtUtil.readInventoryNbt(nbt, "inventory", this.inventory);
     }
 
     public byte getMovementType()

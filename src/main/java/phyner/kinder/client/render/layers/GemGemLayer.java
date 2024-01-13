@@ -1,5 +1,7 @@
 package phyner.kinder.client.render.layers;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -13,7 +15,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 import java.awt.*;
-
+@Environment(value= EnvType.CLIENT)
 public class GemGemLayer<T extends AbstractGemEntity> extends GeoRenderLayer<T> {
     public GemGemLayer(GeoRenderer<T> entityRenderer) {
         super(entityRenderer);

@@ -12,10 +12,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import phyner.kinder.KinderMod;
 import phyner.kinder.entities.AbstractGemEntity;
+import phyner.kinder.util.GemColors;
+import phyner.kinder.util.PaletteType;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,10 +26,12 @@ import java.util.Optional;
 
 public class GemItem extends Item {
     private final EntityType<?> type;
+    private final GemColors color;
 
-    public GemItem(EntityType<? extends AbstractGemEntity> type,Settings settings) {
+    public GemItem(EntityType<? extends AbstractGemEntity> type,GemColors color, Settings settings) {
         super(settings);
         this.type = type;
+        this.color = color;
     }
 
     @Override
@@ -62,7 +67,10 @@ public class GemItem extends Item {
             }
             else
             {
-                type.spawn(Objects.requireNonNull(world.getServer()).getWorld(world.getRegistryKey()),pos.up(),SpawnReason.MOB_SUMMONED);
+                AbstractGemEntity gem = (AbstractGemEntity) Objects.requireNonNull(type.spawn(Objects.requireNonNull(world.getServer()).getWorld(world.getRegistryKey()),pos.up(),SpawnReason.MOB_SUMMONED));
+                gem.setGemVariantOnInitialSpawn = false;
+                gem.setGemColorVariant(color.getId());
+                gem.generateColors();
                 KinderMod.LOGGER.info("Spawning Gem, Name is " + type.getName().getString());
                 if (!Objects.requireNonNull(context.getPlayer()).isCreative())
                 {

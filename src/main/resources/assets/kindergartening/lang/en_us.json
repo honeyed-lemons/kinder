@@ -5,6 +5,8 @@
 
   "entity.kindergartening.ruby": "Ruby",
 
+  "entity.kindergartening.quartz_10" : "Amethyst",
+
   "kinder.gem.movement.interact.wander": " will now wander.",
   "kinder.gem.movement.interact.stay": " will now stay.",
   "kinder.gem.movement.interact.follow": " will now follow you."
