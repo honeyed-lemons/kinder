@@ -24,12 +24,12 @@ public class KinderGemEntities {
             .build();
     public static final EntityType<QuartzEntity> QUARTZ = FabricEntityTypeBuilder.create()
             .entityFactory(QuartzEntity::new)
-            .dimensions(EntityDimensions.changing(0.8F,2F))
+            .dimensions(EntityDimensions.changing(0.6F,1.45F))
             .build();
 
     public static final EntityType<PearlEntity> PEARL = FabricEntityTypeBuilder.create()
             .entityFactory(PearlEntity::new)
-            .dimensions(EntityDimensions.changing(0.6F,2F))
+            .dimensions(EntityDimensions.changing(0.6F,1.45F))
             .build();
 
     private static void register(String name, EntityType<?> type)

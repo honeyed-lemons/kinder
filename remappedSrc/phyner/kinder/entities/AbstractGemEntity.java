@@ -301,7 +301,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     @Override
     public void onDeath(DamageSource source)
     {
-        if(!this.getWorld().isClient()){
+        if(!this.method_48926().isClient()){
             ItemStack item = gemItem();
             NbtCompound nbt = new NbtCompound();
             nbt.putString("id",EntityType.getId(this.getType()).toString());
@@ -343,7 +343,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     */
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (!player.getWorld().isClient && !player.isSpectator()) {
+        if (!player.method_48926().isClient && !player.isSpectator()) {
             if (this.getOwner() == null) {
                 KinderMod.LOGGER.info("There's no owner.");
             }

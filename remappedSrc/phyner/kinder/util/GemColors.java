@@ -32,7 +32,7 @@ public enum GemColors implements StringIdentifiable {
     BLACK(15, "black", 1973790);
 
     private static final IntFunction<GemColors> BY_ID = ValueLists.createIdToValueFunction(GemColors::getId, values(), (ValueLists.OutOfBoundsHandling)ValueLists.OutOfBoundsHandling.ZERO);
-    public static final StringIdentifiable.BasicCodec<GemColors> CODEC = StringIdentifiable.createCodec(GemColors::values);
+    public static final StringIdentifiable.Codec<GemColors> CODEC = StringIdentifiable.createCodec(GemColors::values);
     private final int id;
     private final String name;
     private final float[] colorComponents;
@@ -76,6 +76,19 @@ public enum GemColors implements StringIdentifiable {
      */
     public static GemColors byId(int id) {
         return (GemColors)BY_ID.apply(id);
+    }
+
+    /**
+     * {@return the dye color whose name is {@code name}, or {@code defaultColor} if
+     * there is no such color}
+     *
+     * @apiNote This returns {@code null} only if {@code defaultColor} is {@code null}.
+     */
+    @Nullable
+    @Contract("_,!null->!null;_,null->_")
+    public static GemColors byName(String name, @Nullable GemColors defaultColor) {
+        GemColors GemColors = CODEC.byId(name);
+        return GemColors != null ? GemColors : defaultColor;
     }
 
     public String toString() {

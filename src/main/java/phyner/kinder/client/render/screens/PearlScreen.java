@@ -19,16 +19,13 @@ public class PearlScreen extends HandledScreen<PearlScreenHandler> {
 
     public PearlScreen(PearlScreenHandler handler,PlayerInventory inventory,Text title) {
         super(handler, inventory, title);
-        int i = 222;
-        int j = 114;
-        this.rows = 6;
+        this.rows = handler.entity.getPerfection();
         this.backgroundHeight = 114 + this.rows * 18;
         this.playerInventoryTitleY = this.backgroundHeight - 94;
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
         super.render(context, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(context, mouseX, mouseY);
     }

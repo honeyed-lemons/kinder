@@ -21,8 +21,8 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     }
     public static DefaultAttributeContainer.@NotNull Builder createGemAttributes(){
         return createDefaultGemAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED,0.60)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 15.0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED,0.75)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE,5.0);
     }
     @Override

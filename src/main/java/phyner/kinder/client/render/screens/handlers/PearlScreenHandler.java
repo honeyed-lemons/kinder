@@ -10,39 +10,36 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.ShulkerBoxSlot;
 import net.minecraft.screen.slot.Slot;
 import phyner.kinder.entities.AbstractGemEntity;
 import phyner.kinder.init.KinderScreens;
 @Environment(value=EnvType.CLIENT)
 public class PearlScreenHandler extends ScreenHandler implements InventoryChangedListener {
-    private final SimpleInventory inventory;
-    private final AbstractGemEntity entity;
-
+    public final SimpleInventory inventory;
+    public final AbstractGemEntity entity;
 
     public PearlScreenHandler(int syncId,PlayerInventory playerInventory,PacketByteBuf buf) {
-        this(syncId, playerInventory,
-                playerInventory.player.getWorld().getEntityById(buf.readVarInt()) instanceof AbstractGemEntity snail ? snail : null
+        this(syncId, playerInventory,playerInventory.player.getWorld().getEntityById(buf.readVarInt()) instanceof AbstractGemEntity gem ? gem : null
         );
     }
-    public AbstractGemEntity gem() {
-        return this.entity;
-    }
-    public PearlScreenHandler(int syncId,PlayerInventory playerInventory,AbstractGemEntity snail) {
-        this(syncId, playerInventory, new SimpleInventory(6*9), snail);
+    public PearlScreenHandler(int syncId,PlayerInventory playerInventory,AbstractGemEntity entity) {
+        this(syncId, playerInventory, new SimpleInventory(entity.getPerfection()*9), entity,entity.getPerfection());
     }
 
-    public PearlScreenHandler(int syncId,PlayerInventory playerInventory,SimpleInventory inventory,AbstractGemEntity entity) {
+    public PearlScreenHandler(int syncId,PlayerInventory playerInventory,SimpleInventory inventory,AbstractGemEntity entity, int perfection) {
         super(KinderScreens.PEARL_SCREEN_HANDLER, syncId);
         int k;
         int j;
-        checkSize(inventory, 6 * 9);
         this.inventory = inventory;
         this.entity = entity;
+        checkSize(inventory,
+                entity.getInventorySize());
         inventory.onOpen(playerInventory.player);
-        int i = (6 - 4) * 18;
-        for (j = 0; j < 6; ++j) {
+        int i = (perfection - 4) * 18;
+        for (j = 0; j < perfection; ++j) {
             for (k = 0; k < 9; ++k) {
-                this.addSlot(new Slot(inventory, k + j * 9, 8 + k * 18, 18 + j * 18));
+                this.addSlot(new ShulkerBoxSlot(inventory, k + j * 9, 8 + k * 18, 18 + j * 18));
             }
         }
         for (j = 0; j < 3; ++j) {
@@ -68,7 +65,7 @@ public class PearlScreenHandler extends ScreenHandler implements InventoryChange
         if (slot2.hasStack()) {
             ItemStack itemStack2 = slot2.getStack();
             itemStack = itemStack2.copy();
-            if (slot < 6 * 9 ? !this.insertItem(itemStack2, 6 * 9, this.slots.size(), true) : !this.insertItem(itemStack2, 0, 6* 9, false)) {
+            if (slot <  entity.getInventorySize() ? !this.insertItem(itemStack2,  entity.getInventorySize(), this.slots.size(), true) : !this.insertItem(itemStack2, 0,  entity.getInventorySize(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack2.isEmpty()) {
@@ -82,7 +79,7 @@ public class PearlScreenHandler extends ScreenHandler implements InventoryChange
 
     @Override
     public void onInventoryChanged(Inventory sender){
-
+        entity.playAmbientSound();
     }
 }
 
