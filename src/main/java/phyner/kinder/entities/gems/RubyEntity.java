@@ -13,7 +13,10 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import phyner.kinder.entities.AbstractGemEntity;
 import phyner.kinder.init.KinderItems;
+import phyner.kinder.util.GemConditions;
 import phyner.kinder.util.GemPlacements;
+
+import java.util.HashMap;
 
 public class RubyEntity extends AbstractGemEntity {
     public RubyEntity(EntityType<? extends AbstractGemEntity> entityType, World world) {
@@ -29,7 +32,22 @@ public class RubyEntity extends AbstractGemEntity {
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED,0.60)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE,3.5);
     }
-
+    public static GemConditions RubyConditions()
+    {
+        float tempMin = 0.5f;
+        float tempIdeal = 2.0f;
+        float tempMax = 2.0f;
+        float depthMax = -255;
+        float depthMin = 80;
+        int color = 0;
+        HashMap<String,Float> biomes = new HashMap<>();
+        biomes.put("minecraft:nether_wastes",1f);
+        biomes.put("minecraft:warped_forest",1f);
+        biomes.put("minecraft:crimson_forest",1f);
+        biomes.put("minecraft:basalt_deltas",1f);
+        biomes.put("minecraft:soul_sand_valley",1f);
+        return new GemConditions(tempMin,tempIdeal,tempMax,depthMin,depthMax,color,biomes);
+    }
     @Override
     @NotNull
     public SoundEvent gemInstrument(){

@@ -45,11 +45,9 @@ import phyner.kinder.entities.goals.GemAttackWithOwnerGoal;
 import phyner.kinder.entities.goals.GemFollowOwnerGoal;
 import phyner.kinder.entities.goals.GemTrackOwnerAttackerGoal;
 import phyner.kinder.entities.goals.GemWanderAroundGoal;
-import phyner.kinder.util.ColorUtil;
-import phyner.kinder.util.GemPlacements;
-import phyner.kinder.util.InventoryNbtUtil;
-import phyner.kinder.util.PaletteType;
+import phyner.kinder.util.*;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -333,7 +331,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
             e.printStackTrace();
             colors.add(0xFFFFFF);
         }
-        return ColorUtil.lerpHex(colors);
+        return GemColors.lerpHex(colors);
     }
     /*
     Movement Type Values
@@ -388,9 +386,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         }
         return super.interactMob(player, hand);
     }
-    public void interactGem(PlayerEntity player)
-    {
-    }
+    public void interactGem(PlayerEntity player){}
 
     public class GemScreenHandlerFactory implements ExtendedScreenHandlerFactory{
         private AbstractGemEntity gem() {
@@ -443,6 +439,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
         controllerRegistrar.add(GemDefaultAnimations.genericGemWalkLegsController(this));
         controllerRegistrar.add(GemDefaultAnimations.genericGemWalkArmsController(this));
+        controllerRegistrar.add(DefaultAnimations.genericAttackAnimation(this,GemDefaultAnimations.ARMS_USE));
     }
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

@@ -16,6 +16,7 @@ public class QuartzEntityRenderer extends GeoEntityRenderer<QuartzEntity> {
         super(renderManager, new QuartzEntityModel());
         addRenderLayer(new GemSkinLayer<>(this));
         addRenderLayer(new GemHairLayer<>(this));
+        addRenderLayer(new GemEyeLayer<>(this));
         addRenderLayer(new GemInsigniaLayer<>(this));
         addRenderLayer(new GemOutfitLayer<>(this));
         addRenderLayer(new GemGemLayer<>(this));

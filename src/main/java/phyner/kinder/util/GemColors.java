@@ -1,15 +1,14 @@
 package phyner.kinder.util;
 
 import com.google.common.collect.Maps;
+import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.function.ValueLists;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
@@ -32,7 +31,6 @@ public enum GemColors implements StringIdentifiable {
     BLACK(15, "black", 1973790);
 
     private static final IntFunction<GemColors> BY_ID = ValueLists.createIdToValueFunction(GemColors::getId, values(), (ValueLists.OutOfBoundsHandling)ValueLists.OutOfBoundsHandling.ZERO);
-    public static final StringIdentifiable.BasicCodec<GemColors> CODEC = StringIdentifiable.createCodec(GemColors::values);
     private final int id;
     private final String name;
     private final float[] colorComponents;
@@ -94,5 +92,34 @@ public enum GemColors implements StringIdentifiable {
             float f = 0.75F;
             return new float[]{fs[0] * f, fs[1] * f, fs[2] * f};
         }
+    }
+
+    public static int lerpHex(ArrayList<Integer> colors){
+        Random random = new Random();
+        if (colors.size() == 0) {
+            return 0;
+        }
+        if (colors.size() == 1) {
+            return colors.get(0);
+        }
+        int r;
+        int g;
+        int b;
+        float u = random.nextFloat();
+
+        int bound = random.nextInt(colors.size() - 1);
+
+        int b_r = (colors.get(bound) & 16711680) >> 16;
+        int b_g = (colors.get(bound) & 65280) >> 8;
+        int b_b = (colors.get(bound) & 255);
+        int e_r = (colors.get(bound + 1) & 16711680) >> 16;
+        int e_g = (colors.get(bound + 1) & 65280) >> 8;
+        int e_b = (colors.get(bound + 1) & 255);
+
+        r = (int) (u * b_r + (1f - u) * e_r);
+        g = (int) (u * b_g + (1f - u) * e_g);
+        b = (int) (u * b_b + (1f - u) * e_b);
+
+        return (r << 16) + (g << 8) + b;
     }
 }

@@ -1,5 +1,6 @@
 package phyner.kinder.entities;
 
+import net.minecraft.entity.LivingEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -9,12 +10,13 @@ public final class GemDefaultAnimations {
     public static final RawAnimation LEGS_WALK = RawAnimation.begin().thenLoop("legs.walk");
     public static final RawAnimation ARMS_WALK = RawAnimation.begin().thenLoop("arms.walk");
     public static final RawAnimation ARMS_USE = RawAnimation.begin().thenPlay("arms.use");
+    public static final RawAnimation ARMS_IDLE = RawAnimation.begin().thenPlay("arms.idle");
 
 
     public static <T extends GeoAnimatable> AnimationController<T> genericGemWalkLegsController(T animatable) {
         return new AnimationController<>(animatable,
                 "LegWalk",
-                1,
+                0,
                 state -> {
                     if (state.isMoving()) {
                         return state.setAndContinue(LEGS_WALK);
@@ -23,15 +25,27 @@ public final class GemDefaultAnimations {
                     }
                 });
     }
-    public static <T extends GeoAnimatable> AnimationController<T> genericGemWalkArmsController(T animatable) {
+    public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericGemWalkArmsController(T animatable) {
         return new AnimationController<>(animatable,
                 "ArmWalk",
-                2,
+                0,
                 state -> {
                     if (state.isMoving()) {
                         return state.setAndContinue(ARMS_WALK);
                     } else {
                         return PlayState.STOP;
+                    }
+                });
+    }
+    public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericGemPearlArmsController(T animatable) {
+        return new AnimationController<>(animatable,
+                "GemArmsIdle",
+                5,
+                state -> {
+                    if (!state.isMoving()) {
+                        return state.setAndContinue(ARMS_IDLE);
+                    } else {
+                        return state.setAndContinue(ARMS_WALK);
                     }
                 });
     }

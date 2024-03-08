@@ -11,6 +11,9 @@
 	"icon": "assets/kindergartening/icon.png",
 	"environment": "*",
 	"entrypoints": {
+		"fabric-datagen": [
+			"phyner.kinder.init.KinderDataGenerator"
+		],
 		"main": [
 			"phyner.kinder.KinderMod"
 		],
@@ -22,10 +25,11 @@
 		"kindergartening.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.15.6",
-		"minecraft": "~1.20.4",
+		"fabricloader": ">=0.15.7",
+		"minecraft": "~1.20.1",
 		"java": ">=17",
-		"fabric-api": ">=0.95.0",
+		"fabric-api": ">=0.92.0",
 		"geckolib": "=4.4"
-	}
+	},
+	"accessWidener" : "kindergartening.accesswidener"
 }

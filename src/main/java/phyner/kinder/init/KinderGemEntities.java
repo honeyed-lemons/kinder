@@ -29,7 +29,7 @@ public class KinderGemEntities {
 
     public static final EntityType<PearlEntity> PEARL = FabricEntityTypeBuilder.create()
             .entityFactory(PearlEntity::new)
-            .dimensions(EntityDimensions.changing(0.6F,2F))
+            .dimensions(EntityDimensions.changing(0.6F,0.75F))
             .build();
 
     private static void register(String name, EntityType<?> type)

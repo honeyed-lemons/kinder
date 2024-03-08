@@ -16,7 +16,7 @@ public class KinderMod implements ModInitializer {
 
     @Override public void onInitialize() {
         LOGGER.info("Starting Kindergartening");
-        KinderBlocks.registerFluids();
+        KinderBlocks.registerBlocks();
         KinderItems.registerItems();
         //KinderItemGroups.addItems();
         KinderGemEntities.registerEntities();

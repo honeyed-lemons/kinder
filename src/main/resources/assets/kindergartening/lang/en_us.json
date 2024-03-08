@@ -7,6 +7,15 @@
 
   "entity.kindergartening.quartz_10" : "Amethyst",
 
+  "item.kindergartening.pearl_wedge" : "Pearl Shuck",
+  "block.kindergartening.oyster" : "Pearl Oyster",
+
+  "item.kindergartening.white_essence" : "White Essence Bottle",
+  "item.kindergartening.pink_essence" : "Pink Essence Bottle",
+  "item.kindergartening.yellow_essence" : "Yellow Essence Bottle",
+  "item.kindergartening.blue_essence" : "Blue Essence Bottle",
+
+
   "kinder.gem.movement.interact.wander": " will now wander.",
   "kinder.gem.movement.interact.stay": " will now stay.",
   "kinder.gem.movement.interact.follow": " will now follow you."

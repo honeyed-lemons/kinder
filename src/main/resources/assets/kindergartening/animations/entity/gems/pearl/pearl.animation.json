@@ -49,6 +49,19 @@
 					}
 				}
 			}
+		},
+		"arms.idle": {
+			"loop": true,
+			"bones": {
+				"leftArm": {
+					"rotation": [16.18923, 13.5202, 24.0697],
+					"position": [0, 0, 1]
+				},
+				"rightArm": {
+					"rotation": [16.18923, -13.52019, -24.06968],
+					"position": [0, 0, 1]
+				}
+			}
 		}
 	}
 }

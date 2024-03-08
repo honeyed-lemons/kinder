@@ -12,7 +12,10 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import phyner.kinder.entities.AbstractVaryingGemEntity;
 import phyner.kinder.init.KinderItems;
+import phyner.kinder.util.GemConditions;
 import phyner.kinder.util.GemPlacements;
+
+import java.util.HashMap;
 
 public class QuartzEntity extends AbstractVaryingGemEntity {
     public QuartzEntity(EntityType<? extends TameableEntity> entityType,World world){
@@ -26,9 +29,21 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE,5.0);
     }
 
+    public static GemConditions QuartzConditions()
+    {
+        float tempMin = 0.0f;
+        float tempIdeal = 0.8f;
+        float tempMax = 2.0f;
+        float depthMax = -255;
+        float depthMin = 70;
+        int color = 5;
+        HashMap<String,Float> biomes = new HashMap<>();
+        return new GemConditions(tempMin,tempIdeal,tempMax,depthMin,depthMax,color,biomes);
+    }
+
     @Override
     public boolean isSolider(){
-        return false;
+        return true;
     }
 
     @Override

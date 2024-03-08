@@ -19,6 +19,7 @@ public class RubyEntityRenderer extends GeoEntityRenderer<RubyEntity> {
 
         addRenderLayer(new GemSkinLayer<>(this));
         addRenderLayer(new GemHairLayer<>(this));
+        addRenderLayer(new GemEyeLayer<>(this));
         addRenderLayer(new GemInsigniaLayer<>(this));
         addRenderLayer(new GemOutfitLayer<>(this));
         addRenderLayer(new GemGemLayer<>(this));

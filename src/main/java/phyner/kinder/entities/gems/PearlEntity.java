@@ -1,6 +1,10 @@
 package phyner.kinder.entities.gems;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.LookAroundGoal;
+import net.minecraft.entity.ai.goal.LookAtEntityGoal;
+import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.passive.TameableEntity;
@@ -12,8 +16,16 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import phyner.kinder.entities.AbstractVaryingGemEntity;
+import phyner.kinder.entities.GemDefaultAnimations;
+import phyner.kinder.entities.goals.GemAttackWithOwnerGoal;
+import phyner.kinder.entities.goals.GemFollowOwnerGoal;
+import phyner.kinder.entities.goals.GemTrackOwnerAttackerGoal;
+import phyner.kinder.entities.goals.GemWanderAroundGoal;
 import phyner.kinder.init.KinderItems;
+import phyner.kinder.util.GemConditions;
 import phyner.kinder.util.GemPlacements;
+import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.core.animation.AnimatableManager;
 
 public class PearlEntity extends AbstractVaryingGemEntity {
     public PearlEntity(EntityType<? extends TameableEntity> entityType,World world){
@@ -22,8 +34,8 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     public static DefaultAttributeContainer.@NotNull Builder createGemAttributes(){
         return createDefaultGemAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 15.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED,0.75)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE,5.0);
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED,0.625)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE,1.0);
     }
     @Override
     public void interactGem(PlayerEntity player)
@@ -37,14 +49,30 @@ public class PearlEntity extends AbstractVaryingGemEntity {
 
     @Override
     public int hairVariantCount(){
-        return 0;
+        return 5;
+    }
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(GemDefaultAnimations.genericGemWalkLegsController(this));
+        controllerRegistrar.add(GemDefaultAnimations.genericGemPearlArmsController(this));
+        controllerRegistrar.add(DefaultAnimations.genericAttackAnimation(this,GemDefaultAnimations.ARMS_USE));
     }
 
     @Override
     public int outfitVariantCount(){
-        return 0;
+        return 4;
     }
-
+    public int insigniaVariantCount(){
+        return 4;
+    }
+    @Override
+    public int generateInsigniaVariant()
+    {
+        if (insigniaVariantCount()!=0) {
+            return this.random.nextBetween(1,outfitVariantCount());
+        }
+        else return 0;
+    }
     @Override
     public boolean hasOutfitPlacementVariant(){
         return false;
@@ -63,7 +91,7 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     @Override
     public GemPlacements[] getPlacements(){
         return new GemPlacements[]{
-                GemPlacements.CHEST
+                GemPlacements.CHEST,GemPlacements.NOSE,GemPlacements.BACK,GemPlacements.BELLY,GemPlacements.FOREHEAD,GemPlacements.RIGHT_EYE,GemPlacements.LEFT_EYE
         };
     }
 

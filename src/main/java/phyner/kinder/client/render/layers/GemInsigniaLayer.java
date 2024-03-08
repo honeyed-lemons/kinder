@@ -38,7 +38,7 @@ public class GemInsigniaLayer<T extends AbstractGemEntity> extends GeoRenderLaye
                 }
             }
         }
-        RenderLayer armorRenderType = RenderLayer.getEntityCutoutNoCull(texture);
+        RenderLayer armorRenderType = RenderLayer.getEntityTranslucent(texture);
         getRenderer().reRender(getDefaultBakedModel(gem), poseStack, bufferSource, gem, armorRenderType,bufferSource.getBuffer(armorRenderType), partialTick, packedLight, OverlayTexture.DEFAULT_UV,insigniaColors[0], insigniaColors[1], insigniaColors[2], 1);
     }
 }
