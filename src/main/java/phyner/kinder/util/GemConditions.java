@@ -14,23 +14,14 @@ public class GemConditions {
     public HashMap<String,Float> biome;
 
     /*
-    white = 0
-    yellow = 1
-    blue = 2
-    pink = 3
-    yellow blue = 4
-    yellow pink = 5
-    pink blue = 6
+    white = 1
+    yellow = 2
+    blue = 3
+    pink = 4
+    yellow blue = 5
+    yellow pink = 6
+    pink blue = 7
     */
-    public GemConditions(Float tempMin, Float tempMax, Float tempIdeal, Float depthMin, Float depthMax, int essenceColor)
-    {
-        this.tempMin = tempMin;
-        this.tempIdeal = tempIdeal;
-        this.tempMax = tempMax;
-        this.depthMin = depthMin;
-        this.depthMax = depthMax;
-        this.essenceColor = essenceColor;
-    }
 
     public GemConditions(Float tempMin,Float tempIdeal, Float tempMax, Float depthMin, Float depthMax, int essenceColor, HashMap<String,Float> biome)
     {

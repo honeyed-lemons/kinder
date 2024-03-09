@@ -39,7 +39,7 @@ public class RubyEntity extends AbstractGemEntity {
         float tempMax = 2.0f;
         float depthMax = -255;
         float depthMin = 80;
-        int color = 0;
+        int color = 3;
         HashMap<String,Float> biomes = new HashMap<>();
         biomes.put("minecraft:nether_wastes",1f);
         biomes.put("minecraft:warped_forest",1f);
