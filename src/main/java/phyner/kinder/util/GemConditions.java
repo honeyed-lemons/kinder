@@ -1,17 +1,24 @@
 package phyner.kinder.util;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GemConditions {
     public float tempMin;
     public float tempIdeal;
     public float tempMax;
 
-    public int essenceColor;
     public float depthMin;
     public float depthMax;
 
-    public HashMap<String,Float> biome;
+
+    public HashMap<Item,GemColors> gems;
+
+    public HashMap<String, Float> biome;
 
     /*
     white = 1
@@ -23,14 +30,13 @@ public class GemConditions {
     pink blue = 7
     */
 
-    public GemConditions(Float tempMin,Float tempIdeal, Float tempMax, Float depthMin, Float depthMax, int essenceColor, HashMap<String,Float> biome)
-    {
+    public GemConditions(Float tempMin,Float tempIdeal,Float tempMax,Float depthMin,Float depthMax,HashMap<String, Float> biome,  HashMap<Item,GemColors> gems){
         this.tempMin = tempMin;
         this.tempIdeal = tempIdeal;
         this.tempMax = tempMax;
         this.depthMin = depthMin;
         this.depthMax = depthMax;
-        this.essenceColor = essenceColor;
         this.biome = biome;
+        this.gems = gems;
     }
 }

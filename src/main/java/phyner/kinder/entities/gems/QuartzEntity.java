@@ -13,10 +13,13 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import phyner.kinder.entities.AbstractVaryingGemEntity;
 import phyner.kinder.init.KinderItems;
+import phyner.kinder.util.GemColors;
 import phyner.kinder.util.GemConditions;
 import phyner.kinder.util.GemPlacements;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class QuartzEntity extends AbstractVaryingGemEntity {
     public QuartzEntity(EntityType<? extends TameableEntity> entityType,World world){
@@ -37,9 +40,26 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
         float tempMax = 2.0f;
         float depthMax = -255;
         float depthMin = 70;
-        int color = 6;
         HashMap<String,Float> biomes = new HashMap<>();
-        return new GemConditions(tempMin,tempIdeal,tempMax,depthMin,depthMax,color,biomes);
+        HashMap<Item, GemColors> gems = new HashMap<>() {
+        };
+        gems.put(KinderItems.QUARTZ_GEM_0,GemColors.WHITE);
+        gems.put(KinderItems.QUARTZ_GEM_1,GemColors.ORANGE);
+        gems.put(KinderItems.QUARTZ_GEM_2,GemColors.MAGENTA);
+        gems.put(KinderItems.QUARTZ_GEM_3,GemColors.LIGHT_BLUE);
+        gems.put(KinderItems.QUARTZ_GEM_4,GemColors.YELLOW);
+        gems.put(KinderItems.QUARTZ_GEM_5,GemColors.LIME);
+        gems.put(KinderItems.QUARTZ_GEM_6,GemColors.PINK);
+        gems.put(KinderItems.QUARTZ_GEM_7,GemColors.GRAY);
+        gems.put(KinderItems.QUARTZ_GEM_8,GemColors.LIGHT_GRAY);
+        gems.put(KinderItems.QUARTZ_GEM_9,GemColors.CYAN);
+        gems.put(KinderItems.QUARTZ_GEM_10,GemColors.PURPLE);
+        gems.put(KinderItems.QUARTZ_GEM_11,GemColors.BLUE);
+        gems.put(KinderItems.QUARTZ_GEM_12,GemColors.BROWN);
+        gems.put(KinderItems.QUARTZ_GEM_13,GemColors.GREEN);
+        gems.put(KinderItems.QUARTZ_GEM_14,GemColors.RED);
+        gems.put(KinderItems.QUARTZ_GEM_15,GemColors.BLACK);
+        return new GemConditions(tempMin,tempIdeal,tempMax,depthMin,depthMax,biomes,gems);
     }
 
     @Override
@@ -82,28 +102,6 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
     @Override
     public ItemStack gemItem(){
         return switch (getGemColorVariant()) {
-            case 1 -> KinderItems.QUARTZ_GEM_1.getDefaultStack();
-            case 2 -> KinderItems.QUARTZ_GEM_2.getDefaultStack();
-            case 3 -> KinderItems.QUARTZ_GEM_3.getDefaultStack();
-            case 4 -> KinderItems.QUARTZ_GEM_4.getDefaultStack();
-            case 5 -> KinderItems.QUARTZ_GEM_5.getDefaultStack();
-            case 6 -> KinderItems.QUARTZ_GEM_6.getDefaultStack();
-            case 7 -> KinderItems.QUARTZ_GEM_7.getDefaultStack();
-            case 8 -> KinderItems.QUARTZ_GEM_8.getDefaultStack();
-            case 9 -> KinderItems.QUARTZ_GEM_9.getDefaultStack();
-            case 10 -> KinderItems.QUARTZ_GEM_10.getDefaultStack();
-            case 11 -> KinderItems.QUARTZ_GEM_11.getDefaultStack();
-            case 12 -> KinderItems.QUARTZ_GEM_12.getDefaultStack();
-            case 13 -> KinderItems.QUARTZ_GEM_13.getDefaultStack();
-            case 14 -> KinderItems.QUARTZ_GEM_14.getDefaultStack();
-            case 15 -> KinderItems.QUARTZ_GEM_15.getDefaultStack();
-            default -> KinderItems.QUARTZ_GEM_0.getDefaultStack();
-        };
-    }
-
-    public ItemStack getRandomGemItem()
-    {
-        return switch (random.nextInt(15)){
             case 1 -> KinderItems.QUARTZ_GEM_1.getDefaultStack();
             case 2 -> KinderItems.QUARTZ_GEM_2.getDefaultStack();
             case 3 -> KinderItems.QUARTZ_GEM_3.getDefaultStack();

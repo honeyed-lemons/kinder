@@ -6,6 +6,7 @@ import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -13,6 +14,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import phyner.kinder.entities.AbstractGemEntity;
 import phyner.kinder.init.KinderItems;
+import phyner.kinder.util.GemColors;
 import phyner.kinder.util.GemConditions;
 import phyner.kinder.util.GemPlacements;
 
@@ -39,14 +41,15 @@ public class RubyEntity extends AbstractGemEntity {
         float tempMax = 2.0f;
         float depthMax = -255;
         float depthMin = 80;
-        int color = 3;
         HashMap<String,Float> biomes = new HashMap<>();
         biomes.put("minecraft:nether_wastes",1f);
         biomes.put("minecraft:warped_forest",1f);
         biomes.put("minecraft:crimson_forest",1f);
         biomes.put("minecraft:basalt_deltas",1f);
         biomes.put("minecraft:soul_sand_valley",1f);
-        return new GemConditions(tempMin,tempIdeal,tempMax,depthMin,depthMax,color,biomes);
+        HashMap<Item, GemColors> gem = new HashMap<>();
+        gem.put(KinderItems.RUBY_GEM,GemColors.RED);
+        return new GemConditions(tempMin,tempIdeal,tempMax,depthMin,depthMax,biomes,gem);
     }
     @Override
     @NotNull

@@ -153,6 +153,7 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
                     } else if (!player.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE))) {
                         player.dropItem(new ItemStack(Items.GLASS_BOTTLE),false);
                     }
+                    return ActionResult.success(world.isClient);
                 }
             } else if (itemStack.getItem() == KinderItems.PEARL_SHUCK && state.get(COOKED)) {
                 float randomWeight = world.random.nextFloat();
@@ -174,12 +175,11 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
                         pos.getY(),
                         pos.getZ(),
                         ((OysterBlockEntity) be).getPearl(world,pos));
+                return ActionResult.success(world.isClient);
             }
             else if (player.isSneaking() && player.isCreative() && !cooked && cooking) {
-                world.setBlockState(pos,
-                        state.with(COOKING,
-                                false).with(COOKED,
-                                true));
+                world.setBlockState(pos,state.with(COOKING,false).with(COOKED,true));
+                return ActionResult.success(world.isClient);
             }
         }
         return super.onUse(state,

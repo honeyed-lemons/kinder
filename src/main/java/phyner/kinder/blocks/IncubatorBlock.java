@@ -8,6 +8,8 @@ import net.minecraft.block.entity.BeehiveBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,6 +22,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -27,6 +30,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import phyner.kinder.KinderMod;
 import phyner.kinder.blocks.entities.IncubatorBlockEntity;
+import phyner.kinder.blocks.entities.OysterBlockEntity;
+import phyner.kinder.entities.AbstractGemEntity;
 import phyner.kinder.init.KinderBlocks;
 import phyner.kinder.init.KinderItems;
 
@@ -78,48 +83,63 @@ public class IncubatorBlock extends BlockWithEntity {
         BlockEntity be = world.getBlockEntity(pos);
         boolean cooking = state.get(COOKING);
         boolean cooked = state.get(COOKED);
-        if (hand == player.preferredHand)
-        if (be instanceof IncubatorBlockEntity) {
-            if (!cooking && !cooked) {
-                if (!state.get(ESSENCESLOT2).equals(0) && !state.get(ESSENCESLOT1).equals(0) && player.getStackInHand(hand) == ItemStack.EMPTY)
-                {
-                    world.setBlockState(pos,state.with(COOKING,true));
-                }
-                if (itemStack.getItem() == Items.GLASS_BOTTLE && !state.get(ESSENCESLOT1).equals(0)) {
-                    KinderMod.LOGGER.info("Draining");
-                    drainEssence(state,world,pos,player,hand);
-                } else {
-                    for (Map.Entry<Integer, Item> map : essenceHash().entrySet()) {
-                        if (itemStack.getItem() == map.getValue()) {
-                            if (state.get(ESSENCESLOT1).equals(0) || state.get(ESSENCESLOT2).equals(0)) {
-                                fillEssence(state,map.getKey(),world,pos);
-                                itemStack.decrement(1);
-                                world.playSound(player,player.getX(),player.getY(),player.getZ(),SoundEvents.ITEM_BOTTLE_EMPTY,SoundCategory.BLOCKS,1.0f,1.0f);
-                                if (itemStack.isEmpty()) {
-                                    player.setStackInHand(hand,
-                                            new ItemStack(Items.GLASS_BOTTLE));
-                                } else if (!player.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE))) { player.dropItem(new ItemStack(Items.GLASS_BOTTLE),false);
+        if (hand == player.preferredHand) {
+            if (be instanceof IncubatorBlockEntity) {
+                if (!cooking && !cooked) {
+                    if (!state.get(ESSENCESLOT2).equals(0) && !state.get(ESSENCESLOT1).equals(0) && player.getStackInHand(hand) == ItemStack.EMPTY) {
+                        world.setBlockState(pos,state.with(COOKING,true));
+                        return ActionResult.success(world.isClient);
+                    }
+                    if (itemStack.getItem() == Items.GLASS_BOTTLE && !state.get(ESSENCESLOT1).equals(0)) {
+                        KinderMod.LOGGER.info("Draining");
+                        drainEssence(state,world,pos,player,hand);
+                        return ActionResult.success(world.isClient);
+                    } else {
+                        for (Map.Entry<Integer, Item> map : essenceHash().entrySet()) {
+                            if (itemStack.getItem() == map.getValue()) {
+                                KinderMod.LOGGER.info("Knows you're holding essence");
+                                if (state.get(ESSENCESLOT1).equals(0) || state.get(ESSENCESLOT2).equals(0)) {
+                                    fillEssence(state,map.getKey(),world,pos);
+                                    itemStack.decrement(1);
+                                    world.playSound(player,player.getX(),player.getY(),player.getZ(),SoundEvents.ITEM_BOTTLE_EMPTY,SoundCategory.BLOCKS,1.0f,1.0f);
+                                    if (itemStack.isEmpty()) {
+                                        player.setStackInHand(hand,new ItemStack(Items.GLASS_BOTTLE));
+                                    }
+                                    else if (!player.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE))) {
+                                        player.dropItem(new ItemStack(Items.GLASS_BOTTLE),false);
+                                    }
+                                    return ActionResult.success(world.isClient);
                                 }
                             }
                         }
                     }
+                } else if (cooking && !cooked && player.isCreative() && player.isSneaky()) {
+                    world.setBlockState(pos,state.with(COOKED,true).with(COOKING,false));
+                    return ActionResult.success(world.isClient);
+                } else if (cooked) {
+                    world.scheduleBlockTick(pos,this,1);
+                    return ActionResult.success(world.isClient);
                 }
-            } else if (cooked && player.isSneaky()) {
-                world.scheduleBlockTick(pos, this, 4);
-            } else if (cooking && !cooked && player.isCreative() && player.isSneaky()) {
-                world.setBlockState(pos,state.with(COOKED,true).with(COOKING,false));
             }
         }
-
-
         return super.onUse(state,world,pos,player,hand,hit);
     }
 
-
+    public static void explode(World world,BlockPos pos) {
+        double x = pos.getX();
+        double y = pos.getY();
+        double z = pos.getZ();
+        world.createExplosion(null, x, y, z, 3.0F, World.ExplosionSourceType.BLOCK);
+    }
     public void scheduledTick(BlockState state,ServerWorld world,BlockPos pos,Random random) {
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof IncubatorBlockEntity) {
-            ((IncubatorBlockEntity) be).gemEntityType(world,pos);
+            ItemStack is = ((IncubatorBlockEntity) be).GemItemStack(world,pos).getDefaultStack();
+            if (is != null)
+            {
+                ItemScatterer.spawn(world,pos.getX(),pos.getY(),pos.getZ(),is);
+                FlushEssence(state,world,pos);
+            }
         }
     }
     public void fillEssence(BlockState state,int essencetofill,World world,BlockPos pos)
@@ -180,6 +200,6 @@ public class IncubatorBlock extends BlockWithEntity {
 
     public static void FlushEssence(BlockState state,World world,BlockPos pos)
     {
-        world.setBlockState(pos,state.with(ESSENCESLOT1,0).with(ESSENCESLOT2,0));
+        world.setBlockState(pos,state.with(ESSENCESLOT1,0).with(ESSENCESLOT2,0).with(COOKING,false).with(COOKED,false));
     }
 }

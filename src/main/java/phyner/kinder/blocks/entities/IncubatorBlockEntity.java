@@ -1,16 +1,16 @@
 package phyner.kinder.blocks.entities;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import phyner.kinder.KinderMod;
 import phyner.kinder.blocks.IncubatorBlock;
-import phyner.kinder.blocks.OysterBlock;
 import phyner.kinder.init.KinderBlocks;
 import phyner.kinder.init.KinderConditions;
+import phyner.kinder.init.KinderItems;
+import phyner.kinder.util.GemColors;
 import phyner.kinder.util.GemConditions;
 
 import java.util.Map;
@@ -35,6 +35,10 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity{
                     ticksElapsed++;
                 }
             }
+            if (state.get(IncubatorBlock.COOKING).equals(false) && ticksElapsed > 0)
+            {
+                ticksElapsed = 0;
+            }
         }
     }
     @Override
@@ -47,29 +51,37 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity{
         super.readNbt(nbt);
         ticksElapsed = nbt.getInt("te");
     }
-    public EntityType gemEntityType(World world, BlockPos blockPos)
+    public Item GemItemStack(World world,BlockPos blockPos)
     {
         BlockState bs = world.getBlockState(blockPos);
         int essenceColor = IncubatorBlock.combineEssences(bs.get(IncubatorBlock.ESSENCESLOT1),bs.get(IncubatorBlock.ESSENCESLOT2));
         float highestScore = 0;
-        EntityType highestScorer = null;
-        for (Map.Entry<EntityType, GemConditions> map : KinderConditions.GemConditions().entrySet())
+        Item highestScorerItemStack = KinderItems.RUBY_GEM;
+        for (GemConditions gemConditions : KinderConditions.conditions())
         {
-            float score = scoreGem(map.getValue(),world,blockPos,essenceColor);
-            if (score >= highestScore)
+            for (Map.Entry<Item,GemColors> map : gemConditions.gems.entrySet())
             {
-                highestScore = score;
-                highestScorer = map.getKey();
+                float score = scoreGem(gemConditions,world,blockPos,essenceColor, testEssence(map.getValue()));
+                if (score >= highestScore)
+                {
+                    highestScore = score;
+                    highestScorerItemStack = map.getKey();
+                    KinderMod.LOGGER.info(map.getKey().getTranslationKey()+" Score: "+score);
+                }
             }
-            KinderMod.LOGGER.info(map.getKey().getTranslationKey()+" "+score);
         }
-        assert highestScorer != null;
+        if (highestScore == 0)
+        {
+            IncubatorBlock.FlushEssence(bs,world,blockPos);
+            IncubatorBlock.explode(world,blockPos);
+            world.removeBlock(pos,false);
+            return null;
+        }
         KinderMod.LOGGER.info("Essence Color is "+essenceColor);
-        KinderMod.LOGGER.info("Winmer is "+highestScorer.getTranslationKey());
-        IncubatorBlock.FlushEssence(bs,world,pos);
-        return highestScorer;
+        KinderMod.LOGGER.info("Winmer is "+highestScorerItemStack.getTranslationKey());
+        return highestScorerItemStack;
     }
-    public static float scoreGem(GemConditions conditions,World world, BlockPos blockPos, int essenceColor)
+    public static float scoreGem(GemConditions conditions,World world, BlockPos blockPos,int essenceColor, int gemColor)
     {
         float score = 0;
         if (conditions.biome!=null)
@@ -80,10 +92,6 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity{
                 }
             }
         }
-        if (blockPos.getY() >= conditions.depthMax && blockPos.getY() <= conditions.depthMin)
-        {
-            score += 1f;
-        }
         if (getBiomeTemp(world,blockPos) >= conditions.tempMin && getBiomeTemp(world,blockPos) <= conditions.tempMax)
         {
             score += 1f;
@@ -92,13 +100,81 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity{
                 score += 0.5f;
             }
         }
-        score += world.random.nextFloat();
-
-        if (essenceColor == conditions.essenceColor)
+        if (score != 0)
+        {
+            if (blockPos.getY() >= conditions.depthMax && blockPos.getY() <= conditions.depthMin)
+            {
+                score += 1f;
+            }
+            else
+            {
+                score = 0;
+            }
+            if (score != 0)
+            {
+                score += world.random.nextFloat();
+            }
+        }
+        if (essenceColor == gemColor)
         {
             return score;
         }
         return 0;
     }
+    /*
+    white = 1
+    yellow = 2
+    blue = 3
+    pink = 4
+    yellow blue = 5
+    yellow pink = 6
+    pink blue = 7
+    */
 
+    /*
+        gems.put(KinderItems.QUARTZ_GEM_0,GemColors.WHITE);
+        gems.put(KinderItems.QUARTZ_GEM_1,GemColors.ORANGE);
+        gems.put(KinderItems.QUARTZ_GEM_2,GemColors.MAGENTA);
+        gems.put(KinderItems.QUARTZ_GEM_3,GemColors.LIGHT_BLUE);
+        gems.put(KinderItems.QUARTZ_GEM_4,GemColors.YELLOW);
+        gems.put(KinderItems.QUARTZ_GEM_5,GemColors.LIME);
+        gems.put(KinderItems.QUARTZ_GEM_6,GemColors.PINK);
+        gems.put(KinderItems.QUARTZ_GEM_7,GemColors.GRAY);
+        gems.put(KinderItems.QUARTZ_GEM_8,GemColors.LIGHT_GRAY);
+        gems.put(KinderItems.QUARTZ_GEM_9,GemColors.CYAN);
+        gems.put(KinderItems.QUARTZ_GEM_10,GemColors.PURPLE);
+        gems.put(KinderItems.QUARTZ_GEM_11,GemColors.BLUE);
+        gems.put(KinderItems.QUARTZ_GEM_12,GemColors.BROWN);
+        gems.put(KinderItems.QUARTZ_GEM_13,GemColors.GREEN);
+        gems.put(KinderItems.QUARTZ_GEM_14,GemColors.RED);
+        gems.put(KinderItems.QUARTZ_GEM_15,GemColors.BLACK);
+    */
+    public int testEssence(GemColors gemcolor)
+    {
+        int color = gemcolor.getId();
+        switch (color) {
+            case 0,7,8,15 -> {
+                return 1;
+            }
+            case 1,12 -> {
+                return 6;
+            }
+            case 2,10 -> {
+                return 7;
+            }
+            case 3,11 -> {
+                return 3;
+            }
+            case 4 -> {
+                return 2;
+            }
+            case 5,9,13 -> {
+                return 5;
+            }
+            case 6,14 -> {
+                return 4;
+            }
+        }
+        return 1;
+    }
 }

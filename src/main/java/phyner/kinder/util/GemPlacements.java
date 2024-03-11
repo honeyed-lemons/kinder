@@ -29,10 +29,12 @@ public enum GemPlacements {
     RIGHT_ARM(25);
     public final int id;
     private static final GemPlacements[] vals = GemPlacements.values();
-    GemPlacements(int id) {
+
+    GemPlacements(int id){
         this.id = id;
     }
-    public static GemPlacements getPlacement(int i) {
+
+    public static GemPlacements getPlacement(int i){
         return GemPlacements.vals[i];
     }
 }

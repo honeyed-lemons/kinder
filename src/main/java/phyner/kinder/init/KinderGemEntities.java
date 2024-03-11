@@ -20,35 +20,45 @@ public class KinderGemEntities {
 
     public static final EntityType<RubyEntity> RUBY = FabricEntityTypeBuilder.create()
             .entityFactory(RubyEntity::new)
-            .dimensions(EntityDimensions.changing(0.6F,1.45F))
+            .dimensions(EntityDimensions.changing(0.6F,
+                    1.45F))
             .build();
     public static final EntityType<QuartzEntity> QUARTZ = FabricEntityTypeBuilder.create()
             .entityFactory(QuartzEntity::new)
-            .dimensions(EntityDimensions.changing(0.8F,2F))
+            .dimensions(EntityDimensions.changing(0.8F,
+                    2F))
             .build();
 
     public static final EntityType<PearlEntity> PEARL = FabricEntityTypeBuilder.create()
             .entityFactory(PearlEntity::new)
-            .dimensions(EntityDimensions.changing(0.6F,0.75F))
+            .dimensions(EntityDimensions.changing(0.6F,
+                    0.75F))
             .build();
 
-    private static void register(String name, EntityType<?> type)
-    {
+    private static void register(String name,EntityType<?> type){
         GEMS.add(type);
-        Registry.register(Registries.ENTITY_TYPE, new Identifier(KinderMod.MOD_ID,name),type);
+        Registry.register(Registries.ENTITY_TYPE,
+                new Identifier(KinderMod.MOD_ID,
+                        name),
+                type);
     }
 
-    public static void registerEntities()
-    {
-        register("ruby",RUBY);
-        register("quartz",QUARTZ);
-        register("pearl",PEARL);
+    public static void registerEntities(){
+        register("ruby",
+                RUBY);
+        register("quartz",
+                QUARTZ);
+        register("pearl",
+                PEARL);
 
     }
-    public static void registerAttributes()
-    {
-        FabricDefaultAttributeRegistry.register(RUBY, RubyEntity.createGemAttributes());
-        FabricDefaultAttributeRegistry.register(PEARL, PearlEntity.createGemAttributes());
-        FabricDefaultAttributeRegistry.register(QUARTZ, QuartzEntity.createGemAttributes());
+
+    public static void registerAttributes(){
+        FabricDefaultAttributeRegistry.register(RUBY,
+                RubyEntity.createGemAttributes());
+        FabricDefaultAttributeRegistry.register(PEARL,
+                PearlEntity.createGemAttributes());
+        FabricDefaultAttributeRegistry.register(QUARTZ,
+                QuartzEntity.createGemAttributes());
     }
 }
