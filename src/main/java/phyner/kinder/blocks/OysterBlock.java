@@ -1,18 +1,17 @@
 package phyner.kinder.blocks;
 
-import com.mojang.serialization.MapCodec;
-import jdk.jshell.Snippet;
 import net.minecraft.block.*;
-import net.minecraft.block.entity.BeehiveBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -29,7 +28,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 import phyner.kinder.KinderMod;
 import phyner.kinder.blocks.entities.OysterBlockEntity;
@@ -42,22 +40,11 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
     public static final BooleanProperty COOKING = BooleanProperty.of("cooking");
 
 
-    protected static final VoxelShape BOTTOM_SHAPE = Block.createCuboidShape(0.0,
-            0.0,
-            0.0,
-            16.0,
-            8.0,
-            16.0);
+    protected static final VoxelShape BOTTOM_SHAPE = Block.createCuboidShape(0.0,0.0,0.0,16.0,8.0,16.0);
 
     public OysterBlock(Settings settings){
         super(settings);
-        setDefaultState(getDefaultState()
-                .with(Properties.HORIZONTAL_FACING,
-                        Direction.NORTH)
-                .with(WATERLOGGED,
-                        false).with(COOKED,
-                        false).with(COOKING,
-                        false));
+        setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING,Direction.NORTH).with(WATERLOGGED,false).with(COOKED,false).with(COOKING,false));
     }
 
     @Override
@@ -72,20 +59,13 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder){
-        builder.add(Properties.HORIZONTAL_FACING,
-                WATERLOGGED,
-                COOKED,
-                COOKING);
+        builder.add(Properties.HORIZONTAL_FACING,WATERLOGGED,COOKED,COOKING);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx){
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        return this.getDefaultState()
-                .with(Properties.HORIZONTAL_FACING,
-                        ctx.getHorizontalPlayerFacing().getOpposite())
-                .with(WATERLOGGED,
-                        fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING,ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED,fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
     }
 
     public FluidState getFluidState(BlockState state){
@@ -94,42 +74,29 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
 
     public BlockState getStateForNeighborUpdate(BlockState state,Direction direction,BlockState neighborState,WorldAccess world,BlockPos pos,BlockPos neighborPos){
         if (state.get(WATERLOGGED)) {
-            world.scheduleFluidTick(pos,
-                    Fluids.WATER,
-                    Fluids.WATER.getTickRate(world));
+            world.scheduleFluidTick(pos,Fluids.WATER,Fluids.WATER.getTickRate(world));
         }
-        return super.getStateForNeighborUpdate(state,
-                direction,
-                neighborState,
-                world,
-                pos,
-                neighborPos);
+        return super.getStateForNeighborUpdate(state,direction,neighborState,world,pos,neighborPos);
     }
 
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos,BlockState state){
-        return new OysterBlockEntity(pos,
-                state);
+        return new OysterBlockEntity(pos,state);
     }
 
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient ? null : checkType(type, KinderBlocks.OYSTER_BLOCK_ENTITY, OysterBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world,BlockState state,BlockEntityType<T> type){
+        return world.isClient ? null : checkType(type,KinderBlocks.OYSTER_BLOCK_ENTITY,OysterBlockEntity::tick);
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void onBreak(World world,BlockPos pos,BlockState state,PlayerEntity player){
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof OysterBlockEntity && state.get(WATERLOGGED) && state.get(COOKED) && !world.isClient) {
-            ItemScatterer.spawn(world,
-                    pos.getX(),
-                    pos.getY(),
-                    pos.getZ(),
-                    ((OysterBlockEntity) blockEntity).getPearl(world,
-                            pos));
+            ItemScatterer.spawn(world,pos.getX(),pos.getY(),pos.getZ(),((OysterBlockEntity) blockEntity).getPearl(world,pos));
         }
-        super.onBreak(world, pos, state, player);
+        super.onBreak(world,pos,state,player);
     }
 
     @Override
@@ -142,10 +109,7 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
             if (!cooked && !cooking && state.get(WATERLOGGED).equals(true)) {
                 Item item = itemStack.getItem();
                 if (item == KinderItems.WHITE_ESSENCE) {
-                    world.setBlockState(pos,
-                            state.with(COOKING,
-                                    true),
-                            Block.NOTIFY_ALL);
+                    world.setBlockState(pos,state.with(COOKING,true),Block.NOTIFY_ALL);
                     itemStack.decrement(1);
                     world.playSound(player,player.getX(),player.getY(),player.getZ(),SoundEvents.ITEM_BOTTLE_EMPTY,SoundCategory.BLOCKS,1.0f,1.0f);
                     if (itemStack.isEmpty()) {
@@ -162,7 +126,7 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
                 if (player.getStatusEffect(StatusEffects.LUCK) != null) {
                     luckWeight = 0.2f;
                 }
-                KinderMod.LOGGER.info("Random Weight is "+ randomWeight+", luck weight is "+luckWeight+", break chance is "+breakChance);
+                KinderMod.LOGGER.info("Random Weight is " + randomWeight + ", luck weight is " + luckWeight + ", break chance is " + breakChance);
                 if (randomWeight <= (luckWeight + breakChance)) {
                     ((OysterBlockEntity) be).setBreakChance(breakChance - 0.2f);
                     world.setBlockState(pos,state.with(COOKED,false));
@@ -170,23 +134,13 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
                     world.breakBlock(pos,true);
                 }
                 itemStack.damage(1,player,playerx -> playerx.sendToolBreakStatus(hand));
-                ItemScatterer.spawn(world,
-                        pos.getX(),
-                        pos.getY(),
-                        pos.getZ(),
-                        ((OysterBlockEntity) be).getPearl(world,pos));
+                ItemScatterer.spawn(world,pos.getX(),pos.getY(),pos.getZ(),((OysterBlockEntity) be).getPearl(world,pos));
                 return ActionResult.success(world.isClient);
-            }
-            else if (player.isSneaking() && player.isCreative() && !cooked && cooking) {
+            } else if (player.isSneaking() && player.isCreative() && !cooked && cooking) {
                 world.setBlockState(pos,state.with(COOKING,false).with(COOKED,true));
                 return ActionResult.success(world.isClient);
             }
         }
-        return super.onUse(state,
-                world,
-                pos,
-                player,
-                hand,
-                hit);
+        return super.onUse(state,world,pos,player,hand,hit);
     }
 }

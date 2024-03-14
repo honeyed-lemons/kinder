@@ -19,17 +19,16 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     public PearlEntity(EntityType<? extends TameableEntity> entityType,World world){
         super(entityType,world);
     }
+
     public static DefaultAttributeContainer.@NotNull Builder createGemAttributes(){
-        return createDefaultGemAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 15.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED,0.75)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE,5.0);
+        return createDefaultGemAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH,15.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED,0.75).add(EntityAttributes.GENERIC_ATTACK_DAMAGE,5.0);
     }
+
     @Override
-    public void interactGem(PlayerEntity player)
-    {
+    public void interactGem(PlayerEntity player){
         player.openHandledScreen(new GemScreenHandlerFactory());
     }
+
     @Override
     public boolean isSolider(){
         return false;
@@ -62,9 +61,7 @@ public class PearlEntity extends AbstractVaryingGemEntity {
 
     @Override
     public GemPlacements[] getPlacements(){
-        return new GemPlacements[]{
-                GemPlacements.CHEST
-        };
+        return new GemPlacements[]{GemPlacements.CHEST};
     }
 
     @Override
@@ -98,7 +95,8 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     public boolean UsesUniqueNames(){
         return true;
     }
+
     @Override
-    public void onInventoryChanged(Inventory sender) {
+    public void onInventoryChanged(Inventory sender){
     }
 }

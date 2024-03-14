@@ -35,10 +35,7 @@ public class GemItem extends Item {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context){
         if (context.getSide().equals(Direction.UP)) {
-            this.spawnGem(context.getStack(),
-                    context.getWorld(),
-                    context.getBlockPos(),
-                    context);
+            this.spawnGem(context.getStack(),context.getWorld(),context.getBlockPos(),context);
         }
         return ActionResult.CONSUME;
     }
@@ -56,44 +53,29 @@ public class GemItem extends Item {
         NbtCompound nbt = itemStack.getSubNbt("gem");
         if (!world.isClient) {
             if (nbt != null) {
-                Optional<Entity> entity = EntityType.getEntityFromNbt(nbt,
-                        world);
+                Optional<Entity> entity = EntityType.getEntityFromNbt(nbt,world);
                 if (entity.isPresent()) {
                     AbstractGemEntity gem = (AbstractGemEntity) entity.get();
-                    gem.setPos(pos.getX() + 0.5,
-                            pos.getY() + 1.0,
-                            pos.getZ() + 0.5F);
+                    gem.setPos(pos.getX() + 0.5,pos.getY() + 1.0,pos.getZ() + 0.5F);
                     gem.fallDistance = 0;
                     gem.speed = 0;
                     gem.setOnFire(false);
                     gem.setFireTicks(0);
                     gem.setHealth(gem.getMaxHealth());
                     gem.clearStatusEffects();
-                    gem.setVelocity(0,
-                            0,
-                            0);
+                    gem.setVelocity(0,0,0);
                     KinderMod.LOGGER.info("Spawning Gem, Name is " + gem.getName().getString());
                     world.spawnEntity(gem);
-                    gem.lookAtEntity(context.getPlayer(),
-                            90,
-                            90);
+                    gem.lookAtEntity(context.getPlayer(),90,90);
                     itemStack.setCount(0);
                 }
             } else {
                 {
                     if (itemStack.getNbt() != null) {
                         int perf = itemStack.getNbt().getInt("Perfection");
-                        spawnGemWONbt(itemStack,
-                                world,
-                                pos,
-                                context,
-                                perf);
+                        spawnGemWONbt(itemStack,world,pos,context,perf);
                     } else {
-                        spawnGemWONbt(itemStack,
-                                world,
-                                pos,
-                                context,
-                                3);
+                        spawnGemWONbt(itemStack,world,pos,context,3);
                     }
                 }
             }
@@ -101,9 +83,7 @@ public class GemItem extends Item {
     }
 
     public void spawnGemWONbt(ItemStack itemStack,World world,BlockPos pos,ItemUsageContext context,int perfection){
-        AbstractGemEntity gem = (AbstractGemEntity) Objects.requireNonNull(type.spawn(Objects.requireNonNull(world.getServer()).getWorld(world.getRegistryKey()),
-                pos.up(),
-                SpawnReason.MOB_SUMMONED));
+        AbstractGemEntity gem = (AbstractGemEntity) Objects.requireNonNull(type.spawn(Objects.requireNonNull(world.getServer()).getWorld(world.getRegistryKey()),pos.up(),SpawnReason.MOB_SUMMONED));
         gem.setGemVariantOnInitialSpawn = false;
         gem.setGemColorVariant(color.getId());
         gem.generateColors();
@@ -118,8 +98,7 @@ public class GemItem extends Item {
     public void appendTooltip(ItemStack stack,@Nullable World world,List<Text> tooltip,TooltipContext context){
         NbtCompound nbt = stack.getSubNbt("gem");
         if (nbt != null) {
-            Optional<Entity> entity = EntityType.getEntityFromNbt(nbt,
-                    world);
+            Optional<Entity> entity = EntityType.getEntityFromNbt(nbt,world);
             entity.ifPresent(value -> tooltip.add(Text.of(String.valueOf(value.getName().getString()))));
         }
     }

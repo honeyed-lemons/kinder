@@ -5,13 +5,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import phyner.kinder.KinderMod;
 import phyner.kinder.entities.gems.QuartzEntity;
-import phyner.kinder.entities.gems.RubyEntity;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 @Environment(EnvType.CLIENT)
 public class QuartzEntityModel extends DefaultedEntityGeoModel<QuartzEntity> {
 
-    public QuartzEntityModel() {
-        super(new Identifier(KinderMod.MOD_ID,"gems/quartz/quartz"), true);
+    public QuartzEntityModel(){
+        super(new Identifier(KinderMod.MOD_ID,"gems/quartz/quartz"),true);
     }
 }

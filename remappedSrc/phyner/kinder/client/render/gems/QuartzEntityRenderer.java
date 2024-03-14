@@ -12,8 +12,8 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 @Environment(EnvType.CLIENT)
 public class QuartzEntityRenderer extends GeoEntityRenderer<QuartzEntity> {
-    public QuartzEntityRenderer(EntityRendererFactory.Context renderManager) {
-        super(renderManager, new QuartzEntityModel());
+    public QuartzEntityRenderer(EntityRendererFactory.Context renderManager){
+        super(renderManager,new QuartzEntityModel());
         addRenderLayer(new GemSkinLayer<>(this));
         addRenderLayer(new GemHairLayer<>(this));
         addRenderLayer(new GemInsigniaLayer<>(this));
@@ -22,7 +22,7 @@ public class QuartzEntityRenderer extends GeoEntityRenderer<QuartzEntity> {
     }
 
     @Override
-    public boolean hasLabel(QuartzEntity animatable) {
+    public boolean hasLabel(QuartzEntity animatable){
         return super.hasLabel(animatable);
     }
 }

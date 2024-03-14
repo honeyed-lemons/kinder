@@ -36,7 +36,7 @@ public class ColorUtil {
 
     public static String getColorName(int c){
         Random random = new Random();
-        if(c > 15 || c < 0){
+        if (c > 15 || c < 0) {
             return ColorUtil.getColorName(random.nextInt(16));
         }
         return switch (c) {

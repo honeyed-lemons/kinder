@@ -11,44 +11,39 @@ import phyner.kinder.entities.AbstractGemEntity;
 
 import java.util.EnumSet;
 
-public class GemTrackOwnerAttackerGoal
-        extends TrackTargetGoal {
+public class GemTrackOwnerAttackerGoal extends TrackTargetGoal {
 
     private final AbstractGemEntity tameable;
+    private final boolean canFight;
     private LivingEntity attacker;
     private int lastAttackedTime;
-    private final boolean canFight;
 
-    public GemTrackOwnerAttackerGoal(AbstractGemEntity tameable, boolean canFight) {
-        super(tameable, false);
+    public GemTrackOwnerAttackerGoal(AbstractGemEntity tameable,boolean canFight){
+        super(tameable,false);
         this.tameable = tameable;
         this.canFight = canFight;
         this.setControls(EnumSet.of(Goal.Control.TARGET));
     }
 
-    public boolean canStart() {
+    public boolean canStart(){
         if (this.tameable.isTamed()) {
             LivingEntity livingEntity = this.tameable.getOwner();
-            if (livingEntity == null)
-            {
+            if (livingEntity == null) {
                 return false;
             }
-            if (!canFight)
-            {
+            if (!canFight) {
                 return false;
-            }
-            else
-            {
+            } else {
                 this.attacker = livingEntity.getAttacker();
                 int i = livingEntity.getLastAttackedTime();
-                return i != this.lastAttackedTime && this.canTrack(this.attacker, TargetPredicate.DEFAULT) && this.tameable.canAttackWithOwner(this.attacker, livingEntity);
+                return i != this.lastAttackedTime && this.canTrack(this.attacker,TargetPredicate.DEFAULT) && this.tameable.canAttackWithOwner(this.attacker,livingEntity);
             }
         } else {
             return false;
         }
     }
 
-    public void start() {
+    public void start(){
         this.mob.setTarget(this.attacker);
         LivingEntity livingEntity = this.tameable.getOwner();
         if (livingEntity != null) {

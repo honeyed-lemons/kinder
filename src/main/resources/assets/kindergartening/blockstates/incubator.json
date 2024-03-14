@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "facing=east,cooking=false,cooked=false,half=lower": {
+      "model": "kindergartening:block/incubator_inactive",
+      "y": 90
+    },
+    "facing=north,cooking=false,cooked=false,half=lower": {
+      "model": "kindergartening:block/incubator_inactive"
+    },
+    "facing=south,cooking=false,cooked=false,half=lower": {
+      "model": "kindergartening:block/incubator_inactive",
+      "y": 180
+    },
+    "facing=west,cooking=false,cooked=false,half=lower": {
+      "model": "kindergartening:block/incubator_inactive",
+      "y": 270
+    },
+    "facing=east,cooking=true,cooked=false,half=lower": {
+      "model": "kindergartening:block/incubator_working",
+      "y": 90
+    },
+    "facing=north,cooking=true,cooked=false,half=lower": {
+      "model": "kindergartening:block/incubator_working"
+    },
+    "facing=south,cooking=true,cooked=false,half=lower": {
+      "model": "kindergartening:block/incubator_working",
+      "y": 180
+    },
+    "facing=west,cooking=true,cooked=false,half=lower": {
+      "model": "kindergartening:block/incubator_working",
+      "y": 270
+    },
+    "facing=east,cooking=false,cooked=true,half=lower": {
+      "model": "kindergartening:block/incubator_complete",
+      "y": 90
+    },
+    "facing=north,cooking=false,cooked=true,half=lower": {
+      "model": "kindergartening:block/incubator_complete"
+    },
+    "facing=south,cooking=false,cooked=true,half=lower": {
+      "model": "kindergartening:block/incubator_complete",
+      "y": 180
+    },
+    "facing=west,cooking=false,cooked=true,half=lower": {
+      "model": "kindergartening:block/incubator_complete",
+      "y": 270
+    },
+    "facing=east,cooking=false,cooked=false,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing",
+      "y": 90
+    },
+    "facing=north,cooking=false,cooked=false,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing"
+    },
+    "facing=south,cooking=false,cooked=false,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing",
+      "y": 180
+    },
+    "facing=west,cooking=false,cooked=false,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing",
+      "y": 270
+    },
+    "facing=east,cooking=true,cooked=false,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing",
+      "y": 90
+    },
+    "facing=north,cooking=true,cooked=false,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing"
+    },
+    "facing=south,cooking=true,cooked=false,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing",
+      "y": 180
+    },
+    "facing=west,cooking=true,cooked=false,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing",
+      "y": 270
+    },
+    "facing=east,cooking=false,cooked=true,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing",
+      "y": 90
+    },
+    "facing=north,cooking=false,cooked=true,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing"
+    },
+    "facing=south,cooking=false,cooked=true,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing",
+      "y": 180
+    },
+    "facing=west,cooking=false,cooked=true,half=upper": {
+      "model": "kindergartening:block/empty_incubator_thing",
+      "y": 270
+    }
+  }
+}

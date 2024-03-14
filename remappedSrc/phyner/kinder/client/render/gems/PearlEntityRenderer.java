@@ -12,8 +12,8 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 @Environment(EnvType.CLIENT)
 public class PearlEntityRenderer extends GeoEntityRenderer<PearlEntity> {
-    public PearlEntityRenderer(EntityRendererFactory.Context renderManager) {
-        super(renderManager, new PearlEntityModel());
+    public PearlEntityRenderer(EntityRendererFactory.Context renderManager){
+        super(renderManager,new PearlEntityModel());
         addRenderLayer(new GemSkinLayer<>(this));
         addRenderLayer(new GemHairLayer<>(this));
         addRenderLayer(new GemInsigniaLayer<>(this));
@@ -22,7 +22,7 @@ public class PearlEntityRenderer extends GeoEntityRenderer<PearlEntity> {
     }
 
     @Override
-    public boolean hasLabel(PearlEntity animatable) {
+    public boolean hasLabel(PearlEntity animatable){
         return super.hasLabel(animatable);
     }
 

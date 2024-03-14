@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "kindergartening:item/pink_gem_seeds"
+  }
+}

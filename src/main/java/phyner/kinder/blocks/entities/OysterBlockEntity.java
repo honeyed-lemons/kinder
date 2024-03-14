@@ -1,16 +1,11 @@
 package phyner.kinder.blocks.entities;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
-import net.minecraft.world.biome.BuiltinBiomes;
 import phyner.kinder.KinderMod;
 import phyner.kinder.blocks.OysterBlock;
 import phyner.kinder.init.KinderBlocks;
@@ -21,42 +16,40 @@ import java.util.Arrays;
 
 public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
 
-    public static int ticksElapsed;
+    public int ticksElapsed;
     public float breakChance = 1f;
+
     public OysterBlockEntity(BlockPos pos,BlockState state){
-        super(KinderBlocks.OYSTER_BLOCK_ENTITY,
-                pos,
-                state);
+        super(KinderBlocks.OYSTER_BLOCK_ENTITY,pos,state);
     }
-    @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.putInt("te", ticksElapsed);
-        nbt.putFloat("breakChance", breakChance);
-    }
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        ticksElapsed = nbt.getInt("te");
-        breakChance = nbt.getFloat("breakChance");
-    }
+
     public static void tick(World world,BlockPos pos,BlockState state,OysterBlockEntity blockEntity){
-        if (state.get(OysterBlock.COOKING).equals(true) && state.get(OysterBlock.WATERLOGGED))
-        {
-            if (ticksElapsed >= (24000 / (getDownfall(world,pos) + 0.5)))
-            {
+        if (state.get(OysterBlock.COOKING).equals(true) && state.get(OysterBlock.WATERLOGGED)) {
+            if (blockEntity.ticksElapsed >= (24000 / (getDownfall(world,pos) + 0.5))) {
                 world.setBlockState(pos,state.with(OysterBlock.COOKED,true).with(OysterBlock.COOKING,false));
-                ticksElapsed = 0;
-            }
-            else
-            {
-                ticksElapsed++;
+                blockEntity.ticksElapsed = 0;
+            } else {
+                blockEntity.ticksElapsed++;
             }
         }
     }
 
-    public ItemStack getPearl(World world,BlockPos blockPos) {
-        float biomeTemp = getBiomeTemp(world, blockPos);
+    @Override
+    public void writeNbt(NbtCompound nbt){
+        super.writeNbt(nbt);
+        nbt.putInt("te",ticksElapsed);
+        nbt.putFloat("breakChance",breakChance);
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt){
+        super.readNbt(nbt);
+        ticksElapsed = nbt.getInt("te");
+        breakChance = nbt.getFloat("breakChance");
+    }
+
+    public ItemStack getPearl(World world,BlockPos blockPos){
+        float biomeTemp = getBiomeTemp(world,blockPos);
         int pearlSet;
         float minVal;
         float maxVal;
@@ -96,69 +89,56 @@ public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
         finalPearlItemStack.getOrCreateNbt().putInt("Perfection",getPerfection(blockPos));
         return finalPearlItemStack;
     }
-    public int getPerfection(BlockPos blockPos)
-    {
+
+    public int getPerfection(BlockPos blockPos){
         int ylevel = blockPos.getY();
         float val = 3;
-        if (ylevel >= 90-7)
-        {
+        if (ylevel >= 83) {
             val = 1;
-        } else if (ylevel >= 74-7) {
+        } else if (ylevel >= 67) {
             val = 2;
-        } else if (ylevel >= 63-7) {
+        } else if (ylevel >= 56) {
             val = 3;
-        } else if (ylevel >= 50-7) {
+        } else if (ylevel >= 43) {
             val = 4;
-        } else if (ylevel >= 40-7) {
+        } else if (ylevel >= 33) {
             val = 5;
-        } else if (ylevel >= 30-7) {
+        } else if (ylevel >= 23) {
             val = 6;
         }
-        val = (float) (val * (getDownfall(world, blockPos)+0.1));
-        if (val > 6)
-        {
+        val = (float) (val * (getDownfall(world,blockPos) + 0.1));
+        if (val > 6) {
             val = 6;
         }
-        if (val <= 0)
-        {
+        if (val <= 0) {
             val = 1;
         }
-        KinderMod.LOGGER.info("Pearl perfection is "+ Math.round(val));
+        KinderMod.LOGGER.info("Pearl perfection is " + Math.round(val));
         return Math.round(val);
     }
 
-    public ArrayList<Item> genPearlSet(int pearlSet) {
+    public ArrayList<Item> genPearlSet(int pearlSet){
         ArrayList<Item> pearls = new ArrayList<>();
 
         switch (pearlSet) {
-            case 4 -> pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_0,
-                    KinderItems.PEARL_GEM_14,
-                    KinderItems.PEARL_GEM_2,
-                    KinderItems.PEARL_GEM_6));
-            case 3 -> pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_1,
-                    KinderItems.PEARL_GEM_2,
-                    KinderItems.PEARL_GEM_7,
-                    KinderItems.PEARL_GEM_8));
-            case 2 -> pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_4,
-                    KinderItems.PEARL_GEM_5,
-                    KinderItems.PEARL_GEM_13,
-                    KinderItems.PEARL_GEM_3));
-            case 1 -> pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_11,
-                    KinderItems.PEARL_GEM_9,
-                    KinderItems.PEARL_GEM_15,
-                    KinderItems.PEARL_GEM_10));
+            case 4 ->
+                    pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_0,KinderItems.PEARL_GEM_14,KinderItems.PEARL_GEM_2,KinderItems.PEARL_GEM_6));
+            case 3 ->
+                    pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_1,KinderItems.PEARL_GEM_2,KinderItems.PEARL_GEM_7,KinderItems.PEARL_GEM_8));
+            case 2 ->
+                    pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_4,KinderItems.PEARL_GEM_5,KinderItems.PEARL_GEM_13,KinderItems.PEARL_GEM_3));
+            case 1 ->
+                    pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_11,KinderItems.PEARL_GEM_9,KinderItems.PEARL_GEM_15,KinderItems.PEARL_GEM_10));
         }
 
         return pearls;
     }
 
-    public void setBreakChance(float nbreakChance)
-    {
-        breakChance = nbreakChance;
+    public float getBreakChance(){
+        return breakChance;
     }
 
-    public float getBreakChance()
-    {
-        return breakChance;
+    public void setBreakChance(float nbreakChance){
+        breakChance = nbreakChance;
     }
 }

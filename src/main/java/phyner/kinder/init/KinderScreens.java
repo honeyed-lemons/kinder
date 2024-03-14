@@ -11,17 +11,13 @@ import phyner.kinder.client.render.screens.PearlScreen;
 import phyner.kinder.client.render.screens.handlers.PearlScreenHandler;
 
 public class KinderScreens {
-    public static final ScreenHandlerType<PearlScreenHandler> PEARL_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(PearlScreenHandler::new);
-
     public static void init(){
-        Registry.register(Registries.SCREEN_HANDLER,
-                new Identifier(KinderMod.MOD_ID,
-                        "pearlinventory"),
-                PEARL_SCREEN_HANDLER);
-    }
+        Registry.register(Registries.SCREEN_HANDLER,new Identifier(KinderMod.MOD_ID,"pearlinventory"),PEARL_SCREEN_HANDLER);
+    }    public static final ScreenHandlerType<PearlScreenHandler> PEARL_SCREEN_HANDLER = new ExtendedScreenHandlerType<>(PearlScreenHandler::new);
 
     public static void clientint(){
-        HandledScreens.register(PEARL_SCREEN_HANDLER,
-                PearlScreen::new);
+        HandledScreens.register(PEARL_SCREEN_HANDLER,PearlScreen::new);
     }
+
+
 }

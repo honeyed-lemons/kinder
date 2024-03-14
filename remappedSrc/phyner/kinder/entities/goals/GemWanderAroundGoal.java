@@ -12,17 +12,19 @@ public class GemWanderAroundGoal extends WanderAroundFarGoal {
     protected AbstractGemEntity gem;
     protected float gemProbability;
 
-    public GemWanderAroundGoal(PathAwareEntity pathAwareEntity, double d, float gemProbability) {
-        super(pathAwareEntity, d);
+    public GemWanderAroundGoal(PathAwareEntity pathAwareEntity,double d,float gemProbability){
+        super(pathAwareEntity,d);
         gem = (AbstractGemEntity) mob;
         this.gemProbability = gemProbability;
     }
+
     @Override
-    public boolean shouldContinue() {
+    public boolean shouldContinue(){
         return !gem.getNavigation().isIdle() && !gem.hasPassengers() && gem.getMovementType() == 0;
     }
+
     @Override
-    public boolean canStart() {
+    public boolean canStart(){
         if (gem.hasPassengers() || (!ignoringChance && gem.getRandom().nextInt(WanderAroundGoal.toGoalTicks(chance)) != 0)) {
             return false;
         }
@@ -42,13 +44,13 @@ public class GemWanderAroundGoal extends WanderAroundFarGoal {
 
     @Override
     @Nullable
-    protected Vec3d getWanderTarget() {
+    protected Vec3d getWanderTarget(){
         if (this.gem.isInsideWaterOrBubbleColumn()) {
-            Vec3d vec3d = FuzzyTargeting.find(this.gem, 15, 7);
+            Vec3d vec3d = FuzzyTargeting.find(this.gem,15,7);
             return vec3d == null ? super.getWanderTarget() : vec3d;
         }
         if (this.gem.getRandom().nextFloat() >= this.gemProbability) {
-            return FuzzyTargeting.find(this.gem, 10, 7);
+            return FuzzyTargeting.find(this.gem,10,7);
         }
         return super.getWanderTarget();
     }

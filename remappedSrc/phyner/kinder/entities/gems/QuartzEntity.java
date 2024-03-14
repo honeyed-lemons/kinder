@@ -16,14 +16,11 @@ import phyner.kinder.util.GemPlacements;
 
 public class QuartzEntity extends AbstractVaryingGemEntity {
     public QuartzEntity(EntityType<? extends TameableEntity> entityType,World world){
-        super(entityType,
-                world);
+        super(entityType,world);
     }
+
     public static DefaultAttributeContainer.@NotNull Builder createGemAttributes(){
-        return createDefaultGemAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED,0.60)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE,5.0);
+        return createDefaultGemAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH,40.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED,0.60).add(EntityAttributes.GENERIC_ATTACK_DAMAGE,5.0);
     }
 
     @Override
@@ -58,9 +55,7 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
 
     @Override
     public GemPlacements[] getPlacements(){
-        return new GemPlacements[]{
-                GemPlacements.CHEST
-        };
+        return new GemPlacements[]{GemPlacements.CHEST};
     }
 
     @Override

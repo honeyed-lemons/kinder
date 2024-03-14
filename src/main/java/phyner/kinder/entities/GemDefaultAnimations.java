@@ -13,40 +13,33 @@ public final class GemDefaultAnimations {
     public static final RawAnimation ARMS_IDLE = RawAnimation.begin().thenPlay("arms.idle");
 
 
-    public static <T extends GeoAnimatable> AnimationController<T> genericGemWalkLegsController(T animatable) {
-        return new AnimationController<>(animatable,
-                "LegWalk",
-                0,
-                state -> {
-                    if (state.isMoving()) {
-                        return state.setAndContinue(LEGS_WALK);
-                    } else {
-                        return PlayState.STOP;
-                    }
-                });
+    public static <T extends GeoAnimatable> AnimationController<T> genericGemWalkLegsController(T animatable){
+        return new AnimationController<>(animatable,"LegWalk",0,state -> {
+            if (state.isMoving()) {
+                return state.setAndContinue(LEGS_WALK);
+            } else {
+                return PlayState.STOP;
+            }
+        });
     }
-    public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericGemWalkArmsController(T animatable) {
-        return new AnimationController<>(animatable,
-                "ArmWalk",
-                0,
-                state -> {
-                    if (state.isMoving()) {
-                        return state.setAndContinue(ARMS_WALK);
-                    } else {
-                        return PlayState.STOP;
-                    }
-                });
+
+    public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericGemWalkArmsController(T animatable){
+        return new AnimationController<>(animatable,"ArmWalk",0,state -> {
+            if (state.isMoving()) {
+                return state.setAndContinue(ARMS_WALK);
+            } else {
+                return PlayState.STOP;
+            }
+        });
     }
-    public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericGemPearlArmsController(T animatable) {
-        return new AnimationController<>(animatable,
-                "GemArmsIdle",
-                5,
-                state -> {
-                    if (!state.isMoving()) {
-                        return state.setAndContinue(ARMS_IDLE);
-                    } else {
-                        return state.setAndContinue(ARMS_WALK);
-                    }
-                });
+
+    public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericGemPearlArmsController(T animatable){
+        return new AnimationController<>(animatable,"GemArmsIdle",5,state -> {
+            if (!state.isMoving()) {
+                return state.setAndContinue(ARMS_IDLE);
+            } else {
+                return state.setAndContinue(ARMS_WALK);
+            }
+        });
     }
 }

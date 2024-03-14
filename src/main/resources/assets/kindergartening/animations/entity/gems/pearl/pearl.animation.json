@@ -1,67 +1,115 @@
 {
-	"format_version": "1.8.0",
-	"animations": {
-		"arms.walk": {
-			"loop": true,
-			"bones": {
-				"rightArm": {
-					"rotation": ["Math.sin(query.anim_time * (600 + query.ground_speed)) * (35 + query.ground_speed)", 0, 0]
-				},
-				"leftArm": {
-					"rotation": ["Math.sin(query.anim_time * (-600 + query.ground_speed)) * (35 + query.ground_speed)", 0, 0]
-				}
-			}
-		},
-		"legs.walk": {
-			"loop": true,
-			"animation_length": 18.08,
-			"bones": {
-				"rightLeg": {
-					"rotation": ["Math.sin(query.anim_time * (-600 + query.ground_speed)) * (35 + query.ground_speed)", 0, 0]
-				},
-				"leftLeg": {
-					"rotation": ["Math.sin(query.anim_time * (600 + query.ground_speed)) * (35 + query.ground_speed)", 0, 0]
-				}
-			}
-		},
-		"arms.use": {
-			"animation_length": 0.36,
-			"override_previous_animation": true,
-			"bones": {
-				"rightArm": {
-					"rotation": {
-						"0.0": {
-							"post": [0, 0, 0],
-							"lerp_mode": "catmullrom"
-						},
-						"0.12": {
-							"post": [-77.5, 0, 0],
-							"lerp_mode": "catmullrom"
-						},
-						"0.24": {
-							"post": [-20.89746, -25.90999, -44.07668],
-							"lerp_mode": "catmullrom"
-						},
-						"0.36": {
-							"post": [0, 0, 0],
-							"lerp_mode": "catmullrom"
-						}
-					}
-				}
-			}
-		},
-		"arms.idle": {
-			"loop": true,
-			"bones": {
-				"leftArm": {
-					"rotation": [16.18923, 13.5202, 24.0697],
-					"position": [0, 0, 1]
-				},
-				"rightArm": {
-					"rotation": [16.18923, -13.52019, -24.06968],
-					"position": [0, 0, 1]
-				}
-			}
-		}
-	}
+  "format_version": "1.8.0",
+  "animations": {
+    "arms.walk": {
+      "loop": true,
+      "bones": {
+        "rightArm": {
+          "rotation": [
+            "Math.sin(query.anim_time * (600 + query.ground_speed)) * (35 + query.ground_speed)",
+            0,
+            0
+          ]
+        },
+        "leftArm": {
+          "rotation": [
+            "Math.sin(query.anim_time * (-600 + query.ground_speed)) * (35 + query.ground_speed)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "legs.walk": {
+      "loop": true,
+      "animation_length": 18.08,
+      "bones": {
+        "rightLeg": {
+          "rotation": [
+            "Math.sin(query.anim_time * (-600 + query.ground_speed)) * (35 + query.ground_speed)",
+            0,
+            0
+          ]
+        },
+        "leftLeg": {
+          "rotation": [
+            "Math.sin(query.anim_time * (600 + query.ground_speed)) * (35 + query.ground_speed)",
+            0,
+            0
+          ]
+        }
+      }
+    },
+    "arms.use": {
+      "animation_length": 0.36,
+      "override_previous_animation": true,
+      "bones": {
+        "rightArm": {
+          "rotation": {
+            "0.0": {
+              "post": [
+                0,
+                0,
+                0
+              ],
+              "lerp_mode": "catmullrom"
+            },
+            "0.12": {
+              "post": [
+                -77.5,
+                0,
+                0
+              ],
+              "lerp_mode": "catmullrom"
+            },
+            "0.24": {
+              "post": [
+                -20.89746,
+                -25.90999,
+                -44.07668
+              ],
+              "lerp_mode": "catmullrom"
+            },
+            "0.36": {
+              "post": [
+                0,
+                0,
+                0
+              ],
+              "lerp_mode": "catmullrom"
+            }
+          }
+        }
+      }
+    },
+    "arms.idle": {
+      "loop": true,
+      "bones": {
+        "leftArm": {
+          "rotation": [
+            16.18923,
+            13.5202,
+            24.0697
+          ],
+          "position": [
+            0,
+            0,
+            1
+          ]
+        },
+        "rightArm": {
+          "rotation": [
+            16.18923,
+            -13.52019,
+            -24.06968
+          ],
+          "position": [
+            0,
+            0,
+            1
+          ]
+        }
+      }
+    }
+  }
 }
