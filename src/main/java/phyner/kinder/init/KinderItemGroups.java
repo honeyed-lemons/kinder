@@ -50,7 +50,9 @@ public class KinderItemGroups {
         entries.add(KinderItems.PEARL_SHUCK);
         entries.add(KinderBlocks.OYSTER_BLOCK.asItem());
         entries.add(KinderBlocks.INCUBATOR_BLOCK.asItem());
-        entries.add(KinderBlocks.DRAINED_BLOCK.asItem());
+        entries.add(KinderBlocks.COLD_DRAINED_BLOCK.asItem());
+        entries.add(KinderBlocks.TEMP_DRAINED_BLOCK.asItem());
+        entries.add(KinderBlocks.HOT_DRAINED_BLOCK.asItem());
         entries.add(KinderItems.DRIED_GEM_SEEDS);
         entries.add(KinderItems.WHITE_GEM_SEEDS);
         entries.add(KinderBlocks.WHITE_GEM_CROP_FLOWER.asItem());

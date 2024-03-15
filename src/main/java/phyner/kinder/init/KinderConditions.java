@@ -29,18 +29,23 @@ public class KinderConditions {
         cruxes.put(BlockTags.REDSTONE_ORES,0.2f);
         cruxes.put(BlockTags.GOLD_ORES,0.3f);
         cruxes.put(BlockTags.DIRT,-0.4f);
+        cruxes.put(BlockTags.TERRACOTTA,0.1f);
         return cruxes;
     }
 
     public static HashMap<Block, Float> cruxblocks(){
         HashMap<Block, Float> cruxes = new HashMap<>();
-        cruxes.put(KinderBlocks.DRAINED_BLOCK,-0.4f);
+        cruxes.put(KinderBlocks.HOT_DRAINED_BLOCK,-0.4f);
+        cruxes.put(KinderBlocks.TEMP_DRAINED_BLOCK,-0.4f);
+        cruxes.put(KinderBlocks.COLD_DRAINED_BLOCK,-0.4f);
         cruxes.put(Blocks.GRAVEL,-0.1f);
         cruxes.put(Blocks.SCULK,0.25f);
+        cruxes.put(Blocks.CLAY,0.1f);
         return cruxes;
     }
 
     public static GemConditions RubyConditions(){
+        float baseRarity = 0;
         float tempMin = 0.5f;
         float tempIdeal = 2.0f;
         float tempMax = 2.0f;
@@ -54,10 +59,11 @@ public class KinderConditions {
         biomes.put("minecraft:soul_sand_valley",1f);
         HashMap<Item, GemColors> gem = new HashMap<>();
         gem.put(KinderItems.RUBY_GEM,GemColors.RED);
-        return new GemConditions(tempMin,tempIdeal,tempMax,depthMin,depthMax,biomes,gem);
+        return new GemConditions(baseRarity,tempMin,tempIdeal,tempMax,depthMin,depthMax,biomes,gem);
     }
 
     public static GemConditions QuartzConditions(){
+        float baseRarity = -0.3f;
         float tempMin = 0.0f;
         float tempIdeal = 0.8f;
         float tempMax = 2.0f;
@@ -81,7 +87,7 @@ public class KinderConditions {
         gems.put(KinderItems.QUARTZ_GEM_13,GemColors.GREEN);
         gems.put(KinderItems.QUARTZ_GEM_14,GemColors.RED);
         gems.put(KinderItems.QUARTZ_GEM_15,GemColors.BLACK);
-        return new GemConditions(tempMin,tempIdeal,tempMax,depthMin,depthMax,biomes,gems);
+        return new GemConditions(baseRarity,tempMin,tempIdeal,tempMax,depthMin,depthMax,biomes,gems);
     }
 }
 

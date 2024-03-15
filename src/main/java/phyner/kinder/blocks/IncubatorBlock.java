@@ -46,10 +46,11 @@ public class IncubatorBlock extends BlockWithEntity {
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
     protected static final VoxelShape BOTTOM_SHAPE = Block.createCuboidShape(4.0,0.0,4.0,12.0,16.0,12.0);
     protected static final VoxelShape TOP_SHAPE = Block.createCuboidShape(4.0,0.0,4.0,12.0,13.0,12.0);
+    public static final BooleanProperty LIT = BooleanProperty.of("lit");;
 
     public IncubatorBlock(Settings settings){
         super(settings);
-        setDefaultState(getDefaultState().with(ESSENCESLOT1,0).with(ESSENCESLOT2,0).with(COOKED,false).with(COOKING,false).with(Properties.HORIZONTAL_FACING,Direction.NORTH).with(HALF,DoubleBlockHalf.LOWER));
+        setDefaultState(getDefaultState().with(ESSENCESLOT1,0).with(ESSENCESLOT2,0).with(COOKED,false).with(COOKING,false).with(Properties.HORIZONTAL_FACING,Direction.NORTH).with(HALF,DoubleBlockHalf.LOWER).with(LIT,false));
     }
 
     public static HashMap<Integer, Item> essenceHash(){
@@ -101,6 +102,7 @@ public class IncubatorBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getOutlineShape(BlockState state,BlockView world,BlockPos pos,ShapeContext context){
         if (state.get(HALF).equals(DoubleBlockHalf.LOWER)) {
             return BOTTOM_SHAPE;
@@ -111,7 +113,7 @@ public class IncubatorBlock extends BlockWithEntity {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder){
-        builder.add(Properties.HORIZONTAL_FACING,ESSENCESLOT1,ESSENCESLOT2,COOKED,COOKING,HALF);
+        builder.add(Properties.HORIZONTAL_FACING,ESSENCESLOT1,ESSENCESLOT2,COOKED,COOKING,HALF,LIT);
     }
 
     @Override
@@ -121,7 +123,7 @@ public class IncubatorBlock extends BlockWithEntity {
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world,BlockState state,BlockEntityType<T> type){
-        return world.isClient ? null : checkType(type,KinderBlocks.INCUBATOR_BLOCK_ENTITY,IncubatorBlockEntity::tick);
+        return world.isClient ? checkType(type,KinderBlocks.INCUBATOR_BLOCK_ENTITY,IncubatorBlockEntity::clientTick) : checkType(type,KinderBlocks.INCUBATOR_BLOCK_ENTITY,IncubatorBlockEntity::serverTick);
     }
 
     @Nullable
@@ -138,7 +140,7 @@ public class IncubatorBlock extends BlockWithEntity {
     public void onPlaced(World world,BlockPos pos,BlockState state,LivingEntity placer,ItemStack itemStack){
         world.setBlockState(pos.up(),state.with(HALF,DoubleBlockHalf.UPPER),Block.NOTIFY_ALL);
     }
-
+    @SuppressWarnings("deprecation")
     public boolean canPlaceAt(BlockState state,WorldView world,BlockPos pos){
         BlockPos blockPos = pos.down();
         BlockState blockState = world.getBlockState(blockPos);
@@ -158,7 +160,7 @@ public class IncubatorBlock extends BlockWithEntity {
 
         super.onBreak(world,pos,state,player);
     }
-
+    @SuppressWarnings("deprecation")
     public BlockState getStateForNeighborUpdate(BlockState state,Direction direction,BlockState neighborState,WorldAccess world,BlockPos pos,BlockPos neighborPos){
         DoubleBlockHalf doubleBlockHalf = state.get(HALF);
         if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP) && (!neighborState.isOf(this) || neighborState.get(HALF) == doubleBlockHalf)) {
@@ -169,14 +171,13 @@ public class IncubatorBlock extends BlockWithEntity {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState state,World world,BlockPos pos,PlayerEntity player,Hand hand,BlockHitResult hit){
-        ItemStack itemStack = player.getStackInHand(hand);
         BlockEntity be = world.getBlockEntity(pos);
-        boolean cooking = state.get(COOKING);
-        boolean cooked = state.get(COOKED);
-        if (hand == player.preferredHand && state.get(HALF).equals(DoubleBlockHalf.LOWER)) {
-            if (be instanceof IncubatorBlockEntity) {
-                if (!cooking && !cooked) {
+        if (be instanceof IncubatorBlockEntity) {
+            ItemStack itemStack = player.getStackInHand(hand);
+            if (hand == Hand.MAIN_HAND && state.get(HALF).equals(DoubleBlockHalf.LOWER)) {
+                if (state.get(COOKING).equals(false) && state.get(COOKED).equals(false)) {
                     if (!state.get(ESSENCESLOT2).equals(0) && !state.get(ESSENCESLOT1).equals(0) && player.getStackInHand(hand) == ItemStack.EMPTY) {
                         world.setBlockState(pos,state.with(COOKING,true));
                         return ActionResult.success(world.isClient);
@@ -187,7 +188,7 @@ public class IncubatorBlock extends BlockWithEntity {
                         return ActionResult.success(world.isClient);
                     } else {
                         for (Map.Entry<Integer, Item> map : essenceHash().entrySet()) {
-                            if (itemStack.getItem() == map.getValue()) {
+                            if (itemStack.getItem() == map.getValue().asItem()) {
                                 KinderMod.LOGGER.info("Knows you're holding essence");
                                 if (state.get(ESSENCESLOT1).equals(0) || state.get(ESSENCESLOT2).equals(0)) {
                                     fillEssence(state,map.getKey(),world,pos);
@@ -203,18 +204,19 @@ public class IncubatorBlock extends BlockWithEntity {
                             }
                         }
                     }
-                } else if (cooking && !cooked && player.isCreative() && player.isSneaky()) {
+                } else if (state.get(COOKING).equals(true) && state.get(COOKED).equals(false) && player.isCreative() && player.isSneaky()) {
                     world.setBlockState(pos,state.with(COOKED,true).with(COOKING,false));
                     return ActionResult.success(world.isClient);
-                } else if (cooked) {
+                } else if (state.get(COOKED).equals(true)) {
                     world.scheduleBlockTick(pos,this,1);
+                    world.setBlockState(pos.up(),world.getBlockState(pos.up()).with(LIT,false));
                     return ActionResult.success(world.isClient);
                 }
             }
         }
         return super.onUse(state,world,pos,player,hand,hit);
     }
-
+    @SuppressWarnings("deprecation")
     public void scheduledTick(BlockState state,ServerWorld world,BlockPos pos,Random random){
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof IncubatorBlockEntity) {

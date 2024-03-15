@@ -6,11 +6,11 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.BlockItem;
 import net.minecraft.registry.Registries;
@@ -28,9 +28,11 @@ import phyner.kinder.blocks.entities.IncubatorBlockEntity;
 import phyner.kinder.blocks.entities.OysterBlockEntity;
 
 public class KinderBlocks {
-    public static final OysterBlock OYSTER_BLOCK = new OysterBlock(FabricBlockSettings.create().strength(4.0f).nonOpaque());
-    public static final IncubatorBlock INCUBATOR_BLOCK = new IncubatorBlock(FabricBlockSettings.create().strength(4.0f).nonOpaque());
-    public static final Block DRAINED_BLOCK = new Block(FabricBlockSettings.create().strength(4.0f));
+    public static final OysterBlock OYSTER_BLOCK = new OysterBlock(FabricBlockSettings.create().strength(2.0f,30.0f).nonOpaque().sounds(BlockSoundGroup.STONE));
+    public static final IncubatorBlock INCUBATOR_BLOCK = new IncubatorBlock(FabricBlockSettings.create().strength(2.0f,30.0f).nonOpaque().luminance(Blocks.createLightLevelFromLitBlockState(6)).sounds(BlockSoundGroup.ANVIL));
+    public static final Block COLD_DRAINED_BLOCK = new Block(FabricBlockSettings.create().strength(1.5F).sounds(BlockSoundGroup.STONE));
+    public static final Block TEMP_DRAINED_BLOCK = new Block(FabricBlockSettings.create().strength(1.5F).sounds(BlockSoundGroup.STONE));
+    public static final Block HOT_DRAINED_BLOCK = new Block(FabricBlockSettings.create().strength(1.5F).sounds(BlockSoundGroup.STONE));
 
     public static final Block WHITE_GEM_CROP_BLOCK = new WhiteGemCropBlock(cropSettings());
     public static final Block WHITE_GEM_CROP_FLOWER = new FlowerBlock(StatusEffects.BLINDNESS,1200,flowerSettings());
@@ -63,7 +65,11 @@ public class KinderBlocks {
     public static void registerBlocks(){
         registerBlock(OYSTER_BLOCK,"oyster");
         registerBlock(INCUBATOR_BLOCK,"incubator");
-        registerBlock(DRAINED_BLOCK,"drained_block");
+
+        registerBlock(HOT_DRAINED_BLOCK,"hot_drained_block");
+        registerBlock(TEMP_DRAINED_BLOCK,"temp_drained_block");
+        registerBlock(COLD_DRAINED_BLOCK,"cold_drained_block");
+
         registerBlockNoItem(WHITE_GEM_CROP_BLOCK,"white_gem_crop");
         registerBlock(WHITE_GEM_CROP_FLOWER,"white_gem_crop_flower");
         registerBlockNoItem(YELLOW_GEM_CROP_BLOCK,"yellow_gem_crop");

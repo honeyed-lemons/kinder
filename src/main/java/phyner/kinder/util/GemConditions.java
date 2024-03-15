@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import java.util.HashMap;
 
 public class GemConditions {
+    public float baseRarity;
     public float tempMin;
     public float tempIdeal;
     public float tempMax;
@@ -27,7 +28,8 @@ public class GemConditions {
     pink blue = 7
     */
 
-    public GemConditions(Float tempMin,Float tempIdeal,Float tempMax,Float depthMin,Float depthMax,HashMap<String, Float> biome,HashMap<Item, GemColors> gems){
+    public GemConditions(Float baseRarity, Float tempMin,Float tempIdeal,Float tempMax,Float depthMin,Float depthMax,HashMap<String, Float> biome,HashMap<Item, GemColors> gems){
+        this.baseRarity = baseRarity;
         this.tempMin = tempMin;
         this.tempIdeal = tempIdeal;
         this.tempMax = tempMax;

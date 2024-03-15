@@ -92,29 +92,24 @@ public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
 
     public int getPerfection(BlockPos blockPos){
         int ylevel = blockPos.getY();
-        float val = 3;
-        if (ylevel >= 83) {
+        int val;
+        if (ylevel >= 70) {
             val = 1;
-        } else if (ylevel >= 67) {
+        } else if (ylevel >= 65) {
             val = 2;
-        } else if (ylevel >= 56) {
+        } else if (ylevel >= 50) {
             val = 3;
-        } else if (ylevel >= 43) {
+        } else if (ylevel >= 40) {
             val = 4;
-        } else if (ylevel >= 33) {
+        } else if (ylevel >= 30) {
             val = 5;
-        } else if (ylevel >= 23) {
+        } else {
             val = 6;
         }
-        val = (float) (val * (getDownfall(world,blockPos) + 0.1));
-        if (val > 6) {
-            val = 6;
-        }
-        if (val <= 0) {
-            val = 1;
-        }
-        KinderMod.LOGGER.info("Pearl perfection is " + Math.round(val));
-        return Math.round(val);
+        val = (int) (val * (getDownfall(world,blockPos) + 0.2));
+        val = Math.min(6, Math.max(1, val));
+        KinderMod.LOGGER.info("Pearl perfection is " + val);
+        return val;
     }
 
     public ArrayList<Item> genPearlSet(int pearlSet){

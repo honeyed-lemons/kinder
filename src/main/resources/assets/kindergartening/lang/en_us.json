@@ -50,7 +50,13 @@
 
   "block.kindergartening.incubator": "Gem Incubator",
 
+  "block.kindergartening.hot_drained_block": "Sweltering Drained Block",
+  "block.kindergartening.temp_drained_block": "Drained Block",
+  "block.kindergartening.cold_drained_block": "Frigid Drained Block",
+
   "kinder.gem.movement.interact.wander": " will now wander.",
   "kinder.gem.movement.interact.stay": " will now stay.",
-  "kinder.gem.movement.interact.follow": " will now follow you."
+  "kinder.gem.movement.interact.follow": " will now follow you.",
+
+  "subtitles.kindergartening.incubator": "Active Incubator"
 }

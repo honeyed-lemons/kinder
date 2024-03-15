@@ -19,6 +19,7 @@ public class InventoryNbtUtil {
         }
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static NbtCompound writeInventoryNbt(NbtCompound nbt,String key,Inventory stacks,int end){
         return writeInventoryNbt(nbt,key,stacks,end,true);
     }

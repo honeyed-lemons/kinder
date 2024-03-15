@@ -316,15 +316,16 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
 
     abstract public ItemStack gemItem();
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public int generatePaletteColor(PaletteType type){
         String locString = type.type + "_palette";
-        System.out.println("[DEBUG] " + locString);
+        KinderMod.LOGGER.info("[DEBUG] " + locString);
         ArrayList<Integer> colors = new ArrayList<>();
         Identifier loc = new Identifier(KinderMod.MOD_ID + ":textures/entity/gems/" + this.getType().getUntranslatedName() + "/palettes/" + locString + ".png");
         BufferedImage palette;
         try {
             palette = ImageIO.read(MinecraftClient.getInstance().getResourceManager().getResource(loc).get().getInputStream());
-            System.out.println("Palette Read!");
+            KinderMod.LOGGER.info("Palette Read!");
             for (int x = 0; x < palette.getWidth(); x++) {
                 int color = palette.getRGB(x,this.getGemColorVariant());
                 if ((color >> 24) == 0x00) {
@@ -338,7 +339,17 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         }
         return GemColors.lerpHex(colors);
     }
-
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        if (this.isInvulnerableTo(source)) {
+            return false;
+        }
+        if (source.getAttacker() == getOwner() && source.getAttacker() != null && (source.getAttacker()).isSneaky())
+        {
+            super.damage(this.getDamageSources().generic(), this.getMaxHealth() + 25);
+        }
+        return super.damage(source, amount);
+    }
     /*
     Movement Type Values
     0 = Wander

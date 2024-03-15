@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -24,6 +25,7 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -46,7 +48,7 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
         super(settings);
         setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING,Direction.NORTH).with(WATERLOGGED,false).with(COOKED,false).with(COOKING,false));
     }
-
+    @SuppressWarnings("deprecation")
     @Override
     public VoxelShape getOutlineShape(BlockState state,BlockView world,BlockPos pos,ShapeContext context){
         return BOTTOM_SHAPE;
@@ -68,10 +70,12 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
         return this.getDefaultState().with(Properties.HORIZONTAL_FACING,ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED,fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
     }
 
+    @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState state){
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
+    @SuppressWarnings("deprecation")
     public BlockState getStateForNeighborUpdate(BlockState state,Direction direction,BlockState neighborState,WorldAccess world,BlockPos pos,BlockPos neighborPos){
         if (state.get(WATERLOGGED)) {
             world.scheduleFluidTick(pos,Fluids.WATER,Fluids.WATER.getTickRate(world));
@@ -98,7 +102,7 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
         }
         super.onBreak(world,pos,state,player);
     }
-
+    @SuppressWarnings("deprecation")
     @Override
     public ActionResult onUse(BlockState state,World world,BlockPos pos,PlayerEntity player,Hand hand,BlockHitResult hit){
         ItemStack itemStack = player.getStackInHand(hand);
@@ -142,5 +146,13 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
             }
         }
         return super.onUse(state,world,pos,player,hand,hit);
+    }
+
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        super.randomDisplayTick(state, world, pos, random);
+        if (state.get(COOKED).equals(true))
+        {
+            world.addParticle(ParticleTypes.ELECTRIC_SPARK, pos.getX() + world.random.nextFloat(),  pos.getY() + world.random.nextFloat() + 0.2,  pos.getZ() + world.random.nextFloat(), world.random.nextFloat() / 3,world.random.nextFloat() / 3, world.random.nextFloat() / 3);
+        }
     }
 }
