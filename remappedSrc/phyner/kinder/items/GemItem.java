@@ -28,65 +28,63 @@ public class GemItem extends Item {
     private final EntityType<?> type;
     private final GemColors color;
 
-    public GemItem(EntityType<? extends AbstractGemEntity> type,GemColors color,Settings settings){
-        super(settings);
+    public GemItem (EntityType<? extends AbstractGemEntity> type, GemColors color, Settings settings){
+        super (settings);
         this.type = type;
         this.color = color;
     }
 
-    @Override
-    public ActionResult useOnBlock(ItemUsageContext context){
-        if (context.getSide().equals(Direction.UP)) {
-            this.spawnGem(context.getStack(),context.getWorld(),context.getBlockPos(),context);
+    @Override public ActionResult useOnBlock (ItemUsageContext context){
+        if (context.getSide ().equals (Direction.UP)) {
+            this.spawnGem (context.getStack (), context.getWorld (), context.getBlockPos (), context);
         }
         return ActionResult.CONSUME;
     }
 
-    @Override
-    public boolean canBeNested(){
+    @Override public boolean canBeNested (){
         return false;
     }
 
-    public void spawnGem(ItemStack itemStack,World world,BlockPos pos,ItemUsageContext context){
-        NbtCompound nbt = itemStack.getSubNbt("gem");
+    public void spawnGem (ItemStack itemStack, World world, BlockPos pos, ItemUsageContext context){
+        NbtCompound nbt = itemStack.getSubNbt ("gem");
         if (!world.isClient) {
             if (nbt != null) {
-                Optional<Entity> entity = EntityType.getEntityFromNbt(nbt,world);
-                if (entity.isPresent()) {
-                    AbstractGemEntity gem = (AbstractGemEntity) entity.get();
-                    gem.setPos(pos.getX() + 0.5,pos.getY() + 1.0,pos.getZ() + 0.5F);
+                Optional<Entity> entity = EntityType.getEntityFromNbt (nbt, world);
+                if (entity.isPresent ()) {
+                    AbstractGemEntity gem = (AbstractGemEntity) entity.get ();
+                    gem.setPos (pos.getX () + 0.5, pos.getY () + 1.0, pos.getZ () + 0.5F);
                     gem.fallDistance = 0;
                     gem.speed = 0;
-                    gem.setOnFire(false);
-                    gem.setFireTicks(0);
-                    gem.setHealth(gem.getMaxHealth());
-                    gem.clearStatusEffects();
-                    gem.setVelocity(0,0,0);
-                    KinderMod.LOGGER.info("Spawning Gem, Name is " + gem.getName().getString());
-                    world.spawnEntity(gem);
-                    gem.lookAtEntity(context.getPlayer(),90,90);
-                    itemStack.setCount(0);
+                    gem.setOnFire (false);
+                    gem.setFireTicks (0);
+                    gem.setHealth (gem.getMaxHealth ());
+                    gem.clearStatusEffects ();
+                    gem.setVelocity (0, 0, 0);
+                    KinderMod.LOGGER.info ("Spawning Gem, Name is " + gem.getName ().getString ());
+                    world.spawnEntity (gem);
+                    gem.lookAtEntity (context.getPlayer (), 90, 90);
+                    itemStack.setCount (0);
                 }
             } else {
-                AbstractGemEntity gem = (AbstractGemEntity) Objects.requireNonNull(type.spawn(Objects.requireNonNull(world.getServer()).getWorld(world.getRegistryKey()),pos.up(),SpawnReason.MOB_SUMMONED));
+                AbstractGemEntity gem = (AbstractGemEntity) Objects.requireNonNull (type.spawn (Objects.requireNonNull (world.getServer ()).getWorld (world.getRegistryKey ()), pos.up (), SpawnReason.MOB_SUMMONED));
                 gem.setGemVariantOnInitialSpawn = false;
-                gem.setGemColorVariant(color.getId());
-                gem.generateColors();
-                gem.setPerfection(3);
-                KinderMod.LOGGER.info("Spawning Gem, Name is " + type.getName().getString());
-                if (!Objects.requireNonNull(context.getPlayer()).isCreative()) {
-                    itemStack.setCount(0);
+                gem.setGemColorVariant (color.getId ());
+                gem.generateColors ();
+                gem.setPerfection (3);
+                KinderMod.LOGGER.info ("Spawning Gem, Name is " + type.getName ().getString ());
+                if (!Objects.requireNonNull (context.getPlayer ()).isCreative ()) {
+                    itemStack.setCount (0);
                 }
             }
         }
     }
 
     @Override
-    public void appendTooltip(ItemStack stack,@Nullable World world,List<Text> tooltip,TooltipContext context){
-        NbtCompound nbt = stack.getSubNbt("gem");
+    public void appendTooltip (ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context){
+        NbtCompound nbt = stack.getSubNbt ("gem");
         if (nbt != null) {
-            Optional<Entity> entity = EntityType.getEntityFromNbt(nbt,world);
-            entity.ifPresent(value -> tooltip.add(Text.of(String.valueOf(value.getName().getString()))));
+            Optional<Entity> entity = EntityType.getEntityFromNbt (nbt, world);
+            entity.ifPresent (value -> tooltip.add (Text.of (String.valueOf (value.getName ().getString ()))));
         }
     }
 }

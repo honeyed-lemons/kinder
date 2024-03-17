@@ -12,27 +12,25 @@ public class GemWanderAroundGoal extends WanderAroundFarGoal {
     protected AbstractGemEntity gem;
     protected float gemProbability;
 
-    public GemWanderAroundGoal(PathAwareEntity pathAwareEntity,double d,float gemProbability){
-        super(pathAwareEntity,d);
+    public GemWanderAroundGoal (PathAwareEntity pathAwareEntity, double d, float gemProbability){
+        super (pathAwareEntity, d);
         gem = (AbstractGemEntity) mob;
         this.gemProbability = gemProbability;
     }
 
-    @Override
-    public boolean shouldContinue(){
-        return !gem.getNavigation().isIdle() && !gem.hasPassengers() && gem.getMovementType() == 0;
+    @Override public boolean shouldContinue (){
+        return !gem.getNavigation ().isIdle () && !gem.hasPassengers () && gem.getMovementType () == 0;
     }
 
-    @Override
-    public boolean canStart(){
-        if (gem.hasPassengers() || (!ignoringChance && gem.getRandom().nextInt(WanderAroundGoal.toGoalTicks(chance)) != 0)) {
+    @Override public boolean canStart (){
+        if (gem.hasPassengers () || (!ignoringChance && gem.getRandom ().nextInt (WanderAroundGoal.toGoalTicks (chance)) != 0)) {
             return false;
         }
-        Vec3d vec3d = getWanderTarget();
+        Vec3d vec3d = getWanderTarget ();
         if (vec3d == null) {
             return false;
         }
-        if (gem.getMovementType() != 0) {
+        if (gem.getMovementType () != 0) {
             return false;
         }
         targetX = vec3d.x;
@@ -42,16 +40,14 @@ public class GemWanderAroundGoal extends WanderAroundFarGoal {
         return true;
     }
 
-    @Override
-    @Nullable
-    protected Vec3d getWanderTarget(){
-        if (this.gem.isInsideWaterOrBubbleColumn()) {
-            Vec3d vec3d = FuzzyTargeting.find(this.gem,15,7);
-            return vec3d == null ? super.getWanderTarget() : vec3d;
+    @Override @Nullable protected Vec3d getWanderTarget (){
+        if (this.gem.isInsideWaterOrBubbleColumn ()) {
+            Vec3d vec3d = FuzzyTargeting.find (this.gem, 15, 7);
+            return vec3d == null ? super.getWanderTarget () : vec3d;
         }
-        if (this.gem.getRandom().nextFloat() >= this.gemProbability) {
-            return FuzzyTargeting.find(this.gem,10,7);
+        if (this.gem.getRandom ().nextFloat () >= this.gemProbability) {
+            return FuzzyTargeting.find (this.gem, 10, 7);
         }
-        return super.getWanderTarget();
+        return super.getWanderTarget ();
     }
 }

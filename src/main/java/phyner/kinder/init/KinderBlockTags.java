@@ -7,5 +7,5 @@ import net.minecraft.util.Identifier;
 import phyner.kinder.KinderMod;
 
 public class KinderBlockTags {
-    public static final TagKey<Block> DRAINABLE = TagKey.of(RegistryKeys.BLOCK,new Identifier(KinderMod.MOD_ID,"drainable"));
+    public static final TagKey<Block> DRAINABLE = TagKey.of (RegistryKeys.BLOCK, new Identifier (KinderMod.MOD_ID, "drainable"));
 }

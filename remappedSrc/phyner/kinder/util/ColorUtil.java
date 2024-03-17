@@ -5,27 +5,27 @@ import java.util.Random;
 
 public class ColorUtil {
 
-    public static int lerpHex(ArrayList<Integer> colors){
-        Random random = new Random();
-        if (colors.size() == 0) {
+    public static int lerpHex (ArrayList<Integer> colors){
+        Random random = new Random ();
+        if (colors.size () == 0) {
             return 0;
         }
-        if (colors.size() == 1) {
-            return colors.get(0);
+        if (colors.size () == 1) {
+            return colors.get (0);
         }
         int r;
         int g;
         int b;
-        float u = random.nextFloat();
+        float u = random.nextFloat ();
 
-        int bound = random.nextInt(colors.size() - 1);
+        int bound = random.nextInt (colors.size () - 1);
 
-        int b_r = (colors.get(bound) & 16711680) >> 16;
-        int b_g = (colors.get(bound) & 65280) >> 8;
-        int b_b = (colors.get(bound) & 255);
-        int e_r = (colors.get(bound + 1) & 16711680) >> 16;
-        int e_g = (colors.get(bound + 1) & 65280) >> 8;
-        int e_b = (colors.get(bound + 1) & 255);
+        int b_r = (colors.get (bound) & 16711680) >> 16;
+        int b_g = (colors.get (bound) & 65280) >> 8;
+        int b_b = (colors.get (bound) & 255);
+        int e_r = (colors.get (bound + 1) & 16711680) >> 16;
+        int e_g = (colors.get (bound + 1) & 65280) >> 8;
+        int e_b = (colors.get (bound + 1) & 255);
 
         r = (int) (u * b_r + (1f - u) * e_r);
         g = (int) (u * b_g + (1f - u) * e_g);
@@ -34,10 +34,10 @@ public class ColorUtil {
         return (r << 16) + (g << 8) + b;
     }
 
-    public static String getColorName(int c){
-        Random random = new Random();
+    public static String getColorName (int c){
+        Random random = new Random ();
         if (c > 15 || c < 0) {
-            return ColorUtil.getColorName(random.nextInt(16));
+            return ColorUtil.getColorName (random.nextInt (16));
         }
         return switch (c) {
             case 1 -> "orange";

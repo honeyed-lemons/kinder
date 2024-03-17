@@ -11,17 +11,16 @@ import org.slf4j.LoggerFactory;
 import phyner.kinder.init.*;
 
 public class KinderMod implements ModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("Kindergartening");
+    public static final Logger LOGGER = LoggerFactory.getLogger ("Kindergartening");
     public static String MOD_ID = "kindergartening";
 
-    @Override
-    public void onInitialize(){
-        LOGGER.info("Starting Kindergartening");
-        KinderBlocks.registerFluids();
-        KinderItems.registerItems();
+    @Override public void onInitialize (){
+        LOGGER.info ("Starting Kindergartening");
+        KinderBlocks.registerFluids ();
+        KinderItems.registerItems ();
         //KinderItemGroups.addItems();
-        KinderGemEntities.registerEntities();
-        KinderScreens.init();
-        KinderGemEntities.registerAttributes();
+        KinderGemEntities.registerEntities ();
+        KinderScreens.init ();
+        KinderGemEntities.registerAttributes ();
     }
 }

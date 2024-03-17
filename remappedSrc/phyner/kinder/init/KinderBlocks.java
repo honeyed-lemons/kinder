@@ -5,6 +5,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
 public class KinderBlocks {
-    public static void registerFluids(){
+    public static void registerFluids (){
     }
 }

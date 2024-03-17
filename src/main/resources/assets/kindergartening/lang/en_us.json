@@ -1,7 +1,10 @@
 {
   "itemGroup.kindergartening.gem_group": "Kinder: Gems",
+
   "itemGroup.kindergartening.misc_group": "Kinder: Items & Blocks",
+
   "item.kindergartening.ruby_gem": "Ruby Gem",
+
   "item.kindergartening.pearl_gem_0": "White Pearl Gem",
   "item.kindergartening.pearl_gem_1": "Orange Pearl Gem",
   "item.kindergartening.pearl_gem_2": "Magenta Pearl Gem",
@@ -37,7 +40,6 @@
   "entity.kindergartening.pearl_13": "Green Pearl",
   "entity.kindergartening.pearl_14": "Red Pearl",
   "entity.kindergartening.pearl_15": "Black Pearl",
-
   "entity.kindergartening.quartz_10": "Amethyst",
 
   "item.kindergartening.pearl_shuck": "Pearl Shuck",
@@ -49,7 +51,6 @@
   "item.kindergartening.blue_essence": "Blue Essence Bottle",
 
   "block.kindergartening.incubator": "Gem Incubator",
-
   "block.kindergartening.hot_drained_block": "Sweltering Drained Block",
   "block.kindergartening.temp_drained_block": "Drained Block",
   "block.kindergartening.cold_drained_block": "Frigid Drained Block",
@@ -58,5 +59,9 @@
   "kinder.gem.movement.interact.stay": " will now stay.",
   "kinder.gem.movement.interact.follow": " will now follow you.",
 
-  "subtitles.kindergartening.incubator": "Active Incubator"
+  "subtitles.kindergartening.incubator": "Active Incubator",
+
+  "kinder.item.pearlcustomizer.hair": "Now Customizing Hair",
+  "kinder.item.pearlcustomizer.outfit": "Now Customizing Outfit",
+  "kinder.item.pearlcustomizer.insignia": "Now Customizing Accessory"
 }

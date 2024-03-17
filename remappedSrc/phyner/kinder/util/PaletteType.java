@@ -1,20 +1,20 @@
 package phyner.kinder.util;
 
 public enum PaletteType {
-    GEM("gem"),SKIN("skin"),HAIR("hair");
+    GEM ("gem"), SKIN ("skin"), HAIR ("hair");
 
-    private static final PaletteType[] values = PaletteType.values();
+    private static final PaletteType[] values = PaletteType.values ();
     public final String type;
 
-    PaletteType(String id){
+    PaletteType (String id){
         this.type = id;
     }
 
-    public static PaletteType getPaletteType(int i){
+    public static PaletteType getPaletteType (int i){
         return PaletteType.values[i];
     }
 
-    public String getType(){
+    public String getType (){
         return this.type;
     }
 }

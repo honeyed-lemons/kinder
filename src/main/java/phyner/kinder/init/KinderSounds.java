@@ -8,10 +8,9 @@ import phyner.kinder.KinderMod;
 
 public class KinderSounds {
 
-    public static SoundEvent INCUBATOR_SOUND = SoundEvent.of(new Identifier(KinderMod.MOD_ID,"incubator"));
+    public static SoundEvent INCUBATOR_SOUND = SoundEvent.of (new Identifier (KinderMod.MOD_ID, "incubator"));
 
-    public static void registerSounds()
-    {
-        Registry.register(Registries.SOUND_EVENT, new Identifier(KinderMod.MOD_ID,"incubator"), INCUBATOR_SOUND);
+    public static void registerSounds (){
+        Registry.register (Registries.SOUND_EVENT, new Identifier (KinderMod.MOD_ID, "incubator"), INCUBATOR_SOUND);
     }
 }
