@@ -24,15 +24,11 @@ import phyner.kinder.init.KinderItems;
 
     @Inject(at = @At("HEAD"), method = "tick()V") public void tick (CallbackInfo ci){
         if (this.isTouchingWater () && this.getStack ().getItem () == KinderItems.DRIED_GEM_SEEDS) {
-            switch (random.nextBetween (0, 3)) {
-                case 0:
-                    this.setStack (new ItemStack (KinderItems.WHITE_GEM_SEEDS));
-                case 1:
-                    this.setStack (new ItemStack (KinderItems.YELLOW_GEM_SEEDS));
-                case 2:
-                    this.setStack (new ItemStack (KinderItems.BLUE_GEM_SEEDS));
-                case 3:
-                    this.setStack (new ItemStack (KinderItems.PINK_GEM_SEEDS));
+            switch (this.getWorld().random.nextBetween(0, 3)) {
+                case 0 -> this.setStack(new ItemStack(KinderItems.WHITE_GEM_SEEDS));
+                case 1 -> this.setStack(new ItemStack(KinderItems.YELLOW_GEM_SEEDS));
+                case 2 -> this.setStack(new ItemStack(KinderItems.BLUE_GEM_SEEDS));
+                case 3 -> this.setStack(new ItemStack(KinderItems.PINK_GEM_SEEDS));
             }
         }
     }

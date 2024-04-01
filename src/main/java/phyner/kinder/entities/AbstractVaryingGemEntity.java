@@ -10,8 +10,24 @@ public abstract class AbstractVaryingGemEntity extends AbstractGemEntity {
     }
 
     public abstract boolean UsesUniqueNames ();
+    public abstract int[] neglectedColors();
 
-    @Override public int generateGemColorVariant (){
-        return this.initalGemColorVariant;
+    public boolean isValid(int color) {
+        if (this.neglectedColors() != null) {
+            for (int neglectedColor : this.neglectedColors()) {
+                if (neglectedColor == color) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public int generateGemColorVariant() {
+        int color;
+        do {
+            color = this.random.nextInt(16);
+        }
+        while (!this.isValid(color));
+        return color;
     }
 }

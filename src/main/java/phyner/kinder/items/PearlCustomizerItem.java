@@ -24,11 +24,12 @@ public class PearlCustomizerItem extends Item {
         if (user.isSneaky() && !world.isClient() && hand.equals(Hand.MAIN_HAND))
         {
             KinderMod.LOGGER.info("silly");
-            mode = (mode + 1) % 3;
+            mode = (mode + 1) % 4;
             switch (mode) {
                 case 0 -> user.sendMessage(Text.translatable("kinder.item.pearlcustomizer.hair"));
-                case 1 -> user.sendMessage(Text.translatable("kinder.item.pearlcustomizer.outfit"));
-                case 2 -> user.sendMessage(Text.translatable("kinder.item.pearlcustomizer.insignia"));
+                case 1 -> user.sendMessage(Text.translatable("kinder.item.pearlcustomizer.hair_extra"));
+                case 2 -> user.sendMessage(Text.translatable("kinder.item.pearlcustomizer.outfit"));
+                case 3 -> user.sendMessage(Text.translatable("kinder.item.pearlcustomizer.insignia"));
             }
             return TypedActionResult.pass(itemStack);
         }
@@ -41,8 +42,9 @@ public class PearlCustomizerItem extends Item {
         if (entity instanceof PearlEntity && !user.isSneaky()) {
             switch (this.getMode()) {
                 case 0 -> changeHair((PearlEntity) entity);
-                case 1 -> changeOutfit((PearlEntity) entity);
-                case 2 -> changeInsignia((PearlEntity) entity);
+                case 1 -> changeHairExtra((PearlEntity) entity);
+                case 2 -> changeOutfit((PearlEntity) entity);
+                case 3 -> changeInsignia((PearlEntity) entity);
             }
             return super.useOnEntity(stack, user, entity, hand);
         }
@@ -58,6 +60,19 @@ public class PearlCustomizerItem extends Item {
         else
         {
             gem.setHairVariant (gem.getHairVariant() + 1);
+        }
+    }
+    public void changeHairExtra(PearlEntity gem)
+    {
+        if (gem.getHairExtraVariant () == gem.hairExtraVariantCount())
+        {
+            KinderMod.LOGGER.info(String.valueOf(0));
+            gem.setHairExtraVariant (0);
+        }
+        else
+        {
+            KinderMod.LOGGER.info(String.valueOf(gem.getHairExtraVariant()+1));
+            gem.setHairExtraVariant (gem.getHairExtraVariant() + 1);
         }
     }
     public void changeOutfit(PearlEntity gem)

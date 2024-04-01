@@ -30,9 +30,9 @@ import phyner.kinder.blocks.entities.OysterBlockEntity;
 public class KinderBlocks {
     public static final OysterBlock OYSTER_BLOCK = new OysterBlock (FabricBlockSettings.create ().strength (2.0f, 30.0f).nonOpaque ().sounds (BlockSoundGroup.STONE));
     public static final IncubatorBlock INCUBATOR_BLOCK = new IncubatorBlock (FabricBlockSettings.create ().strength (2.0f, 30.0f).nonOpaque ().luminance (Blocks.createLightLevelFromLitBlockState (6)).sounds (BlockSoundGroup.ANVIL));
-    public static final Block COLD_DRAINED_BLOCK = new Block (FabricBlockSettings.create ().strength (1.5F).sounds (BlockSoundGroup.STONE));
-    public static final Block TEMP_DRAINED_BLOCK = new Block (FabricBlockSettings.create ().strength (1.5F).sounds (BlockSoundGroup.STONE));
-    public static final Block HOT_DRAINED_BLOCK = new Block (FabricBlockSettings.create ().strength (1.5F).sounds (BlockSoundGroup.STONE));
+    public static final Block COLD_DRAINED_BLOCK = new Block (FabricBlockSettings.create ().requiresTool().strength (1.5F).sounds (BlockSoundGroup.STONE));
+    public static final Block TEMP_DRAINED_BLOCK = new Block (FabricBlockSettings.create ().requiresTool().strength (1.5F).sounds (BlockSoundGroup.STONE));
+    public static final Block HOT_DRAINED_BLOCK = new Block (FabricBlockSettings.create ().requiresTool().strength (1.5F).sounds (BlockSoundGroup.STONE));
 
     public static final Block WHITE_GEM_CROP_BLOCK = new WhiteGemCropBlock (cropSettings ());
     public static final Block WHITE_GEM_CROP_FLOWER = new FlowerBlock (StatusEffects.BLINDNESS, 1200, flowerSettings ());

@@ -22,6 +22,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
         addRenderLayer (new GemPearlNoseLayer<> (this));
         addRenderLayer (new GemEyeLayer<> (this));
         addRenderLayer (new GemHairLayer<> (this));
+        addRenderLayer (new GemHairExtraLayer<> (this));
         addRenderLayer (new GemOutfitLayer<> (this));
         addRenderLayer (new GemInsigniaLayer<> (this));
         addRenderLayer (new GemGemLayer<> (this));

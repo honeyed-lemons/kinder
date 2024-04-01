@@ -33,7 +33,7 @@ public final class GemDefaultAnimations {
         });
     }
 
-    public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericGemPearlArmsController (T animatable){
+    public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericGemArmsWithIdleController(T animatable){
         return new AnimationController<> (animatable, "GemArmsIdle", 5, state -> {
             if (!state.isMoving ()) {
                 return state.setAndContinue (ARMS_IDLE);

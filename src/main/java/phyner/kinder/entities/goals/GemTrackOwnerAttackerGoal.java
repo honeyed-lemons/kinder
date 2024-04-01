@@ -26,7 +26,7 @@ public class GemTrackOwnerAttackerGoal extends TrackTargetGoal {
     }
 
     public boolean canStart (){
-        if (this.tameable.isTamed ()) {
+        if (this.tameable.isTamed () && !this.tameable.isRebel()) {
             LivingEntity livingEntity = this.tameable.getOwner ();
             if (livingEntity == null) {
                 return false;

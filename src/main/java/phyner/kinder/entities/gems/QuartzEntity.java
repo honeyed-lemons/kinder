@@ -34,7 +34,7 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
     }
 
     @Override public int hairVariantCount (){
-        return 1;
+        return 6;
     }
 
     @Override public int outfitVariantCount (){
@@ -46,10 +46,10 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
     }
 
     @Override public int defaultOutfitColor (){
-        return getGemColorVariant();
+        return 0;
     }
 
-    @Override public int defaultInsigniaColor (){ return getGemColorVariant();
+    @Override public int defaultInsigniaColor (){ return 0;
     }
 
     @Override public GemPlacements[] getPlacements (){
@@ -102,6 +102,11 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
 
     @Override public boolean UsesUniqueNames (){
         return true;
+    }
+
+    @Override
+    public int[] neglectedColors() {
+        return null;
     }
 
     @Override public void onInventoryChanged (Inventory sender){

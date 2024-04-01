@@ -8,9 +8,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +20,7 @@ import phyner.kinder.KinderMod;
 import phyner.kinder.entities.AbstractGemEntity;
 import phyner.kinder.util.GemColors;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -50,6 +53,18 @@ public class GemItem extends Item {
     public void spawnGem (ItemStack itemStack, World world, BlockPos pos, ItemUsageContext context){
         NbtCompound nbt = itemStack.getSubNbt ("gem");
         if (!world.isClient) {
+            if (context.getPlayer() != null)
+            {
+                List<AbstractGemEntity> list = context.getPlayer().getWorld().getEntitiesByClass(AbstractGemEntity.class,context.getPlayer().getBoundingBox().expand(4,4,4), EntityPredicates.VALID_LIVING_ENTITY);
+                for (AbstractGemEntity gem : list)
+                {
+                    if (gem.isDead())
+                    {
+                        KinderMod.LOGGER.info("Cant Spawn Gem lmao get rekt");
+                        return;
+                    }
+                }
+            }
             if (nbt != null) {
                 Optional<Entity> entity = EntityType.getEntityFromNbt (nbt, world);
                 if (entity.isPresent ()) {
@@ -62,6 +77,9 @@ public class GemItem extends Item {
                     gem.setHealth (gem.getMaxHealth ());
                     gem.clearStatusEffects ();
                     gem.setVelocity (0, 0, 0);
+                    gem.setPerfectionThings(gem.getPerfection());
+                    gem.setInsigniaColor(gem.defaultInsigniaColor());
+                    gem.setOutfitColor(gem.defaultOutfitColor());
                     KinderMod.LOGGER.info ("Spawning Gem, Name is " + gem.getName ().getString ());
                     world.spawnEntity (gem);
                     gem.lookAtEntity (context.getPlayer (), 90, 90);
@@ -73,7 +91,6 @@ public class GemItem extends Item {
                         int perf = itemStack.getNbt ().getInt ("Perfection");
                         spawnGemWONbt (itemStack, world, pos, context, perf);
                     } else {
-                        KinderMod.LOGGER.info("Faggot.");
                         spawnGemWONbt (itemStack, world, pos, context, 3);
                     }
                 }
@@ -91,6 +108,7 @@ public class GemItem extends Item {
             itemStack.setCount (0);
         }
         gem.generateColors();
+        gem.setPerfectionThings(gem.getPerfection());
     }
 
     @Override

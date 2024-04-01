@@ -24,10 +24,10 @@ public class KinderConditions {
         cruxes.put (BlockTags.COAL_ORES, 0.1f);
         cruxes.put (BlockTags.IRON_ORES, 0.15f);
         cruxes.put (BlockTags.COPPER_ORES, 0.1f);
-        cruxes.put (BlockTags.LAPIS_ORES, 0.2f);
-        cruxes.put (BlockTags.DIAMOND_ORES, 0.4f);
-        cruxes.put (BlockTags.REDSTONE_ORES, 0.2f);
-        cruxes.put (BlockTags.GOLD_ORES, 0.3f);
+        cruxes.put (BlockTags.LAPIS_ORES, 0.175f);
+        cruxes.put (BlockTags.DIAMOND_ORES, 0.3f);
+        cruxes.put (BlockTags.REDSTONE_ORES, 0.175f);
+        cruxes.put (BlockTags.GOLD_ORES, 0.2f);
         cruxes.put (BlockTags.DIRT, -0.4f);
         cruxes.put (BlockTags.TERRACOTTA, 0.1f);
         return cruxes;

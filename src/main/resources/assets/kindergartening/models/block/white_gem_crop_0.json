@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cross",
   "textures": {
-    "cross": "kindergartening:block/white_gem_crop_2"
+    "cross": "kindergartening:block/gem_crop_0"
   }
 }

@@ -28,6 +28,21 @@ public class KinderItemGroups {
         entries.add (KinderItems.QUARTZ_GEM_13);
         entries.add (KinderItems.QUARTZ_GEM_14);
         entries.add (KinderItems.QUARTZ_GEM_15);
+        entries.add (KinderItems.SAPPHIRE_GEM_0);
+        entries.add (KinderItems.SAPPHIRE_GEM_1);
+        entries.add (KinderItems.SAPPHIRE_GEM_2);
+        entries.add (KinderItems.SAPPHIRE_GEM_3);
+        entries.add (KinderItems.SAPPHIRE_GEM_4);
+        entries.add (KinderItems.SAPPHIRE_GEM_5);
+        entries.add (KinderItems.SAPPHIRE_GEM_6);
+        entries.add (KinderItems.SAPPHIRE_GEM_7);
+        entries.add (KinderItems.SAPPHIRE_GEM_8);
+        entries.add (KinderItems.SAPPHIRE_GEM_9);
+        entries.add (KinderItems.SAPPHIRE_GEM_10);
+        entries.add (KinderItems.SAPPHIRE_GEM_11);
+        entries.add (KinderItems.SAPPHIRE_GEM_12);
+        entries.add (KinderItems.SAPPHIRE_GEM_13);
+        entries.add (KinderItems.SAPPHIRE_GEM_15);
         entries.add (KinderItems.PEARL_GEM_0);
         entries.add (KinderItems.PEARL_GEM_1);
         entries.add (KinderItems.PEARL_GEM_2);
@@ -48,6 +63,7 @@ public class KinderItemGroups {
 
     private static final ItemGroup MISC_GROUP = FabricItemGroup.builder ().icon (() -> new ItemStack (KinderBlocks.INCUBATOR_BLOCK.asItem ())).displayName (Text.translatable ("itemGroup.kindergartening.misc_group")).entries ((context, entries) -> {
         entries.add (KinderItems.PEARL_SHUCK);
+        entries.add (KinderItems.PEARL_CUSTOMIZER);
         entries.add (KinderBlocks.OYSTER_BLOCK.asItem ());
         entries.add (KinderBlocks.INCUBATOR_BLOCK.asItem ());
         entries.add (KinderBlocks.COLD_DRAINED_BLOCK.asItem ());
@@ -66,6 +82,7 @@ public class KinderItemGroups {
         entries.add (KinderItems.YELLOW_ESSENCE);
         entries.add (KinderItems.BLUE_ESSENCE);
         entries.add (KinderItems.PINK_ESSENCE);
+        entries.add (KinderItems.REJUVENATOR);
     }).build ();
 
     public static void registerItemGroups (){

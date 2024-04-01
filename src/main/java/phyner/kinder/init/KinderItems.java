@@ -10,6 +10,7 @@ import net.minecraft.util.Identifier;
 import phyner.kinder.KinderMod;
 import phyner.kinder.items.GemItem;
 import phyner.kinder.items.PearlCustomizerItem;
+import phyner.kinder.items.DestabItem;
 import phyner.kinder.util.GemColors;
 
 import java.util.HashMap;
@@ -34,6 +35,21 @@ public class KinderItems {
     public static final Item QUARTZ_GEM_13 = new GemItem (KinderGemEntities.QUARTZ, GemColors.GREEN, gemSettings ());
     public static final Item QUARTZ_GEM_14 = new GemItem (KinderGemEntities.QUARTZ, GemColors.RED, gemSettings ());
     public static final Item QUARTZ_GEM_15 = new GemItem (KinderGemEntities.QUARTZ, GemColors.BLACK, gemSettings ());
+    public static final Item SAPPHIRE_GEM_0 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.WHITE, gemSettings ());
+    public static final Item SAPPHIRE_GEM_1 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.ORANGE, gemSettings ());
+    public static final Item SAPPHIRE_GEM_2 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.MAGENTA, gemSettings ());
+    public static final Item SAPPHIRE_GEM_3 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.LIGHT_BLUE, gemSettings ());
+    public static final Item SAPPHIRE_GEM_4 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.YELLOW, gemSettings ());
+    public static final Item SAPPHIRE_GEM_5 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.LIME, gemSettings ());
+    public static final Item SAPPHIRE_GEM_6 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.PINK, gemSettings ());
+    public static final Item SAPPHIRE_GEM_7 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.GRAY, gemSettings ());
+    public static final Item SAPPHIRE_GEM_8 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.LIGHT_GRAY, gemSettings ());
+    public static final Item SAPPHIRE_GEM_9 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.CYAN, gemSettings ());
+    public static final Item SAPPHIRE_GEM_10 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.PURPLE, gemSettings ());
+    public static final Item SAPPHIRE_GEM_11 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.BLUE, gemSettings ());
+    public static final Item SAPPHIRE_GEM_12 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.BROWN, gemSettings ());
+    public static final Item SAPPHIRE_GEM_13 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.GREEN, gemSettings ());
+    public static final Item SAPPHIRE_GEM_15 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.BLACK, gemSettings ());
 
     public static final Item PEARL_GEM_0 = new GemItem (KinderGemEntities.PEARL, GemColors.WHITE, gemSettings ());
     public static final Item PEARL_GEM_1 = new GemItem (KinderGemEntities.PEARL, GemColors.ORANGE, gemSettings ());
@@ -67,6 +83,7 @@ public class KinderItems {
     public static final Item PINK_GEM_SEEDS = new AliasedBlockItem (KinderBlocks.PINK_GEM_CROP_BLOCK, new FabricItemSettings ());
     public static final Item PEARL_CUSTOMIZER = new PearlCustomizerItem (new FabricItemSettings ().maxCount (1));
 
+    public static final Item REJUVENATOR = new DestabItem(new FabricItemSettings ().maxCount (1).maxDamage(32));
 
     public static FabricItemSettings gemSettings (){
         return new FabricItemSettings ().maxCount (1).fireproof ();
@@ -76,7 +93,7 @@ public class KinderItems {
         return new FabricItemSettings ().maxCount (16).recipeRemainder (Items.GLASS_BOTTLE);
     }
 
-    public static HashMap<Item, String> Items (){
+    public static HashMap<Item, String> ItemsWithDataGen (){
         HashMap<Item, String> hashmap = new HashMap<> ();
         //Ruby
         hashmap.put (RUBY_GEM, "ruby_gem");
@@ -97,7 +114,22 @@ public class KinderItems {
         hashmap.put (QUARTZ_GEM_13, "quartz_gem_13");
         hashmap.put (QUARTZ_GEM_14, "quartz_gem_14");
         hashmap.put (QUARTZ_GEM_15, "quartz_gem_15");
-
+        //Sapphires
+        hashmap.put (SAPPHIRE_GEM_0, "sapphire_gem_0");
+        hashmap.put (SAPPHIRE_GEM_1, "sapphire_gem_1");
+        hashmap.put (SAPPHIRE_GEM_2, "sapphire_gem_2");
+        hashmap.put (SAPPHIRE_GEM_3, "sapphire_gem_3");
+        hashmap.put (SAPPHIRE_GEM_4, "sapphire_gem_4");
+        hashmap.put (SAPPHIRE_GEM_5, "sapphire_gem_5");
+        hashmap.put (SAPPHIRE_GEM_6, "sapphire_gem_6");
+        hashmap.put (SAPPHIRE_GEM_7, "sapphire_gem_7");
+        hashmap.put (SAPPHIRE_GEM_8, "sapphire_gem_8");
+        hashmap.put (SAPPHIRE_GEM_9, "sapphire_gem_9");
+        hashmap.put (SAPPHIRE_GEM_10, "sapphire_gem_10");
+        hashmap.put (SAPPHIRE_GEM_11, "sapphire_gem_11");
+        hashmap.put (SAPPHIRE_GEM_12, "sapphire_gem_12");
+        hashmap.put (SAPPHIRE_GEM_13, "sapphire_gem_13");
+        hashmap.put (SAPPHIRE_GEM_15, "sapphire_gem_15");
         // Pearls
         hashmap.put (PEARL_GEM_0, "pearl_gem_0");
         hashmap.put (PEARL_GEM_1, "pearl_gem_1");
@@ -134,9 +166,18 @@ public class KinderItems {
 
         return hashmap;
     }
-
+    public static HashMap<Item, String> ItemsWithoutDataGen() {
+        HashMap<Item, String> hashmap = new HashMap<>();
+        hashmap.put(REJUVENATOR,"rejuvenator");
+        return hashmap;
+    }
     public static void registerItems (){
-        for (Map.Entry<Item, String> entry : Items ().entrySet ()) {
+        for (Map.Entry<Item, String> entry : ItemsWithDataGen().entrySet ()) {
+            Item item = entry.getKey ();
+            String strings = entry.getValue ();
+            registerItem (strings, item);
+        }
+        for (Map.Entry<Item, String> entry : ItemsWithoutDataGen().entrySet ()) {
             Item item = entry.getKey ();
             String strings = entry.getValue ();
             registerItem (strings, item);

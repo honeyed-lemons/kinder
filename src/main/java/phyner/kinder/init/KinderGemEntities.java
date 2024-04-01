@@ -1,5 +1,6 @@
 package phyner.kinder.init;
 
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -8,9 +9,14 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import phyner.kinder.KinderMod;
+import phyner.kinder.client.render.gems.PearlEntityRenderer;
+import phyner.kinder.client.render.gems.QuartzEntityRenderer;
+import phyner.kinder.client.render.gems.RubyEntityRenderer;
+import phyner.kinder.client.render.gems.SapphireEntityRenderer;
 import phyner.kinder.entities.gems.PearlEntity;
 import phyner.kinder.entities.gems.QuartzEntity;
 import phyner.kinder.entities.gems.RubyEntity;
+import phyner.kinder.entities.gems.SapphireEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +25,9 @@ public class KinderGemEntities {
     public static final EntityType<RubyEntity> RUBY = FabricEntityTypeBuilder.create ().entityFactory (RubyEntity::new).dimensions (EntityDimensions.changing (0.6F, 1.2F)).build ();
     public static final EntityType<QuartzEntity> QUARTZ = FabricEntityTypeBuilder.create ().entityFactory (QuartzEntity::new).dimensions (EntityDimensions.changing (0.8F, 2F)).build ();
     public static final EntityType<PearlEntity> PEARL = FabricEntityTypeBuilder.create ().entityFactory (PearlEntity::new).dimensions (EntityDimensions.changing (0.6F, 1.75F)).build ();
+
+    public static final EntityType<SapphireEntity> SAPPHIRE = FabricEntityTypeBuilder.create ().entityFactory (SapphireEntity::new).dimensions (EntityDimensions.changing (0.6F, 1.0F)).build ();
+
     public static List<EntityType<?>> GEMS = new ArrayList<> ();
 
     private static void register (String name, EntityType<?> type){
@@ -30,12 +39,22 @@ public class KinderGemEntities {
         register ("ruby", RUBY);
         register ("quartz", QUARTZ);
         register ("pearl", PEARL);
+        register ("sapphire", SAPPHIRE);
 
     }
 
     public static void registerAttributes (){
-        FabricDefaultAttributeRegistry.register (RUBY, RubyEntity.createGemAttributes ());
-        FabricDefaultAttributeRegistry.register (PEARL, PearlEntity.createGemAttributes ());
-        FabricDefaultAttributeRegistry.register (QUARTZ, QuartzEntity.createGemAttributes ());
+        FabricDefaultAttributeRegistry.register (RUBY, RubyEntity.createGemAttributes());
+        FabricDefaultAttributeRegistry.register (PEARL, PearlEntity.createGemAttributes());
+        FabricDefaultAttributeRegistry.register (QUARTZ, QuartzEntity.createGemAttributes());
+        FabricDefaultAttributeRegistry.register (SAPPHIRE, SapphireEntity.createGemAttributes());
+    }
+
+    public static void registerEntityRenderers()
+    {
+        EntityRendererRegistry.register (KinderGemEntities.RUBY, RubyEntityRenderer::new);
+        EntityRendererRegistry.register (KinderGemEntities.QUARTZ, QuartzEntityRenderer::new);
+        EntityRendererRegistry.register (KinderGemEntities.PEARL, PearlEntityRenderer::new);
+        EntityRendererRegistry.register (KinderGemEntities.SAPPHIRE, SapphireEntityRenderer::new);
     }
 }

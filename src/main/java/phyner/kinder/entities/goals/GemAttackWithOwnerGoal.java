@@ -25,9 +25,9 @@ public class GemAttackWithOwnerGoal extends TrackTargetGoal {
     }
 
     public boolean canStart (){
-        if (this.gem.isTamed ()) {
+        if (this.gem.isTamed () && !this.gem.isRebel()) {
             LivingEntity livingEntity = this.gem.getOwner ();
-            if (livingEntity == null) {
+            if (livingEntity == null || gem.isRebel()) {
                 return false;
             }
             if (!canFight) {

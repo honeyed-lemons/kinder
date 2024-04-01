@@ -19,7 +19,7 @@ public class KinderModelGenerator extends FabricModelProvider {
     }
 
     @Override public void generateItemModels (ItemModelGenerator itemModelGenerator){
-        for (Map.Entry<Item, String> entry : KinderItems.Items ().entrySet ()) {
+        for (Map.Entry<Item, String> entry : KinderItems.ItemsWithDataGen().entrySet ()) {
             itemModelGenerator.register (entry.getKey (), Models.GENERATED);
         }
     }
