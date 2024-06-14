@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rwr",
+    "yob",
+    "rpr"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "o": {
+      "item": "kindergartening:light_reactor_blueprint"
+    },
+    "w": {
+      "item": "kindergartening:white_gem_seeds"
+    },
+    "y": {
+      "item": "kindergartening:yellow_gem_seeds"
+    },
+    "p": {
+      "item": "kindergartening:pink_gem_seeds"
+    },
+    "b": {
+      "item": "kindergartening:blue_gem_seeds"
+    }
+  },
+  "result": {
+    "item": "kindergartening:light_reactor"
+  }
+}

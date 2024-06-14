@@ -478,7 +478,10 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         }
         return this.getDefaultName ();
     }
-
+    @Override
+    public int getXpToDrop() {
+        return 0;
+    }
     @Override public void onDeath (DamageSource source){
         if (!this.getWorld ().isClient ()) {
             ItemStack item = gemItem ();
@@ -519,6 +522,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         }
         return GemColors.lerpHex (colors);
     }
+
     @Override
     public boolean damage(DamageSource source, float amount) {
         if (this.isInvulnerableTo(source)) {
@@ -588,6 +592,16 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
             }
 
             if (player == getOwner()) {
+                if (player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof DyeItem dye) {
+                    int colorId = dye.getColor().getId();
+                    if (player.isSneaking()) {
+                        setOutfitColor(colorId);
+                    } else {
+                        setInsigniaColor(colorId);
+                    }
+                    return ActionResult.SUCCESS;
+                }
+
                 if (player.isSneaking() && player.getStackInHand(Hand.MAIN_HAND).isEmpty()) {
                     byte movementType = (byte) ((dataTracker.get(MOVEMENT_TYPE) + 1) % 3);
                     FOLLOW_ID = (movementType == 2) ? player.getUuid() : null;
@@ -602,16 +616,6 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
                     interactGem(player);
                     return ActionResult.SUCCESS;
                 }
-            }
-
-            if (player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof DyeItem dye) {
-                int colorId = dye.getColor().getId();
-                if (player.isSneaking()) {
-                    setOutfitColor(colorId);
-                } else {
-                    setInsigniaColor(colorId);
-                }
-                return ActionResult.SUCCESS;
             }
         }
         return super.interactMob(player, hand);
@@ -648,7 +652,6 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     @Override public void registerControllers (AnimatableManager.ControllerRegistrar controllerRegistrar){
         controllerRegistrar.add (GemDefaultAnimations.genericGemWalkLegsController (this));
         controllerRegistrar.add (GemDefaultAnimations.genericGemWalkArmsController (this));
-        controllerRegistrar.add (DefaultAnimations.genericAttackAnimation (this, GemDefaultAnimations.ARMS_USE));
     }
 
     @Override public AnimatableInstanceCache getAnimatableInstanceCache (){

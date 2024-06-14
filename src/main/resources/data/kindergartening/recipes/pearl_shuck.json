@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ri",
+    "n "
+  ],
+  "key": {
+    "r": {
+      "item": "kindergartening:light_reactor"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "n": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "result": {
+    "item": "kindergartening:pearl_shuck"
+  }
+}

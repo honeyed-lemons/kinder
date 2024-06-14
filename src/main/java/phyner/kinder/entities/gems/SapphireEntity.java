@@ -74,13 +74,9 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
     }
     @Override public int defaultInsigniaColor (){ return 0;
     }
-    public int insigniaVariantCount (){
-        return 1;
-    }
+
     @Override public int generateInsigniaVariant (){
-        if (insigniaVariantCount () != 0) {
-            return this.random.nextBetween (1, insigniaVariantCount ());
-        } else return 0;
+        return getOutfitVariant();
     }
     @Override public void registerControllers (AnimatableManager.ControllerRegistrar controllerRegistrar){
         controllerRegistrar.add (GemDefaultAnimations.genericGemWalkLegsController (this));
@@ -176,7 +172,7 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
     {
         if (bool)
         {
-            switch (random.nextInt(5)) {
+            switch (random.nextInt(7)) {
                 case 0 -> grantPrediction(true, StatusEffects.STRENGTH);
                 case 1 -> grantPrediction(true, StatusEffects.SPEED);
                 case 2 -> grantPrediction(true, StatusEffects.RESISTANCE);
@@ -208,7 +204,7 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
         } else {
             duration *= (getPerfection() >= 3) ? getPerfection() * 2 : ((float) getPerfection() / 3);
         }
-        List<Entity> list = this.getWorld().getEntitiesByClass(Entity.class,this.getBoundingBox().expand(12,12,12), EntityPredicates.VALID_LIVING_ENTITY);
+        List<Entity> list = this.getWorld().getEntitiesByClass(Entity.class,this.getBoundingBox().expand(16,16,16), EntityPredicates.VALID_LIVING_ENTITY);
         for (Entity entity : list)
         {
             if (entity instanceof TameableEntity tameableEntity) {

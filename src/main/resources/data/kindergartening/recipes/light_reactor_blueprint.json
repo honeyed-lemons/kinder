@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:glass"
+    },
+    {
+      "item": "kindergartening:light_reactor_blueprint"
+    }
+  ],
+  "result": {
+    "item": "kindergartening:light_reactor_blueprint",
+    "count": 2
+  }
+}

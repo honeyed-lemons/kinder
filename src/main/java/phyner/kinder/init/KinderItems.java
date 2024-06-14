@@ -73,7 +73,7 @@ public class KinderItems {
     public static final Item BLUE_ESSENCE = new Item (essenceSettings ());
     public static final Item YELLOW_ESSENCE = new Item (essenceSettings ());
 
-    public static final Item PEARL_SHUCK = new Item (new FabricItemSettings ().maxCount (1).maxDamage (32));
+    public static final Item PEARL_SHUCK = new Item (new FabricItemSettings ().maxCount (1).maxDamage (64));
 
     public static final Item DRIED_GEM_SEEDS = new Item (new FabricItemSettings ().maxCount (1));
 
@@ -83,7 +83,10 @@ public class KinderItems {
     public static final Item PINK_GEM_SEEDS = new AliasedBlockItem (KinderBlocks.PINK_GEM_CROP_BLOCK, new FabricItemSettings ());
     public static final Item PEARL_CUSTOMIZER = new PearlCustomizerItem (new FabricItemSettings ().maxCount (1));
 
-    public static final Item REJUVENATOR = new DestabItem(new FabricItemSettings ().maxCount (1).maxDamage(32));
+    public static final Item REJUVENATOR = new DestabItem(new FabricItemSettings ().maxCount (1).maxDamage(64));
+
+    public static final Item LIGHT_REACTOR_BLUEPRINT = new Item(new FabricItemSettings());
+    public static final Item LIGHT_REACTOR = new Item(new FabricItemSettings());
 
     public static FabricItemSettings gemSettings (){
         return new FabricItemSettings ().maxCount (1).fireproof ();
@@ -163,6 +166,9 @@ public class KinderItems {
         hashmap.put (YELLOW_GEM_SEEDS, "yellow_gem_seeds");
         hashmap.put (BLUE_GEM_SEEDS, "blue_gem_seeds");
         hashmap.put (PINK_GEM_SEEDS, "pink_gem_seeds");
+
+        hashmap.put (LIGHT_REACTOR_BLUEPRINT, "light_reactor_blueprint");
+        hashmap.put (LIGHT_REACTOR, "light_reactor");
 
         return hashmap;
     }

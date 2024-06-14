@@ -83,6 +83,8 @@ public class KinderItemGroups {
         entries.add (KinderItems.BLUE_ESSENCE);
         entries.add (KinderItems.PINK_ESSENCE);
         entries.add (KinderItems.REJUVENATOR);
+        entries.add (KinderItems.LIGHT_REACTOR);
+        entries.add (KinderItems.LIGHT_REACTOR_BLUEPRINT);
     }).build ();
 
     public static void registerItemGroups (){

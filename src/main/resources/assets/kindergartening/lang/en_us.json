@@ -127,6 +127,8 @@
   "block.kindergartening.yellow_gem_crop_flower": "Yellow Shard Flower",
   "block.kindergartening.blue_gem_crop_flower": "Blue Shard Flower",
   "block.kindergartening.pink_gem_crop_flower": "Pink Shard Flower",
+  "item.kindergartening.light_reactor": "Light Reactor",
+  "item.kindergartening.light_reactor_blueprint": "Light Reactor Recipe Cube",
 
   "block.kindergartening.incubator": "Gem Incubator",
   "block.kindergartening.hot_drained_block": "Sweltering Drained Block",

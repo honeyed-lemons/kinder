@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:archaeology",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "kindergartening:light_reactor_blueprint"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "kindergartening:dried_gem_seeds"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_bars"
+        }
+      ]
+    }
+  ]
+}

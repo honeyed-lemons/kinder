@@ -1,4 +1,4 @@
-// 1.20.1	2024-03-30T18:44:41.8274895	Kinder/Model Definitions
+// 1.20.1	2024-06-13T15:45:56.9263734	Kinder/Model Definitions
 2b90ed2471b45ef7550f2e6e2f2202c2a8ce7639 assets\kindergartening\models\item\pearl_gem_0.json
 4d5cdb7082995504406aab27c815ae3c5d9d50da assets\kindergartening\models\item\ruby_gem.json
 4bdf308f423094f607f07af3c14defe3ce9b86d5 assets\kindergartening\models\item\quartz_gem_13.json
@@ -28,10 +28,12 @@ bae0ec042b86de0e115173a72689fc1e9c6b1934 assets\kindergartening\models\item\quar
 30809b9526ec412d49e14b75d92c3eb51b62d578 assets\kindergartening\models\item\sapphire_gem_9.json
 cb8395bfd97869519ce935621b39033c21528e0c assets\kindergartening\models\item\pink_gem_seeds.json
 aba1beb66203d2ad6cc61ed32037c5abefdaf01e assets\kindergartening\models\item\pearl_gem_14.json
+803c6cc54b8d306b355c5da6168f367f8e42931b assets\kindergartening\models\item\light_reactor_blueprint.json
 e99f40f178d66ef49af60333ab625c221c9c6686 assets\kindergartening\models\item\quartz_gem_12.json
 b13bdec3cc1f3dd6f6f2726bf6be648f73f65a9c assets\kindergartening\models\item\pearl_gem_4.json
 85f31c4082c455fd348720e3e6e75462fd315947 assets\kindergartening\models\item\quartz_gem_15.json
 1c18a172ae96f39955cbe4e39cc64a1393330515 assets\kindergartening\models\item\pearl_shuck.json
+78221ed7fabde3d09cf9d87f8d37f478305e6467 assets\kindergartening\models\item\light_reactor.json
 25376e26c83dc3b614ae9a0465e3586204fe322a assets\kindergartening\models\item\pearl_gem_7.json
 ad4b0eab8c017d29fcf11052e633142ed0e34d76 assets\kindergartening\models\item\quartz_gem_10.json
 aaa42500fc5dade9753b33e6ed3f7df5b12a26fe assets\kindergartening\models\item\pearl_gem_9.json
