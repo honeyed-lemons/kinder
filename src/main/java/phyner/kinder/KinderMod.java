@@ -18,7 +18,6 @@ public class KinderMod implements ModInitializer {
         KinderBlocks.registerBlocks ();
         KinderItems.registerItems ();
         KinderGemEntities.registerEntities ();
-        KinderScreens.init ();
         KinderGemEntities.registerAttributes ();
         KinderItemGroups.registerItemGroups ();
         KinderSounds.registerSounds ();

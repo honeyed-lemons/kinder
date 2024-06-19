@@ -12,6 +12,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.mob.ZombifiedPiglinEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -113,7 +114,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         this.goalSelector.add (5, new GemFollowOwnerGoal (this, this.getSpeed (), 2, 48, true));
         //Combat
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, false, (entity) -> this.isRebel()));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, MobEntity.class, 1, false, false, (entity) -> this.canFight() && (entity.getGroup().equals(EntityGroup.UNDEAD) || entity.getGroup().equals(EntityGroup.ARTHROPOD) || entity.getGroup().equals(EntityGroup.ILLAGER))));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, MobEntity.class, 1, false, false, (entity) -> this.canFight() && (entity.getGroup().equals(EntityGroup.UNDEAD) || entity instanceof SpiderEntity  || entity.getGroup().equals(EntityGroup.ILLAGER))));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, AbstractGemEntity.class, true, (entity) -> !entity.getDataTracker().get(REBEL) && this.isRebel()));
         this.goalSelector.add (1, new MeleeAttackGoal (this, this.getSpeed (), false));
         this.targetSelector.add (1, new GemAttackWithOwnerGoal (this, this.canFight ()));
@@ -535,16 +536,19 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
                     KinderMod.LOGGER.info(String.valueOf(i));
                     //if (i == 1f) {
                         if (destabItem == KinderItems.REJUVENATOR) {
-                            if (!this.getWorld().getGameRules().getBoolean(KinderMod.REJUVOTHERGEMS) & getOwnerUuid() != source.getAttacker().getUuid()) {
-                                return super.damage(source, amount);
+                            boolean gr = this.getWorld().getGameRules().getBoolean(KinderMod.REJUVOTHERGEMS);
+                            if (!gr && source.getAttacker() != this.getOwner())
+                                {
+                                    return super.damage(source,amount);
+                                }
                             }
+                            else {
                             setRebel(false);
                             if (getRebelBaseChance() >= 2) {
                                 setRebelBaseChance(getRebelBaseChance() - 1);
                             }
                         }
                         return super.damage(this.getDamageSources().generic(), this.maxHealth() + 25);
-                    //}
                 }
             }
             if (!this.isRebel()) {

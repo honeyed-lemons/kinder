@@ -90,36 +90,32 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
         return highestScorerItemStack;
     }
 
-    public static float scoreGem (GemConditions conditions, World world, BlockPos blockPos, int essenceColor, int gemColor){
+    public static float scoreGem(GemConditions conditions, World world, BlockPos blockPos, int essenceColor, int gemColor) {
         float score = conditions.baseRarity;
         if (conditions.biome != null) {
-            for (Map.Entry<String, Float> map : conditions.biome.entrySet ()) {
-                if (Objects.equals (getBiomeName (world, blockPos), map.getKey ())) {
-                    score += map.getValue ();
-                }
+            String biomeName = getBiomeName(world, blockPos);
+            Float biomeScore = conditions.biome.get(biomeName);
+            if (biomeScore != null) {
+                score += biomeScore;
             }
         }
-        if (getBiomeTemp (world, blockPos) >= conditions.tempMin && getBiomeTemp (world, blockPos) <= conditions.tempMax) {
+        float biomeTemp = getBiomeTemp(world, blockPos);
+        if (biomeTemp >= conditions.tempMin && biomeTemp <= conditions.tempMax) {
             score += 1f;
-            if (getBiomeTemp (world, blockPos) == conditions.tempIdeal) {
+            if (biomeTemp == conditions.tempIdeal) {
                 score += 0.5f;
             }
         }
-        if (score != 0) {
-            if (blockPos.getY () >= conditions.depthMax && blockPos.getY () <= conditions.depthMin) {
-                score += 1f;
-            } else {
-                score = 0;
-            }
-            if (score != 0) {
-                score += world.random.nextFloat ();
-            }
+        int blockY = blockPos.getY();
+        if (score != 0 && blockY >= conditions.depthMax && blockY <= conditions.depthMin) {
+            score += 1f;
+            score += world.random.nextFloat();
+        } else {
+            score = 0;
         }
-        if (essenceColor == gemColor) {
-            return score;
-        }
-        return 0;
+        return essenceColor == gemColor ? score : 0;
     }
+
 
     public static void drainBlock (World world, BlockPos pos, IncubatorBlockEntity blockEntity){
         int randx = pos.getX () + world.random.nextBetween (-3, 3);

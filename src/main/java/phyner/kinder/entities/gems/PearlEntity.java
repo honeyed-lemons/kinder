@@ -3,6 +3,7 @@ package phyner.kinder.entities.gems;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.EscapeDangerGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
@@ -48,6 +49,13 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     @Override public int attackDamage (){
         return 1;
     }
+
+    @Override
+    public void initGoals() {
+        super.initGoals();
+        this.goalSelector.add(1, new EscapeDangerGoal(this, getSpeed()));
+    }
+
     @Override public void interactGem (PlayerEntity player){
         ItemStack stack = player.getStackInHand (Hand.MAIN_HAND);
         if (stack == ItemStack.EMPTY)
@@ -60,6 +68,10 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     }
 
     @Override public int hairVariantCount (){
+        return 9;
+    }
+
+    public int hairExtraVariantCount (){
         return 5;
     }
 
@@ -87,9 +99,6 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     }
 
     public int insigniaVariantCount (){
-        return 4;
-    }
-    public int hairExtraVariantCount (){
         return 4;
     }
     public int getHairExtraVariant (){

@@ -2,6 +2,7 @@ package phyner.kinder.entities.gems;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.EscapeDangerGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
@@ -73,6 +74,12 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
         return 0;
     }
     @Override public int defaultInsigniaColor (){ return 0;
+    }
+
+    @Override
+    public void initGoals() {
+        super.initGoals();
+        this.goalSelector.add(1, new EscapeDangerGoal(this, getSpeed()));
     }
 
     @Override public int generateInsigniaVariant (){
@@ -209,13 +216,13 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
         {
             if (entity instanceof TameableEntity tameableEntity) {
                 if (tameableEntity.getOwnerUuid() == this.getOwnerUuid()) {
-                    tameableEntity.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration)), this);
+                    tameableEntity.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration),0,false,false), this);
                 }
             }
             if (entity instanceof PlayerEntity player)
             {
                 if (isOwner(player)) {
-                    player.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration)), this);
+                    player.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration),0,false,false), this);
                     player.sendMessage(Text.literal(this.getName().getString()+": ").append(Text.translatable("kinder.sapphire.prediction.base").append(Text.translatable("kinder.sapphire.prediction."+statusEffect.getTranslationKey()))));
                 }
             }

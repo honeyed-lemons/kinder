@@ -16,6 +16,7 @@ public class KinderConditions {
         ArrayList<GemConditions> map = new ArrayList<> ();
         map.add (RubyConditions ());
         map.add (QuartzConditions ());
+        map.add (SapphireConditions());
         return map;
     }
 
@@ -41,6 +42,8 @@ public class KinderConditions {
         cruxes.put (Blocks.GRAVEL, -0.1f);
         cruxes.put (Blocks.SCULK, 0.25f);
         cruxes.put (Blocks.CLAY, 0.1f);
+        cruxes.put (Blocks.PACKED_ICE, 0.1f);
+        cruxes.put (Blocks.BLUE_ICE, 0.2f);
         return cruxes;
     }
 
@@ -87,6 +90,34 @@ public class KinderConditions {
         gems.put (KinderItems.QUARTZ_GEM_13, GemColors.GREEN);
         gems.put (KinderItems.QUARTZ_GEM_14, GemColors.RED);
         gems.put (KinderItems.QUARTZ_GEM_15, GemColors.BLACK);
+        return new GemConditions (baseRarity, tempMin, tempIdeal, tempMax, depthMin, depthMax, biomes, gems);
+    }
+
+    public static GemConditions SapphireConditions (){
+        float baseRarity = -0.6f;
+        float tempMin = -1.0f;
+        float tempIdeal = -0.5f;
+        float tempMax = 0.05f;
+        float depthMax = -255;
+        float depthMin = 70;
+        HashMap<String, Float> biomes = new HashMap<> ();
+
+        HashMap<Item, GemColors> gems = new HashMap<> () {};
+        gems.put (KinderItems.SAPPHIRE_GEM_0, GemColors.WHITE);
+        gems.put (KinderItems.SAPPHIRE_GEM_1, GemColors.ORANGE);
+        gems.put (KinderItems.SAPPHIRE_GEM_2, GemColors.MAGENTA);
+        gems.put (KinderItems.SAPPHIRE_GEM_3, GemColors.LIGHT_BLUE);
+        gems.put (KinderItems.SAPPHIRE_GEM_4, GemColors.YELLOW);
+        gems.put (KinderItems.SAPPHIRE_GEM_5, GemColors.LIME);
+        gems.put (KinderItems.SAPPHIRE_GEM_6, GemColors.PINK);
+        gems.put (KinderItems.SAPPHIRE_GEM_7, GemColors.GRAY);
+        gems.put (KinderItems.SAPPHIRE_GEM_8, GemColors.LIGHT_GRAY);
+        gems.put (KinderItems.SAPPHIRE_GEM_9, GemColors.CYAN);
+        gems.put (KinderItems.SAPPHIRE_GEM_10, GemColors.PURPLE);
+        gems.put (KinderItems.SAPPHIRE_GEM_11, GemColors.BLUE);
+        gems.put (KinderItems.SAPPHIRE_GEM_12, GemColors.BROWN);
+        gems.put (KinderItems.SAPPHIRE_GEM_13, GemColors.GREEN);
+        gems.put (KinderItems.SAPPHIRE_GEM_15, GemColors.BLACK);
         return new GemConditions (baseRarity, tempMin, tempIdeal, tempMax, depthMin, depthMax, biomes, gems);
     }
 }

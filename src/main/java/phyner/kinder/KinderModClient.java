@@ -17,6 +17,7 @@ import phyner.kinder.init.KinderScreens;
     @Override public void onInitializeClient (){
         KinderGemEntities.registerEntityRenderers();
         KinderScreens.clientint();
+        KinderScreens.init ();
         KinderBlocks.setBlockRender();
     }
 }

@@ -3,7 +3,8 @@
   "package": "phyner.kinder.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "DriedSeedMixin"
+    "DriedSeedMixin",
+    "HostileEntityGemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
