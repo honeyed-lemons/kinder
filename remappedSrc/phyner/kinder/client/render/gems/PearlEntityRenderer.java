@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import phyner.kinder.client.models.gems.PearlEntityModel;
 import phyner.kinder.client.models.gems.RubyEntityModel;
-import phyner.kinder.client.render.layers.*;
 import phyner.kinder.entities.gems.PearlEntity;
 import phyner.kinder.entities.gems.RubyEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;

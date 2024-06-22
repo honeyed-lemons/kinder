@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "nnr",
+    " sp",
+    "s  "
+  ],
+  "key": {
+    "n": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "r": {
+      "item": "kinder:light_reactor"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    },
+    "p": {
+      "item": "kinder:pink_gem_seeds"
+    }
+  },
+  "result": {
+    "item": "kinder:rejuvenator"
+  }
+}

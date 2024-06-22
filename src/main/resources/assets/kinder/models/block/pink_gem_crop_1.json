@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "kinder:block/pink_gem_crop_1"
+  }
+}

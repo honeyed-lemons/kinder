@@ -1,0 +1,25 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:quartz"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "kinder:white_gem_crop_flower"
+    },
+    {
+      "amount": 27000,
+      "fluid": "minecraft:water",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "amount": 27000,
+      "fluid": "kinder:still_white_essence"
+    }
+  ]
+}

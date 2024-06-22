@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "kindergartening:block/pink_gem_crop_2"
-  }
-}

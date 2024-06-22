@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_bottom_top",
-  "textures": {
-    "bottom": "kindergartening:block/hot_drained_block_top",
-    "side": "kindergartening:block/hot_drained_block",
-    "top": "kindergartening:block/hot_drained_block_top"
-  }
-}

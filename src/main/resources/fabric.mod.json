@@ -9,17 +9,17 @@
     "Segapop"
   ],
   "license": "CC0-1.0",
-  "icon": "assets/kindergartening/icon.png",
+  "icon": "assets/kinder/icon.png",
   "environment": "*",
   "entrypoints": {
     "fabric-datagen": [
-      "phyner.kinder.init.KinderDataGenerator"
+      "honeyedlemons.kinder.init.KinderDataGenerator"
     ],
     "main": [
-      "phyner.kinder.KinderMod"
+      "honeyedlemons.kinder.KinderMod"
     ],
     "client": [
-      "phyner.kinder.KinderModClient"
+      "honeyedlemons.kinder.KinderModClient"
     ]
   },
   "mixins": [

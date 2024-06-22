@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "kinder:block/hot_drained_block"
+    }
+  }
+}

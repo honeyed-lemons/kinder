@@ -1,0 +1,37 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "kinder:flowing_white_essence",
+      "required": false
+    },
+    {
+      "id": "kinder:still_white_essence",
+      "required": false
+    },
+    {
+      "id": "kinder:flowing_yellow_essence",
+      "required": false
+    },
+    {
+      "id": "kinder:still_yellow_essence",
+      "required": false
+    },
+    {
+      "id": "kinder:flowing_blue_essence",
+      "required": false
+    },
+    {
+      "id": "kinder:still_blue_essence",
+      "required": false
+    },
+    {
+      "id": "kinder:flowing_pink_essence",
+      "required": false
+    },
+    {
+      "id": "kinder:still_pink_essence",
+      "required": false
+    }
+  ]
+}

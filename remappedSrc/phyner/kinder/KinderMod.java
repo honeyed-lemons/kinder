@@ -8,7 +8,6 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import phyner.kinder.init.*;
 
 public class KinderMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger ("Kindergartening");

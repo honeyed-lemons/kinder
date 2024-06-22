@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "kinder:block/temp_drained_block"
+    }
+  }
+}

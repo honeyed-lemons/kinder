@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "dq",
+    "bf"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "q": {
+      "item": "minecraft:quartz"
+    },
+    "b": {
+      "item": "minecraft:potion"
+    },
+    "f": {
+      "item": "kinder:blue_gem_crop_flower"
+    }
+  },
+  "result": {
+    "item": "kinder:blue_essence_bottle"
+  }
+}
