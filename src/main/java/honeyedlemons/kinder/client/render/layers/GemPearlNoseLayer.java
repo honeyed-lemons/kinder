@@ -5,7 +5,6 @@ import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.util.GemPlacements;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -32,7 +31,7 @@ public class GemPearlNoseLayer<T extends AbstractGemEntity> extends GeoRenderLay
         float g = (float) skinColor.getGreen () / 255;
         RenderLayer armorRenderType = RenderLayer.getEntityCutoutNoCull (TEXTURE);
         if (gem.getGemPlacement () != GemPlacements.NOSE) {
-            getRenderer ().reRender (getDefaultBakedModel (gem), poseStack, bufferSource, gem, armorRenderType, bufferSource.getBuffer (armorRenderType), partialTick, packedLight, OverlayTexture.DEFAULT_UV, r, g, b, 1);
+            getRenderer ().reRender (getDefaultBakedModel (gem), poseStack, bufferSource, gem, armorRenderType, bufferSource.getBuffer (armorRenderType), partialTick, packedLight, packedOverlay, r, g, b, 1);
         }
     }
 }

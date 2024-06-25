@@ -3,7 +3,6 @@ package honeyedlemons.kinder.client.render.layers;
 import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.util.GemColors;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -36,6 +35,6 @@ public class GemInsigniaLayer<T extends AbstractGemEntity> extends GeoRenderLaye
             }
         }
         RenderLayer armorRenderType = RenderLayer.getEntityTranslucent (texture);
-        getRenderer ().reRender (getDefaultBakedModel (gem), poseStack, bufferSource, gem, armorRenderType, bufferSource.getBuffer (armorRenderType), partialTick, packedLight, OverlayTexture.DEFAULT_UV, insigniaColors[0], insigniaColors[1], insigniaColors[2], 1);
+        getRenderer ().reRender (getDefaultBakedModel (gem), poseStack, bufferSource, gem, armorRenderType, bufferSource.getBuffer (armorRenderType), partialTick, packedLight, packedOverlay, insigniaColors[0], insigniaColors[1], insigniaColors[2], 1);
     }
 }

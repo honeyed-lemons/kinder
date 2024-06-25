@@ -76,8 +76,6 @@ public class GemItem extends Item {
                     gem.clearStatusEffects ();
                     gem.setVelocity (0, 0, 0);
                     gem.setPerfectionThings(gem.getPerfection());
-                    gem.setInsigniaColor(gem.defaultInsigniaColor());
-                    gem.setOutfitColor(gem.defaultOutfitColor());
                     KinderMod.LOGGER.info ("Spawning Gem, Name is " + gem.getName ().getString ());
                     world.spawnEntity (gem);
                     gem.lookAtEntity (context.getPlayer (), 90, 90);

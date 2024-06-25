@@ -1,21 +1,21 @@
 package honeyedlemons.kinder;
 
 import honeyedlemons.kinder.init.*;
+import honeyedlemons.kinder.modcompat.KinderConfig;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
-import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class KinderMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger ("Kinder");
     public static String MOD_ID = "kinder";
-    public static final GameRules.Key<GameRules.BooleanRule> REJUVOTHERGEMS = GameRuleRegistry.register("shouldRejuvOtherGems", GameRules.Category.MOBS, GameRuleFactory.createBooleanRule(true));
+    public static KinderConfig config;
 
     @Override public void onInitialize (){
-        LOGGER.info ("Starting Kinder");
-
+        AutoConfig.register(KinderConfig.class, Toml4jConfigSerializer::new);
+        config = AutoConfig.getConfigHolder(KinderConfig.class).getConfig();
         KinderBlocks.registerBlocks ();
         KinderItems.registerItems ();
         KinderGemEntities.registerEntities ();
@@ -25,6 +25,8 @@ public class KinderMod implements ModInitializer {
         KinderItemGroups.registerItemGroups ();
         KinderSounds.registerSounds ();
         KinderLootTables.modifyTables();
-        KinderVillagerTrades.registerCustomTrades();
+        if (config.driedGemSeedConfig.addtovillager) {
+            KinderVillagerTrades.registerCustomTrades();
+        }
     }
 }

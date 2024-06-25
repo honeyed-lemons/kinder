@@ -1,5 +1,6 @@
 package honeyedlemons.kinder.util;
 
+import honeyedlemons.kinder.KinderMod;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -9,7 +10,7 @@ import net.minecraft.nbt.NbtList;
 public class InventoryNbtUtil {
     public static void readInventoryNbt (NbtCompound nbt, String key, Inventory stacks){
         var inventoryNbt = nbt.getList (key, NbtElement.COMPOUND_TYPE);
-
+        KinderMod.LOGGER.info("Reading");
         for (int i = 0; i < inventoryNbt.size (); ++i) {
             var slotNbt = inventoryNbt.getCompound (i);
             int slotId = slotNbt.getByte ("slot") & 255;
@@ -21,10 +22,12 @@ public class InventoryNbtUtil {
 
     @SuppressWarnings("UnusedReturnValue")
     public static NbtCompound writeInventoryNbt (NbtCompound nbt, String key, Inventory stacks, int end){
+        KinderMod.LOGGER.info("Writing");
         return writeInventoryNbt (nbt, key, stacks, end, true);
     }
 
     public static NbtCompound writeInventoryNbt (NbtCompound nbt, String key, Inventory stacks, int end, boolean setIfEmpty){
+        KinderMod.LOGGER.info("Writing");
         var inventoryNbt = new NbtList ();
 
         for (int i = 0; i < end; ++i) {

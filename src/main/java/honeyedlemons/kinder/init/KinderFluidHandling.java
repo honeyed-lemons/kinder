@@ -53,8 +53,10 @@ public class KinderFluidHandling {
     public static void setupFluidRendering(final Fluid still, final Fluid flowing, final Identifier textureBase) {
         final Identifier stillTexture = new Identifier(KinderMod.MOD_ID, "block/fluids/" + textureBase.getPath() + "_still");
         final Identifier flowingTexture = new Identifier(KinderMod.MOD_ID, "block/fluids/" + textureBase.getPath() + "_flow");
+        final Identifier overlayTexture = new Identifier(KinderMod.MOD_ID, "block/fluids/" + textureBase.getPath() + "_overlay");
 
-        FluidRenderHandler handler = new SimpleFluidRenderHandler(stillTexture, flowingTexture);
+        FluidRenderHandler handler = new SimpleFluidRenderHandler(stillTexture, flowingTexture, overlayTexture);
+
         FluidRenderHandlerRegistry.INSTANCE.register(still, handler);
         FluidRenderHandlerRegistry.INSTANCE.register(flowing, handler);
     }

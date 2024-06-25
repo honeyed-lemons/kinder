@@ -1,5 +1,6 @@
 package honeyedlemons.kinder.entities.gems;
 
+import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractVaryingGemEntity;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
@@ -23,11 +24,11 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
         return createDefaultGemAttributes ().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.6);
     }
     @Override public int maxHealth (){
-        return 50;
+        return KinderMod.config.quartzConfig.max_health;
     }
 
     @Override public int attackDamage (){
-        return 6;
+        return KinderMod.config.quartzConfig.attack_damage;
     }
     @Override public boolean isSolider (){
         return true;
@@ -46,11 +47,12 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
     }
 
     @Override public int defaultOutfitColor (){
-        return 0;
+        return -1;
     }
 
-    @Override public int defaultInsigniaColor (){ return 0;
+    @Override public int defaultInsigniaColor (){ return -1;
     }
+
 
     @Override public GemPlacements[] getPlacements (){
         return new GemPlacements[]{

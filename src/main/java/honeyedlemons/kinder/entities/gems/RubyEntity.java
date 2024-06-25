@@ -1,8 +1,10 @@
 package honeyedlemons.kinder.entities.gems;
 
+import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.PathNodeType;
@@ -18,20 +20,20 @@ import org.jetbrains.annotations.NotNull;
 public class RubyEntity extends AbstractGemEntity {
     public RubyEntity (EntityType<? extends AbstractGemEntity> entityType, World world){
         super (entityType, world);
-        this.setPathfindingPenalty (PathNodeType.DANGER_FIRE, 0.0F);
-        this.setPathfindingPenalty (PathNodeType.LAVA, 0.0F);
-        this.setPathfindingPenalty (PathNodeType.DAMAGE_FIRE, 0.0F);
+        this.setPathfindingPenalty (PathNodeType.DANGER_FIRE, 8.0F);
+        this.setPathfindingPenalty (PathNodeType.LAVA, 8.0F);
+        this.setPathfindingPenalty (PathNodeType.DAMAGE_FIRE, 8.0F);
     }
 
     public static DefaultAttributeContainer.@NotNull Builder createGemAttributes (){
         return createDefaultGemAttributes ().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.6);
     }
     @Override public int maxHealth (){
-        return 30;
+        return KinderMod.config.rubyConfig.max_health;
     }
 
     @Override public int attackDamage (){
-        return 3;
+        return KinderMod.config.rubyConfig.attack_damage;
     }
 
     @Override @NotNull public SoundEvent gemInstrument (){
@@ -100,6 +102,22 @@ public class RubyEntity extends AbstractGemEntity {
         return true;
     }
 
+    @Override
+    public float damageModifier(Entity target)
+    {
+        if (target.isOnFire())
+        {
+            return 1.25f;
+        }
+        return 1f;
+    }
+    @Override
+    public void doEnemyThings(Entity target) {
+        if ((0.045*getPerfection())-0.035 > random.nextFloat())
+        {
+            target.setOnFireFor(getPerfection() * 2);
+        }
+    }
     @Override public void onInventoryChanged (Inventory sender){
 
     }

@@ -32,7 +32,7 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
 
     public static void serverTick (World world, BlockPos pos, BlockState state, IncubatorBlockEntity blockEntity){
         if (state.get (IncubatorBlock.COOKING).equals (true)) {
-            if (blockEntity.ticksElapsed >= 16000) {
+            if (blockEntity.ticksElapsed >= KinderMod.config.incubationtime) {
                 world.setBlockState(pos, state.with(IncubatorBlock.COOKED, true).with(IncubatorBlock.COOKING, false));
                 blockEntity.ticksElapsed = 0;
             }

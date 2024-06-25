@@ -1,7 +1,7 @@
 package honeyedlemons.kinder.entities.gems;
 
+import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractVaryingGemEntity;
-import honeyedlemons.kinder.entities.GemDefaultAnimations;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
 import net.minecraft.entity.EntityData;
@@ -26,8 +26,6 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.core.animation.AnimatableManager;
 
 public class PearlEntity extends AbstractVaryingGemEntity {
     public PearlEntity (EntityType<? extends TameableEntity> entityType, World world){
@@ -43,11 +41,11 @@ public class PearlEntity extends AbstractVaryingGemEntity {
         return super.initialize (world, difficulty, spawnReason, entityData, entityNbt);
     }
     @Override public int maxHealth (){
-        return 20;
+        return KinderMod.config.pearlConfig.max_health;
     }
 
     @Override public int attackDamage (){
-        return 1;
+        return KinderMod.config.pearlConfig.attack_damage;
     }
 
     @Override
@@ -68,38 +66,33 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     }
 
     @Override public int hairVariantCount (){
-        return 9;
+        return 10;
     }
 
     public int hairExtraVariantCount (){
         return 5;
     }
 
-    @Override public void registerControllers (AnimatableManager.ControllerRegistrar controllerRegistrar){
-        controllerRegistrar.add (GemDefaultAnimations.genericGemWalkLegsController (this));
-        controllerRegistrar.add (GemDefaultAnimations.genericGemArmsWithIdleController(this));
-        controllerRegistrar.add (DefaultAnimations.genericAttackAnimation (this, GemDefaultAnimations.ARMS_USE));
-    }
     public void initDataTracker (){
         super.initDataTracker ();
         this.dataTracker.startTracking (HAIR_EXTRA_VARIANT, 0);
     }
     public void writeCustomDataToNbt (NbtCompound nbt){
-        super.writeCustomDataToNbt (nbt);
         nbt.putInt ("HairExtraVariant", this.dataTracker.get (HAIR_EXTRA_VARIANT));
+        super.writeCustomDataToNbt (nbt);
     }
 
     public void readCustomDataFromNbt (NbtCompound nbt){
-        super.readCustomDataFromNbt (nbt);
         this.dataTracker.set (HAIR_EXTRA_VARIANT, nbt.getInt ("HairExtraVariant"));
+        super.readCustomDataFromNbt (nbt);
     }
 
     @Override public int outfitVariantCount (){
-        return 4;
+        return 5;
     }
 
     public int insigniaVariantCount (){
-        return 4;
+        return 6;
     }
     public int getHairExtraVariant (){
         return this.dataTracker.get(HAIR_EXTRA_VARIANT);
@@ -112,6 +105,7 @@ public class PearlEntity extends AbstractVaryingGemEntity {
             return this.random.nextBetween (1, insigniaVariantCount());
         } else return 0;
     }
+
     public int generateHairExtraVariant()
     {
         return this.random.nextInt(hairExtraVariantCount());
@@ -121,11 +115,11 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     }
 
     @Override public int defaultOutfitColor (){
-        return 0;
+        return -1;
     }
 
     @Override public int defaultInsigniaColor (){
-        return 0;
+        return -1;
     }
 
     @Override public GemPlacements[] getPlacements (){

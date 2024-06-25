@@ -1,7 +1,7 @@
 package honeyedlemons.kinder.entities.gems;
 
+import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractVaryingGemEntity;
-import honeyedlemons.kinder.entities.GemDefaultAnimations;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
 import net.minecraft.entity.Entity;
@@ -27,8 +27,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.geckolib.constant.DefaultAnimations;
-import software.bernie.geckolib.core.animation.AnimatableManager;
 
 import java.util.List;
 
@@ -42,11 +40,11 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
         return createDefaultGemAttributes ().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.75);
     }
     @Override public int maxHealth (){
-        return 50;
+        return KinderMod.config.sapphireConfig.max_health;
     }
 
     @Override public int attackDamage (){
-        return 1;
+        return KinderMod.config.sapphireConfig.attack_damage;
     }
     @Override public boolean isSolider (){
         return false;
@@ -65,9 +63,9 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
     }
 
     @Override public int defaultOutfitColor (){
-        return 0;
+        return -1;
     }
-    @Override public int defaultInsigniaColor (){ return 0;
+    @Override public int defaultInsigniaColor (){ return -1;
     }
 
     @Override
@@ -76,14 +74,6 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
         this.goalSelector.add(1, new EscapeDangerGoal(this, getSpeed()));
     }
 
-    @Override public int generateInsigniaVariant (){
-        return getOutfitVariant();
-    }
-    @Override public void registerControllers (AnimatableManager.ControllerRegistrar controllerRegistrar){
-        controllerRegistrar.add (GemDefaultAnimations.genericGemWalkLegsController (this));
-        controllerRegistrar.add (GemDefaultAnimations.genericGemArmsWithIdleController(this));
-        controllerRegistrar.add (DefaultAnimations.genericAttackAnimation (this, GemDefaultAnimations.ARMS_USE));
-    }
     @Override public GemPlacements[] getPlacements (){
         return new GemPlacements[]{
                 GemPlacements.CHEST,

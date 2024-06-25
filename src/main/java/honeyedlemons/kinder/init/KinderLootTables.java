@@ -1,5 +1,6 @@
 package honeyedlemons.kinder.init;
 
+import honeyedlemons.kinder.KinderMod;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
@@ -25,9 +26,9 @@ public class KinderLootTables {
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             for (Identifier identifier : tables_to_add_seeds) {
-                if (source.isBuiltin() && identifier.equals(id)) {
+                if (source.isBuiltin() && identifier.equals(id) && KinderMod.config.driedGemSeedConfig.addtostructure) {
                     LootPool.Builder poolBuilder = LootPool.builder()
-                            .with(ItemEntry.builder(KinderItems.DRIED_GEM_SEEDS).conditionally(RandomChanceLootCondition.builder(0.25f)));
+                            .with(ItemEntry.builder(KinderItems.DRIED_GEM_SEEDS).conditionally(RandomChanceLootCondition.builder(KinderMod.config.driedGemSeedConfig.chance)));
 
                     tableBuilder.pool(poolBuilder);
                 }

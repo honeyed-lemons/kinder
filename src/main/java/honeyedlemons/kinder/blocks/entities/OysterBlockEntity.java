@@ -26,7 +26,7 @@ public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
 
     public static void tick (World world, BlockPos pos, BlockState state, OysterBlockEntity blockEntity){
         if (state.get (OysterBlock.COOKING).equals (true) && state.get (OysterBlock.WATERLOGGED)) {
-            if (blockEntity.ticksElapsed >= (24000 / (getDownfall (world, pos) + 0.5))) {
+            if (blockEntity.ticksElapsed >= (KinderMod.config.oystertime / (getDownfall (world, pos) + 0.5))) {
                 world.setBlockState (pos, state.with (OysterBlock.COOKED, true).with (OysterBlock.COOKING, false));
                 blockEntity.ticksElapsed = 0;
             } else {

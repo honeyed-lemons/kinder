@@ -27,8 +27,4 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
         float scaler = animatable.getPerfectionScaler(animatable.getPerfection());
         super.scaleModelForRender(baseWidth * scaler, baseHeight * scaler, poseStack, animatable, model, isReRender, partialTick, packedLight, packedOverlay);
     }
-
-    @Override public boolean hasLabel (QuartzEntity animatable){
-        return super.hasLabel (animatable);
-    }
 }

@@ -39,12 +39,14 @@ public class PearlCustomizerItem extends Item {
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        if (entity instanceof PearlEntity && !user.isSneaky()) {
-            switch (this.getMode()) {
-                case 0 -> changeHair((PearlEntity) entity);
-                case 1 -> changeHairExtra((PearlEntity) entity);
-                case 2 -> changeOutfit((PearlEntity) entity);
-                case 3 -> changeInsignia((PearlEntity) entity);
+        if (entity instanceof PearlEntity pearl && !user.isSneaky()) {
+            if (pearl.getOwner() == user) {
+                switch (this.getMode()) {
+                    case 0 -> changeHair((PearlEntity) entity);
+                    case 1 -> changeHairExtra((PearlEntity) entity);
+                    case 2 -> changeOutfit((PearlEntity) entity);
+                    case 3 -> changeInsignia((PearlEntity) entity);
+                }
             }
             return super.useOnEntity(stack, user, entity, hand);
         }

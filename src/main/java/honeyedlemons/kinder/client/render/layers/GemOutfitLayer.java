@@ -5,7 +5,6 @@ import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.util.GemColors;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -39,6 +38,6 @@ public class GemOutfitLayer<T extends AbstractGemEntity> extends GeoRenderLayer<
             }
         }
         RenderLayer armorRenderType = RenderLayer.getEntityCutoutNoCull (texture);
-        getRenderer ().reRender (getDefaultBakedModel (gem), poseStack, bufferSource, gem, armorRenderType, bufferSource.getBuffer (armorRenderType), partialTick, packedLight, OverlayTexture.DEFAULT_UV, outfitColors[0], outfitColors[1], outfitColors[2], 1);
+        getRenderer ().reRender (getDefaultBakedModel (gem), poseStack, bufferSource, gem, armorRenderType, bufferSource.getBuffer (armorRenderType), partialTick, packedLight, packedOverlay, outfitColors[0], outfitColors[1], outfitColors[2], 1);
     }
 }

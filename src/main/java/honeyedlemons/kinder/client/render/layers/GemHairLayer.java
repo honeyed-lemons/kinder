@@ -4,7 +4,6 @@ import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractGemEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -34,6 +33,6 @@ import java.awt.*;
         float b = (float) hairColor.getBlue () / 255;
         float g = (float) hairColor.getGreen () / 255;
         RenderLayer armorRenderType = RenderLayer.getEntityCutoutNoCull (texture);
-        getRenderer ().reRender (getDefaultBakedModel (gem), poseStack, bufferSource, gem, armorRenderType, bufferSource.getBuffer (armorRenderType), partialTick, packedLight, OverlayTexture.DEFAULT_UV, r, g, b, 1);
+        getRenderer ().reRender (getDefaultBakedModel (gem), poseStack, bufferSource, gem, armorRenderType, bufferSource.getBuffer (armorRenderType), partialTick, packedLight, packedOverlay, r, g, b, 1);
     }
 }

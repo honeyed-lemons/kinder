@@ -15,6 +15,7 @@ import honeyedlemons.kinder.util.PaletteType;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.pathing.MobNavigation;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -46,6 +47,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EntityView;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -65,6 +67,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractGemEntity extends TameableEntity implements GeoEntity, InventoryChangedListener, Tameable {
     protected static final TrackedData<Optional<UUID>> OWNER_UUID = DataTracker.registerData (AbstractGemEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private static final TrackedData<Byte> TAMABLE_FLAGS = DataTracker.registerData (AbstractGemEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -88,12 +91,13 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache (this);
     public int initalGemColorVariant = 0;
     public boolean setGemVariantOnInitialSpawn = true;
-    private SimpleInventory inventory;
+    public SimpleInventory inventory;
 
     @SuppressWarnings("deprecation")
     public AbstractGemEntity (EntityType<? extends TameableEntity> entityType, World world){
         super (entityType, world);
         this.reinitDimensions();
+        ((MobNavigation)this.getNavigation()).setCanPathThroughDoors(true);
         this.updateInventory ();
     }
 
@@ -105,22 +109,21 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
 
     public void initGoals (){
         //Looking around
-        this.goalSelector.add (10, new LookAtEntityGoal (this, PlayerEntity.class, 2.0f));
-        this.goalSelector.add (10, new LookAroundGoal (this));
+        this.goalSelector.add (10, new LookAtEntityGoal(this, PlayerEntity.class, 2.0f));
+        this.goalSelector.add (10, new LookAroundGoal(this));
         //Movement Types and movement
-        this.goalSelector.add (1, new SwimGoal (this));
+        this.goalSelector.add (1, new SwimGoal(this));
         this.goalSelector.add (5, new GemWanderAroundGoal(this, this.getSpeed (), 0.0005f));
         this.goalSelector.add (5, new GemFollowOwnerGoal(this, this.getSpeed (), 2, 48, true));
         //Combat
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, false, (entity) -> this.isRebel()));
-        this.targetSelector.add(2, new ActiveTargetGoal<>(this, MobEntity.class, 1, false, false, (entity) -> this.canFight() && (entity.getGroup().equals(EntityGroup.UNDEAD) || entity instanceof SpiderEntity  || entity.getGroup().equals(EntityGroup.ILLAGER))));
+        this.targetSelector.add(2, new ActiveTargetGoal<>(this, MobEntity.class, 1, false, false, (entity) -> this.canFight() && (entity.getGroup().equals(EntityGroup.UNDEAD) || entity instanceof SpiderEntity || entity.getGroup().equals(EntityGroup.ILLAGER))));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, AbstractGemEntity.class, true, (entity) -> !entity.getDataTracker().get(REBEL) && this.isRebel()));
-        this.goalSelector.add (1, new MeleeAttackGoal (this, this.getSpeed (), false));
+        this.goalSelector.add (1, new MeleeAttackGoal(this, this.getSpeed (), false));
         this.targetSelector.add (1, new GemAttackWithOwnerGoal(this, this.canFight ()));
         this.targetSelector.add (1, new GemTrackOwnerAttackerGoal(this, this.canFight ()));
         super.initGoals ();
     }
-
     public double getSpeed (){
         return this.getAttributeValue (EntityAttributes.GENERIC_MOVEMENT_SPEED);
     }
@@ -181,7 +184,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         nbt.putInt ("InsigniaVariant", this.dataTracker.get (INSIGNIA_VARIANT));
         nbt.putInt ("GemPlacement", this.dataTracker.get (GEM_PLACEMENT));
         nbt.putInt ("GemColor", this.dataTracker.get (GEM_COLOR));
-        InventoryNbtUtil.writeInventoryNbt (nbt, "inventory", this.inventory, this.inventory.size ());
+        InventoryNbtUtil.writeInventoryNbt (nbt, "Inventory", this.inventory, this.inventory.size ());
     }
     @Override
     public void readCustomDataFromNbt (NbtCompound nbt){
@@ -248,15 +251,15 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     }
 
     @Override
-    public void tick (){
-        super.tick();
-        if (getRebelTicks() <= 0) {
-            checkRebel();
-            setRebelTicks(24000);
-        }
-        else{
-            setRebelTicks(getRebelTicks() - 1);
-        }
+    public void mobTick (){
+        super.mobTick();
+        //if (getRebelTicks() <= 0) {
+        //    checkRebel();
+        //    setRebelTicks(24000);
+        //}
+        //else{
+        //    setRebelTicks(getRebelTicks() - 1);
+        //}
     }
 
     public void checkRebel (){
@@ -308,6 +311,14 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
 
     public void setGemColorVariant (int colorVariant){
         this.dataTracker.set (GEM_COLOR_VARIANT, colorVariant);
+        if (defaultOutfitColor() == -1)
+        {
+            setOutfitColor(colorVariant);
+        }
+        if (defaultInsigniaColor() == -1)
+        {
+            setInsigniaColor(colorVariant);
+        }
     }
 
     public int getPerfection (){
@@ -367,7 +378,6 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     public void setInsigniaVariant (int insigniaVariant){
         this.dataTracker.set (INSIGNIA_VARIANT, insigniaVariant);
     }
-
     public int getInsigniaColor (){
         return this.dataTracker.get (INSIGNIA_COLOR);
     }
@@ -403,61 +413,75 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
     }
 
     @Override
-    public EntityData initialize (ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt){
-        setPerfectionThings(this.getPerfection());
-        setHairVariant (generateHairVariant ());
-        this.setGemColorVariant (this.generateGemColorVariant ());
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        setPerfectionThings(getPerfection());
+        setHairVariant(generateHairVariant());
+        if (defaultOutfitColor() != -1) {
+            setOutfitColor(defaultOutfitColor());
+        }
+        if (defaultInsigniaColor() != -1) {
+            setInsigniaColor(defaultInsigniaColor());
+        }
+        this.setGemColorVariant(this.setGemVariantOnInitialSpawn ? generateGemColorVariant() : this.initalGemColorVariant);
         if (this.setGemVariantOnInitialSpawn) {
-            this.setGemColorVariant (this.generateGemColorVariant ());
-            generateColors ();
-        } else this.setGemColorVariant (this.initalGemColorVariant);
-        setOutfitVariant (generateOutfitVariant ());
-        setInsigniaVariant (generateInsigniaVariant ());
-        //setOutfitColor (defaultOutfitColor ());
-        //setInsigniaColor (defaultInsigniaColor ());
-        setGemPlacement (generateGemPlacement ());
-        return super.initialize (world, difficulty, spawnReason, entityData, entityNbt);
+            generateColors();
+        }
+        setOutfitVariant(generateOutfitVariant());
+        setInsigniaVariant(generateInsigniaVariant());
+        setGemPlacement(generateGemPlacement());
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
-    public float getPerfectionScaler(int perfection)
-    {
-        switch (perfection) {
-            case 1 -> {
-                return 0.8f;
-            }
-            case 2 -> {
-                return 0.9f;
-            }
-            default -> {
-                return 1f;
-            }
-            case 4 -> {
-                return 1.075f;
-            }
-            case 5 -> {
-                return 1.1f;
-            }
-            case 6 -> {
-                return 1.125f;
-            }
+    public float getPerfectionScaler(int perfection) {
+        if (perfection >= 1 && perfection <= 3) {
+            return 0.7f + (perfection * 0.1f);
+        } else if (perfection >= 4 && perfection <= 6) {
+            return 1.0f + ((perfection - 3) * 0.025f);
+        } else {
+            return 1.0f;
         }
     }
-    @SuppressWarnings("DataFlowIssue")
-    public void setPerfectionThings(int perfection)
+    public float damageModifier(Entity target)
     {
+        return 1;
+    }
+    public void doEnemyThings(Entity target) {}
+    @Override
+    public boolean tryAttack(Entity target) {
+        float f = (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+        float g = (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_KNOCKBACK);
+        f *= damageModifier(target);
+        doEnemyThings(target);
+        boolean bl = target.damage(this.getDamageSources().mobAttack(this), f);
+        if (bl) {
+            if (g > 0.0F && target instanceof LivingEntity) {
+                ((LivingEntity)target)
+                        .takeKnockback(
+                                g * 0.5F,
+                                MathHelper.sin(this.getYaw() * (float) (Math.PI / 180.0)),
+                                -MathHelper.cos(this.getYaw() * (float) (Math.PI / 180.0))
+                        );
+                this.setVelocity(this.getVelocity().multiply(0.6, 1.0, 0.6));
+            }
+
+            this.applyDamageEffects(this, target);
+            this.onAttacking(target);
+        }
+
+        return bl;
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    public void setPerfectionThings(int perfection) {
         this.refreshPosition();
         this.calculateDimensions();
-        float multiplier = 1;
-        if (getPerfection() >= 4)
-        {
-            multiplier = 1.25f;
-        }
-        else if (getPerfection() <= 2)
-        {
-            multiplier = 0.75f;
-        }
-        this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(maxHealth() * (getPerfectionScaler(perfection) * multiplier));
-        this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(attackDamage() * (getPerfectionScaler(perfection) * multiplier));
+
+        float multiplier = (getPerfection() >= 4) ? 1.25f : (getPerfection() <= 2) ? 0.75f : 1.0f;
+        float perfectionScaler = getPerfectionScaler(perfection) * multiplier;
+
+        this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(maxHealth() * perfectionScaler);
+        this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(attackDamage() * perfectionScaler);
     }
+
     public abstract int maxHealth ();
     public abstract int attackDamage();
 
@@ -470,7 +494,12 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
 
     public abstract int generateGemColorVariant ();
 
+    @Override
     public Text getName (){
+        Text text = this.getCustomName();
+        if (text != null) {
+            return this.getCustomName();
+        }
         if (this instanceof AbstractVaryingGemEntity) {
             if (((AbstractVaryingGemEntity) this).UsesUniqueNames ()) {
                 return Text.translatable ("entity."+KinderMod.MOD_ID+"." + this.getType ().getUntranslatedName () + "_" + this.getGemColorVariant ());
@@ -488,6 +517,7 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
             NbtCompound nbt = new NbtCompound ();
             nbt.putString ("id", EntityType.getId (this.getType ()).toString ());
             this.writeNbt (nbt);
+            InventoryNbtUtil.writeInventoryNbt (nbt, "inventory", this.inventory, this.inventory.size ());
             item.getOrCreateNbt ().put ("gem", nbt);
             Objects.requireNonNull (this.dropStack (item)).setNeverDespawn ();
         }
@@ -533,38 +563,34 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         if (this.isInvulnerableTo(source)) {
             return false;
         }
-        if (source.getAttacker() == getOwner() && source.getAttacker() != null) {
-            if (source.getAttacker() instanceof PlayerEntity player) {
-                if (player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof DestabItem destabItem) {
-                    float i = player.getAttackCooldownProgress(0f);
-                    KinderMod.LOGGER.info(String.valueOf(i));
-                    //if (i == 1f) {
-                        if (destabItem == KinderItems.REJUVENATOR) {
-                            boolean gr = this.getWorld().getGameRules().getBoolean(KinderMod.REJUVOTHERGEMS);
-                            if (!gr && source.getAttacker() != this.getOwner())
-                                {
-                                    return super.damage(source,amount);
-                                }
-                            }
-                            else {
-                            setRebel(false);
-                            if (getRebelBaseChance() >= 2) {
-                                setRebelBaseChance(getRebelBaseChance() - 1);
-                            }
-                        }
-                        return super.damage(this.getDamageSources().generic(), this.maxHealth() + 25);
-                }
-            }
-            if (!this.isRebel()) {
-                if (source.getAttacker().isSneaky()) {
-                    return super.damage(this.getDamageSources().generic(), this.getMaxHealth() + 25);
+
+        Entity attacker = source.getAttacker();
+        if (attacker instanceof PlayerEntity player) {
+            ItemStack itemStack = player.getStackInHand(Hand.MAIN_HAND);
+            if (itemStack.getItem() instanceof DestabItem destabItem && destabItem == KinderItems.REJUVENATOR) {
+                if (!KinderMod.config.rejuvothergems && attacker != this.getOwner()) {
+                    return super.damage(source, amount);
                 } else {
-                    this.addRebelChance(0.2f);
+                    setRebel(false);
+                    if (getRebelBaseChance() >= 2) {
+                        setRebelBaseChance(getRebelBaseChance() - 1);
+                    }
+                    return super.damage(this.getDamageSources().generic(), this.maxHealth() + 25);
                 }
             }
         }
+
+        if (attacker != null && !this.isRebel()) {
+            if (attacker.isSneaky() && isOwner((LivingEntity) attacker)) {
+                return super.damage(this.getDamageSources().generic(), this.getMaxHealth() + 25);
+            } else {
+                this.addRebelChance(0.05f);
+            }
+        }
+
         return super.damage(source, amount);
     }
+
 
     /*
     Movement Type Values
@@ -577,57 +603,58 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
         if (player.getWorld().isClient || player.isSpectator()) {
             return super.interactMob(player, hand);
         }
-        if (hand == Hand.MAIN_HAND) {
-
-            if (getOwner() == null) {
-                KinderMod.LOGGER.info("There's no owner.");
-            }
-
-            if (player != getOwner() && isTamed()) {
+        if (hand != Hand.MAIN_HAND) {
+            return super.interactMob(player, hand);
+        }
+        if (getOwner() == null) {
+            KinderMod.LOGGER.info("There's no owner.");
+        }
+        if (player != getOwner()) {
+            if (isTamed()) {
                 player.sendMessage(Text.literal(getName().getString()).append(Text.translatable("kinder.gem.interact.notyours")));
                 return ActionResult.SUCCESS;
             }
-
-            if (player != getOwner() && getOwner() == null && !isRebel()) {
+            if (!isRebel()) {
                 setOwner(player);
                 player.sendMessage(Text.literal(getName().getString()).append(Text.translatable("kinder.gem.interact.claimed")));
                 return ActionResult.SUCCESS;
             }
-
-            if (player == getOwner() && isRebel()) {
+        }
+        if (player == getOwner()) {
+            if (isRebel()) {
                 player.sendMessage(Text.literal(getName().getString()).append(Text.translatable("kinder.gem.interact.rebel")));
                 return ActionResult.SUCCESS;
             }
-
-            if (player == getOwner()) {
-                if (player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof DyeItem dye) {
-                    int colorId = dye.getColor().getId();
-                    if (player.isSneaking()) {
-                        setOutfitColor(colorId);
-                    } else {
-                        setInsigniaColor(colorId);
-                    }
-                    return ActionResult.SUCCESS;
+            ItemStack itemStack = player.getStackInHand(Hand.MAIN_HAND);
+            if (itemStack.getItem() instanceof DyeItem dye) {
+                int colorId = dye.getColor().getId();
+                if (player.isSneaking()) {
+                    setOutfitColor(colorId);
+                } else {
+                    setInsigniaColor(colorId);
                 }
-
-                if (player.isSneaking() && player.getStackInHand(Hand.MAIN_HAND).isEmpty()) {
-                    byte movementType = (byte) ((dataTracker.get(MOVEMENT_TYPE) + 1) % 3);
-                    FOLLOW_ID = (movementType == 2) ? player.getUuid() : null;
-                    switch (movementType) {
-                        case 0 -> player.sendMessage(Text.literal(getDisplayName().getString()).append(Text.translatable("kinder.gem.movement.interact.wander")));
-                        case 1 -> player.sendMessage(Text.literal(getDisplayName().getString()).append(Text.translatable("kinder.gem.movement.interact.stay")));
-                        case 2 -> player.sendMessage(Text.literal(getDisplayName().getString()).append(Text.translatable("kinder.gem.movement.interact.follow")));
-                    }
-                    dataTracker.set(MOVEMENT_TYPE, movementType);
-                    return ActionResult.SUCCESS;
-                } else if (!player.isSneaking()) {
-                    interactGem(player);
-                    return ActionResult.SUCCESS;
-                }
+                return ActionResult.SUCCESS;
+            }
+            if (player.isSneaking() && itemStack.isEmpty()) {
+                byte movementType = (byte) ((dataTracker.get(MOVEMENT_TYPE) + 1) % 3);
+                FOLLOW_ID = (movementType == 2) ? player.getUuid() : null;
+                String translationKey = switch (movementType) {
+                    case 0 -> "kinder.gem.movement.interact.wander";
+                    case 1 -> "kinder.gem.movement.interact.stay";
+                    case 2 -> "kinder.gem.movement.interact.follow";
+                    default -> "";
+                };
+                player.sendMessage(Text.literal(getDisplayName().getString()).append(Text.translatable(translationKey)));
+                dataTracker.set(MOVEMENT_TYPE, movementType);
+                return ActionResult.SUCCESS;
+            } else if (!player.isSneaking()) {
+                interactGem(player);
+                return ActionResult.SUCCESS;
             }
         }
         return super.interactMob(player, hand);
     }
+
     public void interactGem (PlayerEntity player){}
 
     protected void updateInventory (){
@@ -658,8 +685,10 @@ public abstract class AbstractGemEntity extends TameableEntity implements GeoEnt
 
     // Animation
     @Override public void registerControllers (AnimatableManager.ControllerRegistrar controllerRegistrar){
-        controllerRegistrar.add (GemDefaultAnimations.genericGemWalkLegsController (this));
-        controllerRegistrar.add (GemDefaultAnimations.genericGemWalkArmsController (this));
+        controllerRegistrar.add (GemDefaultAnimations.genericGemWalkLegsController(this));
+        controllerRegistrar.add (GemDefaultAnimations.genericGemArmsController(this));
+        controllerRegistrar.add(GemDefaultAnimations.genericGemSittingController(this));
+        controllerRegistrar.add(GemDefaultAnimations.genericGemIdleHeadController(this));
     }
 
     @Override public AnimatableInstanceCache getAnimatableInstanceCache (){

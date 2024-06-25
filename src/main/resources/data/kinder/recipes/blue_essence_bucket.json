@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "item": "kinder:blue_essence_bottle"
+    },
+    {
+      "item": "kinder:blue_essence_bottle"
+    },
+    {
+      "item": "kinder:blue_essence_bottle"
+    }
+  ],
+  "result": {
+    "item": "kinder:blue_essence_bucket"
+  }
+}
+

@@ -1,5 +1,6 @@
 package honeyedlemons.kinder.init;
 
+import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.util.GemColors;
 import honeyedlemons.kinder.util.GemConditions;
 import net.minecraft.block.Block;
@@ -14,9 +15,15 @@ import java.util.HashMap;
 public class KinderConditions {
     public static ArrayList<GemConditions> conditions (){
         ArrayList<GemConditions> map = new ArrayList<> ();
-        map.add (RubyConditions ());
-        map.add (QuartzConditions ());
-        map.add (SapphireConditions());
+        if (KinderMod.config.rubyConfig.incubatable) {
+            map.add(RubyConditions());
+        }
+        if (KinderMod.config.quartzConfig.incubatable) {
+            map.add(QuartzConditions());
+        }
+        if (KinderMod.config.sapphireConfig.incubatable) {
+            map.add(SapphireConditions());
+        }
         return map;
     }
 
@@ -66,12 +73,12 @@ public class KinderConditions {
     }
 
     public static GemConditions QuartzConditions (){
-        float baseRarity = -0.3f;
+        float baseRarity = -0.4f;
         float tempMin = 0.0f;
         float tempIdeal = 0.8f;
         float tempMax = 2.0f;
         float depthMax = -255;
-        float depthMin = 90;
+        float depthMin = 70;
         HashMap<String, Float> biomes = new HashMap<> ();
         HashMap<Item, GemColors> gems = new HashMap<> () {};
         gems.put (KinderItems.QUARTZ_GEM_0, GemColors.WHITE);
@@ -94,12 +101,12 @@ public class KinderConditions {
     }
 
     public static GemConditions SapphireConditions (){
-        float baseRarity = -0.6f;
+        float baseRarity = -0.8f;
         float tempMin = -1.0f;
         float tempIdeal = -0.5f;
         float tempMax = 0.05f;
         float depthMax = -255;
-        float depthMin = 70;
+        float depthMin = 60;
         HashMap<String, Float> biomes = new HashMap<> ();
 
         HashMap<Item, GemColors> gems = new HashMap<> () {};
