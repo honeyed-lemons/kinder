@@ -5,6 +5,7 @@ import honeyedlemons.kinder.items.DestabItem;
 import honeyedlemons.kinder.items.GemItem;
 import honeyedlemons.kinder.items.PearlCustomizerItem;
 import honeyedlemons.kinder.util.GemColors;
+import honeyedlemons.kinder.util.RegistryUtil;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -19,8 +20,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 import static net.minecraft.item.Items.BUCKET;
 import static net.minecraft.item.Items.GLASS_BOTTLE;
@@ -140,105 +140,90 @@ public class KinderItems {
     public static FabricItemSettings essenceBucketSettings (){
         return new FabricItemSettings ().maxCount (1).recipeRemainder (BUCKET);
     }
-    public static HashMap<Item, String> ItemsWithDataGen (){
-        HashMap<Item, String> hashmap = new HashMap<> ();
-        //Ruby
-        hashmap.put (RUBY_GEM, "ruby_gem");
-        //Quartzes
-        hashmap.put (QUARTZ_GEM_0, "quartz_gem_0");
-        hashmap.put (QUARTZ_GEM_1, "quartz_gem_1");
-        hashmap.put (QUARTZ_GEM_2, "quartz_gem_2");
-        hashmap.put (QUARTZ_GEM_3, "quartz_gem_3");
-        hashmap.put (QUARTZ_GEM_4, "quartz_gem_4");
-        hashmap.put (QUARTZ_GEM_5, "quartz_gem_5");
-        hashmap.put (QUARTZ_GEM_6, "quartz_gem_6");
-        hashmap.put (QUARTZ_GEM_7, "quartz_gem_7");
-        hashmap.put (QUARTZ_GEM_8, "quartz_gem_8");
-        hashmap.put (QUARTZ_GEM_9, "quartz_gem_9");
-        hashmap.put (QUARTZ_GEM_10, "quartz_gem_10");
-        hashmap.put (QUARTZ_GEM_11, "quartz_gem_11");
-        hashmap.put (QUARTZ_GEM_12, "quartz_gem_12");
-        hashmap.put (QUARTZ_GEM_13, "quartz_gem_13");
-        hashmap.put (QUARTZ_GEM_14, "quartz_gem_14");
-        hashmap.put (QUARTZ_GEM_15, "quartz_gem_15");
-        //Sapphires
-        hashmap.put (SAPPHIRE_GEM_0, "sapphire_gem_0");
-        hashmap.put (SAPPHIRE_GEM_1, "sapphire_gem_1");
-        hashmap.put (SAPPHIRE_GEM_2, "sapphire_gem_2");
-        hashmap.put (SAPPHIRE_GEM_3, "sapphire_gem_3");
-        hashmap.put (SAPPHIRE_GEM_4, "sapphire_gem_4");
-        hashmap.put (SAPPHIRE_GEM_5, "sapphire_gem_5");
-        hashmap.put (SAPPHIRE_GEM_6, "sapphire_gem_6");
-        hashmap.put (SAPPHIRE_GEM_7, "sapphire_gem_7");
-        hashmap.put (SAPPHIRE_GEM_8, "sapphire_gem_8");
-        hashmap.put (SAPPHIRE_GEM_9, "sapphire_gem_9");
-        hashmap.put (SAPPHIRE_GEM_10, "sapphire_gem_10");
-        hashmap.put (SAPPHIRE_GEM_11, "sapphire_gem_11");
-        hashmap.put (SAPPHIRE_GEM_12, "sapphire_gem_12");
-        hashmap.put (SAPPHIRE_GEM_13, "sapphire_gem_13");
-        hashmap.put (SAPPHIRE_GEM_15, "sapphire_gem_15");
-        // Pearls
-        hashmap.put (PEARL_GEM_0, "pearl_gem_0");
-        hashmap.put (PEARL_GEM_1, "pearl_gem_1");
-        hashmap.put (PEARL_GEM_2, "pearl_gem_2");
-        hashmap.put (PEARL_GEM_3, "pearl_gem_3");
-        hashmap.put (PEARL_GEM_4, "pearl_gem_4");
-        hashmap.put (PEARL_GEM_5, "pearl_gem_5");
-        hashmap.put (PEARL_GEM_6, "pearl_gem_6");
-        hashmap.put (PEARL_GEM_7, "pearl_gem_7");
-        hashmap.put (PEARL_GEM_8, "pearl_gem_8");
-        hashmap.put (PEARL_GEM_9, "pearl_gem_9");
-        hashmap.put (PEARL_GEM_10, "pearl_gem_10");
-        hashmap.put (PEARL_GEM_11, "pearl_gem_11");
-        hashmap.put (PEARL_GEM_12, "pearl_gem_12");
-        hashmap.put (PEARL_GEM_13, "pearl_gem_13");
-        hashmap.put (PEARL_GEM_14, "pearl_gem_14");
-        hashmap.put (PEARL_GEM_15, "pearl_gem_15");
-        // Essences
-        hashmap.put (WHITE_ESSENCE_BOTTLE, "white_essence_bottle");
-        hashmap.put (YELLOW_ESSENCE_BOTTLE, "yellow_essence_bottle");
-        hashmap.put (BLUE_ESSENCE_BOTTLE, "blue_essence_bottle");
-        hashmap.put (PINK_ESSENCE_BOTTLE, "pink_essence_bottle");
-        hashmap.put(WHITE_ESSENCE_BUCKET, "white_essence_bucket");
-        hashmap.put(YELLOW_ESSENCE_BUCKET, "yellow_essence_bucket");
-        hashmap.put(BLUE_ESSENCE_BUCKET, "blue_essence_bucket");
-        hashmap.put(PINK_ESSENCE_BUCKET, "pink_essence_bucket");
+    public static ArrayList<RegistryUtil.ItemData> itemData() {
+        ArrayList<RegistryUtil.ItemData> itemData = new ArrayList<>();
 
-        // Tools
-        hashmap.put (PEARL_SHUCK, "pearl_shuck");
-        hashmap.put (PEARL_CUSTOMIZER, "pearl_customizer");
-        // Seeds
-        hashmap.put (DRIED_GEM_SEEDS, "dried_gem_seeds");
+        itemData.add(new RegistryUtil.ItemData(RUBY_GEM, "ruby_gem", true));
 
-        hashmap.put (WHITE_GEM_SEEDS, "white_gem_seeds");
-        hashmap.put (YELLOW_GEM_SEEDS, "yellow_gem_seeds");
-        hashmap.put (BLUE_GEM_SEEDS, "blue_gem_seeds");
-        hashmap.put (PINK_GEM_SEEDS, "pink_gem_seeds");
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_0, "quartz_gem_0", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_1, "quartz_gem_1", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_2, "quartz_gem_2", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_3, "quartz_gem_3", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_4, "quartz_gem_4", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_5, "quartz_gem_5", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_6, "quartz_gem_6", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_7, "quartz_gem_7", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_8, "quartz_gem_8", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_9, "quartz_gem_9", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_10, "quartz_gem_10", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_11, "quartz_gem_11", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_12, "quartz_gem_12", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_13, "quartz_gem_13", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_14, "quartz_gem_14", true));
+        itemData.add(new RegistryUtil.ItemData(QUARTZ_GEM_15, "quartz_gem_15", true));
 
-        hashmap.put (LIGHT_REACTOR_BLUEPRINT, "light_reactor_blueprint");
-        hashmap.put (LIGHT_REACTOR, "light_reactor");
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_0, "sapphire_gem_0", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_1, "sapphire_gem_1", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_2, "sapphire_gem_2", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_3, "sapphire_gem_3", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_4, "sapphire_gem_4", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_5, "sapphire_gem_5", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_6, "sapphire_gem_6", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_7, "sapphire_gem_7", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_8, "sapphire_gem_8", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_9, "sapphire_gem_9", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_10, "sapphire_gem_10", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_11, "sapphire_gem_11", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_12, "sapphire_gem_12", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_13, "sapphire_gem_13", true));
+        itemData.add(new RegistryUtil.ItemData(SAPPHIRE_GEM_15, "sapphire_gem_15", true));
 
-        return hashmap;
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_0, "pearl_gem_0", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_1, "pearl_gem_1", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_2, "pearl_gem_2", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_3, "pearl_gem_3", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_4, "pearl_gem_4", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_5, "pearl_gem_5", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_6, "pearl_gem_6", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_7, "pearl_gem_7", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_8, "pearl_gem_8", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_9, "pearl_gem_9", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_10, "pearl_gem_10", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_11, "pearl_gem_11", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_12, "pearl_gem_12", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_13, "pearl_gem_13", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_14, "pearl_gem_14", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_GEM_15, "pearl_gem_15", true));
+
+        itemData.add(new RegistryUtil.ItemData(WHITE_ESSENCE_BOTTLE, "white_essence_bottle", true));
+        itemData.add(new RegistryUtil.ItemData(YELLOW_ESSENCE_BOTTLE, "yellow_essence_bottle", true));
+        itemData.add(new RegistryUtil.ItemData(BLUE_ESSENCE_BOTTLE, "blue_essence_bottle", true));
+        itemData.add(new RegistryUtil.ItemData(PINK_ESSENCE_BOTTLE, "pink_essence_bottle", true));
+        itemData.add(new RegistryUtil.ItemData(WHITE_ESSENCE_BUCKET, "white_essence_bucket", true));
+        itemData.add(new RegistryUtil.ItemData(YELLOW_ESSENCE_BUCKET, "yellow_essence_bucket", true));
+        itemData.add(new RegistryUtil.ItemData(BLUE_ESSENCE_BUCKET, "blue_essence_bucket", true));
+        itemData.add(new RegistryUtil.ItemData(PINK_ESSENCE_BUCKET, "pink_essence_bucket", true));
+
+        itemData.add(new RegistryUtil.ItemData(PEARL_SHUCK, "pearl_shuck", true));
+        itemData.add(new RegistryUtil.ItemData(PEARL_CUSTOMIZER, "pearl_customizer", true));
+        itemData.add(new RegistryUtil.ItemData(DRIED_GEM_SEEDS, "dried_gem_seeds", true));
+
+        itemData.add(new RegistryUtil.ItemData(WHITE_GEM_SEEDS, "white_gem_seeds", true));
+        itemData.add(new RegistryUtil.ItemData(YELLOW_GEM_SEEDS, "yellow_gem_seeds", true));
+        itemData.add(new RegistryUtil.ItemData(BLUE_GEM_SEEDS, "blue_gem_seeds", true));
+        itemData.add(new RegistryUtil.ItemData(PINK_GEM_SEEDS, "pink_gem_seeds", true));
+
+        itemData.add(new RegistryUtil.ItemData(LIGHT_REACTOR_BLUEPRINT, "light_reactor_blueprint", true));
+        itemData.add(new RegistryUtil.ItemData(LIGHT_REACTOR, "light_reactor", true));
+
+        itemData.add(new RegistryUtil.ItemData(REJUVENATOR, "rejuvenator", false));
+
+        return itemData;
     }
-    public static HashMap<Item, String> ItemsWithoutDataGen() {
-        HashMap<Item, String> hashmap = new HashMap<>();
-        hashmap.put(REJUVENATOR,"rejuvenator");
-        return hashmap;
-    }
-    public static void registerItems (){
-        for (Map.Entry<Item, String> entry : ItemsWithDataGen().entrySet ()) {
-            Item item = entry.getKey ();
-            String strings = entry.getValue ();
-            registerItem (strings, item);
+
+    public static void registerItems(){
+        for (RegistryUtil.ItemData itemData : itemData()) {
+            Registry.register (Registries.ITEM, new Identifier (KinderMod.MOD_ID, itemData.item_id()), itemData.item());
         }
-        for (Map.Entry<Item, String> entry : ItemsWithoutDataGen().entrySet ()) {
-            Item item = entry.getKey ();
-            String strings = entry.getValue ();
-            registerItem (strings, item);
-        }
-    }
-
-    public static void registerItem (String id, Item item){
-        Registry.register (Registries.ITEM, new Identifier (KinderMod.MOD_ID, id), item);
     }
 }

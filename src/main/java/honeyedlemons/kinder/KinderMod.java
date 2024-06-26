@@ -16,7 +16,7 @@ public class KinderMod implements ModInitializer {
     @Override public void onInitialize (){
         AutoConfig.register(KinderConfig.class, Toml4jConfigSerializer::new);
         config = AutoConfig.getConfigHolder(KinderConfig.class).getConfig();
-        KinderBlocks.registerBlocks ();
+        KinderBlocks.registerBlocks();
         KinderItems.registerItems ();
         KinderGemEntities.registerEntities ();
         KinderGemEntities.registerAttributes ();
