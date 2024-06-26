@@ -8,20 +8,21 @@ import java.util.Random;
 import java.util.function.IntFunction;
 
 public enum GemColors implements StringIdentifiable {
+    //
     WHITE (0, "white", 16777215),
-    ORANGE (1, "orange", 16750848),
-    MAGENTA (2, "magenta", 16730610),
+    ORANGE (1, "orange", 16745775),
+    MAGENTA (2, "magenta", 16730558),
     LIGHT_BLUE (3, "light_blue", 9889535),
     YELLOW (4, "yellow", 16764199),
-    LIME (5, "lime", 11140914),
-    PINK (6, "pink", 16754888),
+    LIME (5, "lime", 9437039),
+    PINK (6, "pink", 16744120),
     GRAY (7, "gray", 5329233),
-    LIGHT_GRAY (8, "light_gray", 10197915),
-    CYAN (9, "cyan", 65535),
+    LIGHT_GRAY (8, "light_gray", 10461339),
+    CYAN (9, "cyan", 65500),
     PURPLE (10, "purple", 12273663),
     BLUE (11, "blue", 4346623),
-    BROWN (12, "brown", 6304293),
-    GREEN (13, "green", 52224),
+    BROWN (12, "brown", 6304307),
+    GREEN (13, "green", 51781),
     RED (14, "red", 16711760),
     BLACK (15, "black", 1973790);
 

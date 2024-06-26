@@ -121,16 +121,13 @@
 			"loop": true,
 			"bones": {
 				"leftLeg": {
-					"relative_to": {
-						"rotation": "entity"
-					},
 					"rotation": {
-						"vector": ["Math.sin(query.anim_time * (600  + query.ground_speed)) * (10 + query.ground_speed)", 0, 0]
+						"vector": ["Math.sin(query.anim_time * (600  + query.ground_speed)) * (35 + query.ground_speed)", 0, 0]
 					}
 				},
 				"rightLeg": {
 					"rotation": {
-						"vector": ["Math.sin(query.anim_time * (-600  + query.ground_speed)) * (10 + query.ground_speed)", 0, 0]
+						"vector": ["Math.sin(query.anim_time * (-600  + query.ground_speed)) * (35 + query.ground_speed)", 0, 0]
 					}
 				}
 			}
