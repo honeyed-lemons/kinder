@@ -6,6 +6,8 @@ import honeyedlemons.kinder.fluids.BlueEssenceFluid;
 import honeyedlemons.kinder.fluids.PinkEssenceFluid;
 import honeyedlemons.kinder.fluids.WhiteEssenceFluid;
 import honeyedlemons.kinder.fluids.YellowEssenceFluid;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
@@ -50,6 +52,7 @@ public class KinderFluidHandling {
         Registry.register(Registries.FLUID,new Identifier(KinderMod.MOD_ID, "still_blue_essence"),STILL_BLUE_ESSENCE);
         Registry.register(Registries.FLUID,new Identifier(KinderMod.MOD_ID, "flowing_blue_essence"),FLOWING_BLUE_ESSENCE);
     }
+    @Environment(EnvType.CLIENT)
     public static void setupFluidRendering(final Fluid still, final Fluid flowing, final Identifier textureBase) {
         final Identifier stillTexture = new Identifier(KinderMod.MOD_ID, "block/fluids/" + textureBase.getPath() + "_still");
         final Identifier flowingTexture = new Identifier(KinderMod.MOD_ID, "block/fluids/" + textureBase.getPath() + "_flow");
@@ -60,7 +63,7 @@ public class KinderFluidHandling {
         FluidRenderHandlerRegistry.INSTANCE.register(still, handler);
         FluidRenderHandlerRegistry.INSTANCE.register(flowing, handler);
     }
-
+    @Environment(EnvType.CLIENT)
     public static void fluidRendering()
     {
         setupFluidRendering(STILL_WHITE_ESSENCE,FLOWING_WHITE_ESSENCE, new Identifier("white_essence"));

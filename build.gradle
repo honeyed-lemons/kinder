@@ -12,19 +12,12 @@ base {
 
 loom {
     accessWidenerPath = file("src/main/resources/kindergartening.accesswidener")
-    runs {
-        // This adds a new gradle task that runs the datagen API: "gradlew runDatagen"
-        datagen {
-            inherit client
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
-            vmArg "-Dfabric-api.datagen.modid=${modid}"
-
-            runDir "build/datagen"
-        }
-    }
 }
+
+fabricApi {
+    configureDataGeneration()
+}
+
 repositories {
     mavenCentral()
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
@@ -88,14 +81,16 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${project.base.archivesName.get()}"}
     }
 }
+
 
 // configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
             from components.java
         }
     }
