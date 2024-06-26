@@ -48,15 +48,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 }
-sourceSets {
-    main {
-        resources {
-            srcDirs += [
-                    'src/main/generated'
-            ]
-        }
-    }
-}
+
 processResources {
     inputs.property "version", project.version
 
