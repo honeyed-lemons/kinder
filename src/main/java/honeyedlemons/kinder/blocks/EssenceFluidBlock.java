@@ -6,4 +6,5 @@ import net.minecraft.fluid.FlowableFluid;
 public class EssenceFluidBlock extends FluidBlock {
     public EssenceFluidBlock(FlowableFluid fluid, Settings settings) {
         super(fluid, settings);
-    }}
+    }
+}

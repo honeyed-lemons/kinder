@@ -17,37 +17,37 @@ public class GemAttackWithOwnerGoal extends TrackTargetGoal {
     private LivingEntity attacking;
     private int lastAttackTime;
 
-    public GemAttackWithOwnerGoal (AbstractGemEntity gem, boolean canFight){
-        super (gem, false);
+    public GemAttackWithOwnerGoal(AbstractGemEntity gem, boolean canFight) {
+        super(gem, false);
         this.gem = gem;
         this.canFight = canFight;
-        this.setControls (EnumSet.of (Goal.Control.TARGET));
+        this.setControls(EnumSet.of(Goal.Control.TARGET));
     }
 
-    public boolean canStart (){
-        if (this.gem.isTamed () && !this.gem.isRebel()) {
-            LivingEntity livingEntity = this.gem.getOwner ();
+    public boolean canStart() {
+        if (this.gem.isTamed() && !this.gem.isRebel()) {
+            LivingEntity livingEntity = this.gem.getOwner();
             if (livingEntity == null || gem.isRebel()) {
                 return false;
             }
             if (!canFight) {
                 return false;
             } else {
-                this.attacking = livingEntity.getAttacking ();
-                int i = livingEntity.getLastAttackTime ();
-                return i != this.lastAttackTime && this.canTrack (this.attacking, TargetPredicate.DEFAULT) && this.gem.canAttackWithOwner (this.attacking, livingEntity);
+                this.attacking = livingEntity.getAttacking();
+                int i = livingEntity.getLastAttackTime();
+                return i != this.lastAttackTime && this.canTrack(this.attacking, TargetPredicate.DEFAULT) && this.gem.canAttackWithOwner(this.attacking, livingEntity);
             }
         } else {
             return false;
         }
     }
 
-    public void start (){
-        this.mob.setTarget (this.attacking);
-        LivingEntity livingEntity = this.gem.getOwner ();
+    public void start() {
+        this.mob.setTarget(this.attacking);
+        LivingEntity livingEntity = this.gem.getOwner();
         if (livingEntity != null) {
-            this.lastAttackTime = livingEntity.getLastAttackTime ();
+            this.lastAttackTime = livingEntity.getLastAttackTime();
         }
-        super.start ();
+        super.start();
     }
 }

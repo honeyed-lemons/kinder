@@ -13,16 +13,15 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class PearlCustomizerItem extends Item {
-    public PearlCustomizerItem (Settings settings){
-        super (settings);
-    }
-
     int mode = 0;
 
-    public TypedActionResult<ItemStack> use (World world, PlayerEntity user, Hand hand){
+    public PearlCustomizerItem(Settings settings) {
+        super(settings);
+    }
+
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        if (user.isSneaky() && !world.isClient() && hand.equals(Hand.MAIN_HAND))
-        {
+        if (user.isSneaky() && !world.isClient() && hand.equals(Hand.MAIN_HAND)) {
             KinderMod.LOGGER.info("silly");
             mode = (mode + 1) % 4;
             switch (mode) {
@@ -53,54 +52,41 @@ public class PearlCustomizerItem extends Item {
         return super.useOnEntity(stack, user, entity, hand);
     }
 
-    public void changeHair(PearlEntity gem)
-    {
-        if (gem.getHairVariant () == gem.hairVariantCount())
-        {
-            gem.setHairVariant (1);
-        }
-        else
-        {
-            gem.setHairVariant (gem.getHairVariant() + 1);
+    public void changeHair(PearlEntity gem) {
+        if (gem.getHairVariant() == gem.hairVariantCount()) {
+            gem.setHairVariant(1);
+        } else {
+            gem.setHairVariant(gem.getHairVariant() + 1);
         }
     }
-    public void changeHairExtra(PearlEntity gem)
-    {
-        if (gem.getHairExtraVariant () == gem.hairExtraVariantCount())
-        {
+
+    public void changeHairExtra(PearlEntity gem) {
+        if (gem.getHairExtraVariant() == gem.hairExtraVariantCount()) {
             KinderMod.LOGGER.info(String.valueOf(0));
-            gem.setHairExtraVariant (0);
-        }
-        else
-        {
-            KinderMod.LOGGER.info(String.valueOf(gem.getHairExtraVariant()+1));
-            gem.setHairExtraVariant (gem.getHairExtraVariant() + 1);
+            gem.setHairExtraVariant(0);
+        } else {
+            KinderMod.LOGGER.info(String.valueOf(gem.getHairExtraVariant() + 1));
+            gem.setHairExtraVariant(gem.getHairExtraVariant() + 1);
         }
     }
-    public void changeOutfit(PearlEntity gem)
-    {
-        if (gem.getOutfitVariant() == gem.outfitVariantCount())
-        {
+
+    public void changeOutfit(PearlEntity gem) {
+        if (gem.getOutfitVariant() == gem.outfitVariantCount()) {
             gem.setOutfitVariant(1);
-        }
-        else
-        {
+        } else {
             gem.setOutfitVariant(gem.getOutfitVariant() + 1);
         }
     }
-    public void changeInsignia(PearlEntity gem)
-    {
-        if (gem.getInsigniaVariant() == gem.insigniaVariantCount())
-        {
+
+    public void changeInsignia(PearlEntity gem) {
+        if (gem.getInsigniaVariant() == gem.insigniaVariantCount()) {
             gem.setInsigniaVariant(1);
-        }
-        else
-        {
+        } else {
             gem.setInsigniaVariant(gem.getInsigniaVariant() + 1);
         }
     }
-    public int getMode()
-    {
+
+    public int getMode() {
         return mode;
     }
 }

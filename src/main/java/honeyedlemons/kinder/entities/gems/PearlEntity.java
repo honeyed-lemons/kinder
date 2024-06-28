@@ -28,23 +28,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PearlEntity extends AbstractVaryingGemEntity {
-    public PearlEntity (EntityType<? extends TameableEntity> entityType, World world){
-        super (entityType, world);
-    }
-    private static final TrackedData<Integer> HAIR_EXTRA_VARIANT = DataTracker.registerData (PearlEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> HAIR_EXTRA_VARIANT = DataTracker.registerData(PearlEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-    public static DefaultAttributeContainer.@NotNull Builder createGemAttributes (){
-        return createDefaultGemAttributes ().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.625);
+    public PearlEntity(EntityType<? extends TameableEntity> entityType, World world) {
+        super(entityType, world);
     }
-    public EntityData initialize (ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt){
+
+    public static DefaultAttributeContainer.@NotNull Builder createGemAttributes() {
+        return createDefaultGemAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.625);
+    }
+
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         this.setHairExtraVariant(generateHairExtraVariant());
-        return super.initialize (world, difficulty, spawnReason, entityData, entityNbt);
+        return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     }
-    @Override public int maxHealth (){
+
+    @Override
+    public int maxHealth() {
         return KinderMod.config.pearlConfig.max_health;
     }
 
-    @Override public int attackDamage (){
+    @Override
+    public int attackDamage() {
         return KinderMod.config.pearlConfig.attack_damage;
     }
 
@@ -54,75 +59,88 @@ public class PearlEntity extends AbstractVaryingGemEntity {
         this.goalSelector.add(1, new EscapeDangerGoal(this, getSpeed()));
     }
 
-    @Override public void interactGem (PlayerEntity player){
-        ItemStack stack = player.getStackInHand (Hand.MAIN_HAND);
-        if (stack == ItemStack.EMPTY)
-        {
-            player.openHandledScreen (new GemScreenHandlerFactory ());
+    @Override
+    public void interactGem(PlayerEntity player) {
+        ItemStack stack = player.getStackInHand(Hand.MAIN_HAND);
+        if (stack == ItemStack.EMPTY) {
+            player.openHandledScreen(new GemScreenHandlerFactory());
         }
     }
-    @Override public boolean isSolider (){
+
+    @Override
+    public boolean isSolider() {
         return false;
     }
 
-    @Override public int hairVariantCount (){
+    @Override
+    public int hairVariantCount() {
         return 10;
     }
 
-    public int hairExtraVariantCount (){
+    public int hairExtraVariantCount() {
         return 5;
     }
 
-    public void initDataTracker (){
-        super.initDataTracker ();
-        this.dataTracker.startTracking (HAIR_EXTRA_VARIANT, 0);
-    }
-    public void writeCustomDataToNbt (NbtCompound nbt){
-        nbt.putInt ("HairExtraVariant", this.dataTracker.get (HAIR_EXTRA_VARIANT));
-        super.writeCustomDataToNbt (nbt);
+    public void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(HAIR_EXTRA_VARIANT, 0);
     }
 
-    public void readCustomDataFromNbt (NbtCompound nbt){
-        this.dataTracker.set (HAIR_EXTRA_VARIANT, nbt.getInt ("HairExtraVariant"));
-        super.readCustomDataFromNbt (nbt);
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        nbt.putInt("HairExtraVariant", this.dataTracker.get(HAIR_EXTRA_VARIANT));
+        super.writeCustomDataToNbt(nbt);
     }
 
-    @Override public int outfitVariantCount (){
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        this.dataTracker.set(HAIR_EXTRA_VARIANT, nbt.getInt("HairExtraVariant"));
+        super.readCustomDataFromNbt(nbt);
+    }
+
+    @Override
+    public int outfitVariantCount() {
         return 5;
     }
 
-    public int insigniaVariantCount (){
+    public int insigniaVariantCount() {
         return 6;
     }
-    public int getHairExtraVariant (){
+
+    public int getHairExtraVariant() {
         return this.dataTracker.get(HAIR_EXTRA_VARIANT);
     }
-    public void setHairExtraVariant (int hairVariant) {
-        this.dataTracker.set(HAIR_EXTRA_VARIANT,hairVariant);
+
+    public void setHairExtraVariant(int hairVariant) {
+        this.dataTracker.set(HAIR_EXTRA_VARIANT, hairVariant);
     }
-    @Override public int generateInsigniaVariant (){
-        if (insigniaVariantCount () != 0) {
-            return this.random.nextBetween (1, insigniaVariantCount());
+
+    @Override
+    public int generateInsigniaVariant() {
+        if (insigniaVariantCount() != 0) {
+            return this.random.nextBetween(1, insigniaVariantCount());
         } else return 0;
     }
 
-    public int generateHairExtraVariant()
-    {
+    public int generateHairExtraVariant() {
         return this.random.nextInt(hairExtraVariantCount());
     }
-    @Override public boolean hasOutfitPlacementVariant (){
+
+    @Override
+    public boolean hasOutfitPlacementVariant() {
         return false;
     }
 
-    @Override public int defaultOutfitColor (){
+    @Override
+    public int defaultOutfitColor() {
         return -1;
     }
 
-    @Override public int defaultInsigniaColor (){
+    @Override
+    public int defaultInsigniaColor() {
         return -1;
     }
 
-    @Override public GemPlacements[] getPlacements (){
+    @Override
+    public GemPlacements[] getPlacements() {
         return new GemPlacements[]{
                 GemPlacements.CHEST,
                 GemPlacements.NOSE,
@@ -141,37 +159,42 @@ public class PearlEntity extends AbstractVaryingGemEntity {
                 GemPlacements.LEFT_KNEE};
     }
 
-    @Override public ItemStack gemItem (){
-        return switch (getGemColorVariant ()) {
-            case 1 -> KinderItems.PEARL_GEM_1.getDefaultStack ();
-            case 2 -> KinderItems.PEARL_GEM_2.getDefaultStack ();
-            case 3 -> KinderItems.PEARL_GEM_3.getDefaultStack ();
-            case 4 -> KinderItems.PEARL_GEM_4.getDefaultStack ();
-            case 5 -> KinderItems.PEARL_GEM_5.getDefaultStack ();
-            case 6 -> KinderItems.PEARL_GEM_6.getDefaultStack ();
-            case 7 -> KinderItems.PEARL_GEM_7.getDefaultStack ();
-            case 8 -> KinderItems.PEARL_GEM_8.getDefaultStack ();
-            case 9 -> KinderItems.PEARL_GEM_9.getDefaultStack ();
-            case 10 -> KinderItems.PEARL_GEM_10.getDefaultStack ();
-            case 11 -> KinderItems.PEARL_GEM_11.getDefaultStack ();
-            case 12 -> KinderItems.PEARL_GEM_12.getDefaultStack ();
-            case 13 -> KinderItems.PEARL_GEM_13.getDefaultStack ();
-            case 14 -> KinderItems.PEARL_GEM_14.getDefaultStack ();
-            case 15 -> KinderItems.PEARL_GEM_15.getDefaultStack ();
-            default -> KinderItems.PEARL_GEM_0.getDefaultStack ();
+    @Override
+    public ItemStack gemItem() {
+        return switch (getGemColorVariant()) {
+            case 1 -> KinderItems.PEARL_GEM_1.getDefaultStack();
+            case 2 -> KinderItems.PEARL_GEM_2.getDefaultStack();
+            case 3 -> KinderItems.PEARL_GEM_3.getDefaultStack();
+            case 4 -> KinderItems.PEARL_GEM_4.getDefaultStack();
+            case 5 -> KinderItems.PEARL_GEM_5.getDefaultStack();
+            case 6 -> KinderItems.PEARL_GEM_6.getDefaultStack();
+            case 7 -> KinderItems.PEARL_GEM_7.getDefaultStack();
+            case 8 -> KinderItems.PEARL_GEM_8.getDefaultStack();
+            case 9 -> KinderItems.PEARL_GEM_9.getDefaultStack();
+            case 10 -> KinderItems.PEARL_GEM_10.getDefaultStack();
+            case 11 -> KinderItems.PEARL_GEM_11.getDefaultStack();
+            case 12 -> KinderItems.PEARL_GEM_12.getDefaultStack();
+            case 13 -> KinderItems.PEARL_GEM_13.getDefaultStack();
+            case 14 -> KinderItems.PEARL_GEM_14.getDefaultStack();
+            case 15 -> KinderItems.PEARL_GEM_15.getDefaultStack();
+            default -> KinderItems.PEARL_GEM_0.getDefaultStack();
         };
     }
 
-    @Override public @NotNull SoundEvent gemInstrument (){
-        return SoundEvents.BLOCK_NOTE_BLOCK_HARP.value ();
+    @Override
+    public @NotNull SoundEvent gemInstrument() {
+        return SoundEvents.BLOCK_NOTE_BLOCK_HARP.value();
     }
 
-    @Override public boolean UsesUniqueNames (){
+    @Override
+    public boolean UsesUniqueNames() {
         return true;
     }
 
-    @Override public void onInventoryChanged (Inventory sender){
+    @Override
+    public void onInventoryChanged(Inventory sender) {
     }
+
     @Override
     public int[] neglectedColors() {
         return null;

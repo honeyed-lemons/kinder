@@ -1,10 +1,7 @@
 {
   "itemGroup.kinder.gem_group": "Kinder: Gems",
-
   "itemGroup.kinder.misc_group": "Kinder: Items & Blocks",
-
   "item.kinder.ruby_gem": "Ruby Gem",
-
   "item.kinder.pearl_gem_0": "White Pearl Gem",
   "item.kinder.pearl_gem_1": "Orange Pearl Gem",
   "item.kinder.pearl_gem_2": "Magenta Pearl Gem",
@@ -21,7 +18,6 @@
   "item.kinder.pearl_gem_13": "Green Pearl Gem",
   "item.kinder.pearl_gem_14": "Red Pearl Gem",
   "item.kinder.pearl_gem_15": "Black Pearl Gem",
-
   "item.kinder.sapphire_gem_0": "White Sapphire Gem",
   "item.kinder.sapphire_gem_1": "Orange Sapphire Gem",
   "item.kinder.sapphire_gem_2": "Magenta Sapphire Gem",
@@ -37,9 +33,7 @@
   "item.kinder.sapphire_gem_12": "Brown Sapphire Gem",
   "item.kinder.sapphire_gem_13": "Green Sapphire Gem",
   "item.kinder.sapphire_gem_15": "Black Sapphire Gem",
-
   "entity.kinder.ruby": "Ruby",
-
   "entity.kinder.pearl_0": "White Pearl",
   "entity.kinder.pearl_1": "Orange Pearl",
   "entity.kinder.pearl_2": "Magenta Pearl",
@@ -56,7 +50,6 @@
   "entity.kinder.pearl_13": "Green Pearl",
   "entity.kinder.pearl_14": "Red Pearl",
   "entity.kinder.pearl_15": "Black Pearl",
-  
   "entity.kinder.sapphire_0": "White Sapphire",
   "entity.kinder.sapphire_1": "Orange Sapphire",
   "entity.kinder.sapphire_2": "Magenta Sapphire",
@@ -72,7 +65,6 @@
   "entity.kinder.sapphire_12": "Brown Sapphire",
   "entity.kinder.sapphire_13": "Green Sapphire",
   "entity.kinder.sapphire_15": "Black Sapphire",
-  
   "entity.kinder.quartz_0": "Milky Quartz",
   "entity.kinder.quartz_1": "Chert",
   "entity.kinder.quartz_2": "Rose Quartz",
@@ -89,7 +81,6 @@
   "entity.kinder.quartz_13": "Mtorolite",
   "entity.kinder.quartz_14": "Carnelian",
   "entity.kinder.quartz_15": "Onyx",
-  
   "item.kinder.quartz_gem_0": "Milky Quartz Gem",
   "item.kinder.quartz_gem_1": "Chert Gem",
   "item.kinder.quartz_gem_2": "Rose Quartz Gem",
@@ -106,32 +97,26 @@
   "item.kinder.quartz_gem_13": "Mtorolite Gem",
   "item.kinder.quartz_gem_14": "Carnelian Gem",
   "item.kinder.quartz_gem_15": "Onyx Gem",
-  
   "item.kinder.pearl_shuck": "Pearl Shuck",
   "block.kinder.oyster": "Pearl Oyster",
   "item.kinder.pearl_customizer": "Pearl Customizer",
-
   "item.kinder.white_essence_bottle": "White Essence Bottle",
   "item.kinder.pink_essence_bottle": "Pink Essence Bottle",
   "item.kinder.yellow_essence_bottle": "Yellow Essence Bottle",
   "item.kinder.blue_essence_bottle": "Blue Essence Bottle",
-
   "item.kinder.white_essence_bucket": "White Essence Bucket",
   "item.kinder.pink_essence_bucket": "Pink Essence Bucket",
   "item.kinder.yellow_essence_bucket": "Yellow Essence Bucket",
   "item.kinder.blue_essence_bucket": "Blue Essence Bucket",
-
   "block.kinder.white_essence_block": "White Essence",
   "block.kinder.yellow_essence_block": "Yellow Essence",
   "block.kinder.blue_essence_block": "Blue Essence",
   "block.kinder.pink_essence_block": "Pink Essence",
-
   "item.kinder.dried_gem_seeds": "Dried Shard Flower Seeds",
   "item.kinder.white_gem_seeds": "White Shard Flower Seeds",
   "item.kinder.yellow_gem_seeds": "Yellow Shard Flower Seeds",
   "item.kinder.blue_gem_seeds": "Blue Shard Flower Seeds",
   "item.kinder.pink_gem_seeds": "Pink Shard Flower Seeds",
-
   "item.kinder.rejuvenator": "Rejuvenator",
   "block.kinder.white_gem_crop_flower": "White Shard Flower",
   "block.kinder.yellow_gem_crop_flower": "Yellow Shard Flower",
@@ -139,23 +124,18 @@
   "block.kinder.pink_gem_crop_flower": "Pink Shard Flower",
   "item.kinder.light_reactor": "Light Reactor",
   "item.kinder.light_reactor_blueprint": "Light Reactor Recipe Cube",
-
   "block.kinder.incubator": "Gem Incubator",
   "block.kinder.hot_drained_block": "Sweltering Drained Block",
   "block.kinder.temp_drained_block": "Drained Block",
   "block.kinder.cold_drained_block": "Frigid Drained Block",
-
   "kinder.gem.movement.interact.wander": " will now wander.",
   "kinder.gem.movement.interact.stay": " will now stay.",
   "kinder.gem.movement.interact.follow": " will now follow you.",
-
   "kinder.gem.interact.rebel": " is a Rebel.",
   "kinder.gem.interact.notyours": " is not your gem.",
   "kinder.gem.interact.claimed": " has been claimed.",
-
   "kinder.sapphire.prediction.base": "I predict that",
   "kinder.sapphire.prediction.fail": "I cannot predict right now.",
-
   "kinder.sapphire.prediction.effect.minecraft.speed": " our movement will be swift.",
   "kinder.sapphire.prediction.effect.minecraft.haste": " our attacks will be swift.",
   "kinder.sapphire.prediction.effect.minecraft.strength": " our attacks will be strong.",
@@ -163,7 +143,6 @@
   "kinder.sapphire.prediction.effect.minecraft.absorption": " our health will be great.",
   "kinder.sapphire.prediction.effect.minecraft.night_vision": " our sight shall be strong.",
   "kinder.sapphire.prediction.effect.minecraft.luck": " we shall see great luck.",
-
   "kinder.sapphire.prediction.effect.minecraft.weakness": " our attacks will be weak.",
   "kinder.sapphire.prediction.effect.minecraft.slowness": " our movement shall be slow",
   "kinder.sapphire.prediction.effect.minecraft.bad_omen": " something bad is coming...",
@@ -172,48 +151,37 @@
   "kinder.sapphire.prediction.effect.minecraft.blindness": " our sight shall be blind.",
   "kinder.sapphire.prediction.effect.minecraft.levitation": "... Oh.",
   "kinder.sapphire.prediction.effect.minecraft.unluck": " we shall see horrid luck.",
-
-  "subtitles.kinder.incubator" : "Active Incubator",
-
+  "subtitles.kinder.incubator": "Active Incubator",
   "kinder.item.pearlcustomizer.hair": "Now Customizing Hair",
   "kinder.item.pearlcustomizer.hair_extra": "Now Customizing Hair Extra",
   "kinder.item.pearlcustomizer.outfit": "Now Customizing Outfit",
   "kinder.item.pearlcustomizer.insignia": "Now Customizing Accessory",
-
   "text.autoconfig.kinder.option.rejuvothergems": "Rejuvenate others players Gems",
   "text.autoconfig.kinder.option.rejuvothergems.@Tooltip": "Rejuvenate players' gems and reset ownership with a Rejuvenator.",
-
   "text.autoconfig.kinder.option.incubationtime": "Incubation Time (Ticks)",
   "text.autoconfig.kinder.option.incubationtime.@Tooltip": "How long it takes a gem to incubate.",
-
   "text.autoconfig.kinder.option.oystertime": "Oyster Time (Ticks)",
   "text.autoconfig.kinder.option.oystertime.@Tooltip": "How long it takes a pearl to form in an oyster. This is also modified by certain other factors.",
   "text.autoconfig.kinder.option.rubyConfig.@PrefixText": "Gem stat modifications do not apply retroactively.",
-
   "text.autoconfig.kinder.option.rubyConfig": "Ruby Config",
   "text.autoconfig.kinder.option.rubyConfig.incubatable": "Incubatable",
   "text.autoconfig.kinder.option.rubyConfig.attack_damage": "Attack Damage",
   "text.autoconfig.kinder.option.rubyConfig.max_health": "Max Health",
-
   "text.autoconfig.kinder.option.sapphireConfig": "Sapphire Config",
   "text.autoconfig.kinder.option.sapphireConfig.incubatable": "Incubatable",
   "text.autoconfig.kinder.option.sapphireConfig.attack_damage": "Attack Damage",
   "text.autoconfig.kinder.option.sapphireConfig.max_health": "Max Health",
-
   "text.autoconfig.kinder.option.quartzConfig": "Quartz Config",
   "text.autoconfig.kinder.option.quartzConfig.incubatable": "Incubatable",
   "text.autoconfig.kinder.option.quartzConfig.attack_damage": "Attack Damage",
   "text.autoconfig.kinder.option.quartzConfig.max_health": "Max Health",
-
   "text.autoconfig.kinder.option.pearlConfig": "Pearl Config",
   "text.autoconfig.kinder.option.pearlConfig.attack_damage": "Attack Damage",
   "text.autoconfig.kinder.option.pearlConfig.max_health": "Max Health",
-
   "text.autoconfig.kinder.option.driedGemSeedConfig": "Dried Shard Flower Seed Config",
   "text.autoconfig.kinder.option.driedGemSeedConfig.addtostructure": "Add to certain vanilla structures",
   "text.autoconfig.kinder.option.driedGemSeedConfig.chance": "Chance to spawn",
   "text.autoconfig.kinder.option.driedGemSeedConfig.addtovillager": "Add to Villagers",
   "text.autoconfig.kinder.option.driedGemSeedConfig.price": "Price in Emeralds",
-
   "gamerule.shoulRejuvOtherGems": "Rejuv Other Players Gems"
 }

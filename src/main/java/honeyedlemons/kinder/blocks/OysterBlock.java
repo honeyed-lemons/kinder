@@ -39,65 +39,73 @@ import org.jetbrains.annotations.Nullable;
 
 public class OysterBlock extends BlockWithEntity implements Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    public static final BooleanProperty COOKED = BooleanProperty.of ("cooked");
-    public static final BooleanProperty COOKING = BooleanProperty.of ("cooking");
+    public static final BooleanProperty COOKED = BooleanProperty.of("cooked");
+    public static final BooleanProperty COOKING = BooleanProperty.of("cooking");
 
 
-    protected static final VoxelShape BOTTOM_SHAPE = Block.createCuboidShape (0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
+    protected static final VoxelShape BOTTOM_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
 
-    public OysterBlock (Settings settings){
-        super (settings);
-        setDefaultState (getDefaultState ().with (Properties.HORIZONTAL_FACING, Direction.NORTH).with (WATERLOGGED, false).with (COOKED, false).with (COOKING, false));
+    public OysterBlock(Settings settings) {
+        super(settings);
+        setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(COOKED, false).with(COOKING, false));
     }
 
-    @SuppressWarnings("deprecation") @Override
-    public VoxelShape getOutlineShape (BlockState state, BlockView world, BlockPos pos, ShapeContext context){
+    @SuppressWarnings ("deprecation")
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return BOTTOM_SHAPE;
     }
 
-    @Override public BlockRenderType getRenderType (BlockState state){
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
-    @Override protected void appendProperties (StateManager.Builder<Block, BlockState> builder){
-        builder.add (Properties.HORIZONTAL_FACING, WATERLOGGED, COOKED, COOKING);
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(Properties.HORIZONTAL_FACING, WATERLOGGED, COOKED, COOKING);
     }
 
-    @Override public BlockState getPlacementState (ItemPlacementContext ctx){
-        FluidState fluidState = ctx.getWorld ().getFluidState (ctx.getBlockPos ());
-        return this.getDefaultState ().with (Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing ().getOpposite ()).with (WATERLOGGED, fluidState.isIn (FluidTags.WATER) && fluidState.getLevel () == 8);
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED, fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
     }
 
-    @SuppressWarnings("deprecation") public FluidState getFluidState (BlockState state){
-        return state.get (WATERLOGGED) ? Fluids.WATER.getStill (false) : super.getFluidState (state);
+    @SuppressWarnings ("deprecation")
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
-    @SuppressWarnings("deprecation")
-    public BlockState getStateForNeighborUpdate (BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos){
-        if (state.get (WATERLOGGED)) {
-            world.scheduleFluidTick (pos, Fluids.WATER, Fluids.WATER.getTickRate (world));
+    @SuppressWarnings ("deprecation")
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
-        return super.getStateForNeighborUpdate (state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    @Nullable @Override public BlockEntity createBlockEntity (BlockPos pos, BlockState state){
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new OysterBlockEntity(pos, state);
     }
 
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker (World world, BlockState state, BlockEntityType<T> type){
-        return world.isClient ? null : checkType (type, KinderBlocks.OYSTER_BLOCK_ENTITY, OysterBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return world.isClient ? null : checkType(type, KinderBlocks.OYSTER_BLOCK_ENTITY, OysterBlockEntity::tick);
     }
 
-    @Override public void onBreak (World world, BlockPos pos, BlockState state, PlayerEntity player){
-        BlockEntity blockEntity = world.getBlockEntity (pos);
-        if (blockEntity instanceof OysterBlockEntity && state.get (WATERLOGGED) && state.get (COOKED) && !world.isClient) {
-            ItemScatterer.spawn (world, pos.getX (), pos.getY (), pos.getZ (), ((OysterBlockEntity) blockEntity).getPearl (world, pos));
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof OysterBlockEntity && state.get(WATERLOGGED) && state.get(COOKED) && !world.isClient) {
+            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), ((OysterBlockEntity) blockEntity).getPearl(world, pos));
         }
-        super.onBreak (world, pos, state, player);
+        super.onBreak(world, pos, state, player);
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings ("deprecation")
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
@@ -169,10 +177,10 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
     }
 
 
-    public void randomDisplayTick (BlockState state, World world, BlockPos pos, Random random){
-        super.randomDisplayTick (state, world, pos, random);
-        if (state.get (COOKED).equals (true)) {
-            world.addParticle (ParticleTypes.ELECTRIC_SPARK, pos.getX () + world.random.nextFloat (), pos.getY () + world.random.nextFloat () + 0.2, pos.getZ () + world.random.nextFloat (), world.random.nextFloat () / 3, world.random.nextFloat () / 3, world.random.nextFloat () / 3);
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        super.randomDisplayTick(state, world, pos, random);
+        if (state.get(COOKED).equals(true)) {
+            world.addParticle(ParticleTypes.ELECTRIC_SPARK, pos.getX() + world.random.nextFloat(), pos.getY() + world.random.nextFloat() + 0.2, pos.getZ() + world.random.nextFloat(), world.random.nextFloat() / 3, world.random.nextFloat() / 3, world.random.nextFloat() / 3);
         }
     }
 }

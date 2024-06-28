@@ -17,8 +17,8 @@ public class KinderLootTables {
     private static final Identifier ABANDONED_MINESHAFT_CHEST = new Identifier("chests/abandoned_mineshaft");
 
     public static List<Identifier> tables_to_add_seeds = new ArrayList<>();
-    public static void modifyTables()
-    {
+
+    public static void modifyTables() {
         tables_to_add_seeds.add(DESERT_TEMPLE_CHEST);
         tables_to_add_seeds.add(BURIED_TREASURE_CHEST);
         tables_to_add_seeds.add(JUNGLE_TEMPLE_CHEST);

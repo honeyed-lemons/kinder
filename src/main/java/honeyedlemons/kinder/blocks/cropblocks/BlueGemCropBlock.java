@@ -4,11 +4,12 @@ import honeyedlemons.kinder.init.KinderItems;
 import net.minecraft.item.ItemConvertible;
 
 public class BlueGemCropBlock extends GemCropBlock {
-    public BlueGemCropBlock (Settings settings){
-        super (settings);
+    public BlueGemCropBlock(Settings settings) {
+        super(settings);
     }
 
-    @Override public ItemConvertible getSeedsItem (){
+    @Override
+    public ItemConvertible getSeedsItem() {
         return KinderItems.BLUE_GEM_SEEDS;
     }
 

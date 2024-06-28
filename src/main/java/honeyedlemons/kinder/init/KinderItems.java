@@ -24,72 +24,82 @@ import java.util.ArrayList;
 
 import static net.minecraft.item.Items.BUCKET;
 import static net.minecraft.item.Items.GLASS_BOTTLE;
-@SuppressWarnings("UnstableApiUsage")
+
+@SuppressWarnings ("UnstableApiUsage")
 public class KinderItems {
-    public static final Item RUBY_GEM = new GemItem (KinderGemEntities.RUBY, GemColors.RED, gemSettings ());
+    public static final Item RUBY_GEM = new GemItem(KinderGemEntities.RUBY, GemColors.RED, gemSettings());
 
-    public static final Item QUARTZ_GEM_0 = new GemItem (KinderGemEntities.QUARTZ, GemColors.WHITE, gemSettings ());
-    public static final Item QUARTZ_GEM_1 = new GemItem (KinderGemEntities.QUARTZ, GemColors.ORANGE, gemSettings ());
-    public static final Item QUARTZ_GEM_2 = new GemItem (KinderGemEntities.QUARTZ, GemColors.MAGENTA, gemSettings ());
-    public static final Item QUARTZ_GEM_3 = new GemItem (KinderGemEntities.QUARTZ, GemColors.LIGHT_BLUE, gemSettings ());
-    public static final Item QUARTZ_GEM_4 = new GemItem (KinderGemEntities.QUARTZ, GemColors.YELLOW, gemSettings ());
-    public static final Item QUARTZ_GEM_5 = new GemItem (KinderGemEntities.QUARTZ, GemColors.LIME, gemSettings ());
-    public static final Item QUARTZ_GEM_6 = new GemItem (KinderGemEntities.QUARTZ, GemColors.PINK, gemSettings ());
-    public static final Item QUARTZ_GEM_7 = new GemItem (KinderGemEntities.QUARTZ, GemColors.GRAY, gemSettings ());
-    public static final Item QUARTZ_GEM_8 = new GemItem (KinderGemEntities.QUARTZ, GemColors.LIGHT_GRAY, gemSettings ());
-    public static final Item QUARTZ_GEM_9 = new GemItem (KinderGemEntities.QUARTZ, GemColors.CYAN, gemSettings ());
-    public static final Item QUARTZ_GEM_10 = new GemItem (KinderGemEntities.QUARTZ, GemColors.PURPLE, gemSettings ());
-    public static final Item QUARTZ_GEM_11 = new GemItem (KinderGemEntities.QUARTZ, GemColors.BLUE, gemSettings ());
-    public static final Item QUARTZ_GEM_12 = new GemItem (KinderGemEntities.QUARTZ, GemColors.BROWN, gemSettings ());
-    public static final Item QUARTZ_GEM_13 = new GemItem (KinderGemEntities.QUARTZ, GemColors.GREEN, gemSettings ());
-    public static final Item QUARTZ_GEM_14 = new GemItem (KinderGemEntities.QUARTZ, GemColors.RED, gemSettings ());
-    public static final Item QUARTZ_GEM_15 = new GemItem (KinderGemEntities.QUARTZ, GemColors.BLACK, gemSettings ());
-    public static final Item SAPPHIRE_GEM_0 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.WHITE, gemSettings ());
-    public static final Item SAPPHIRE_GEM_1 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.ORANGE, gemSettings ());
-    public static final Item SAPPHIRE_GEM_2 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.MAGENTA, gemSettings ());
-    public static final Item SAPPHIRE_GEM_3 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.LIGHT_BLUE, gemSettings ());
-    public static final Item SAPPHIRE_GEM_4 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.YELLOW, gemSettings ());
-    public static final Item SAPPHIRE_GEM_5 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.LIME, gemSettings ());
-    public static final Item SAPPHIRE_GEM_6 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.PINK, gemSettings ());
-    public static final Item SAPPHIRE_GEM_7 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.GRAY, gemSettings ());
-    public static final Item SAPPHIRE_GEM_8 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.LIGHT_GRAY, gemSettings ());
-    public static final Item SAPPHIRE_GEM_9 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.CYAN, gemSettings ());
-    public static final Item SAPPHIRE_GEM_10 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.PURPLE, gemSettings ());
-    public static final Item SAPPHIRE_GEM_11 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.BLUE, gemSettings ());
-    public static final Item SAPPHIRE_GEM_12 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.BROWN, gemSettings ());
-    public static final Item SAPPHIRE_GEM_13 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.GREEN, gemSettings ());
-    public static final Item SAPPHIRE_GEM_15 = new GemItem (KinderGemEntities.SAPPHIRE, GemColors.BLACK, gemSettings ());
+    public static final Item QUARTZ_GEM_0 = new GemItem(KinderGemEntities.QUARTZ, GemColors.WHITE, gemSettings());
+    public static final Item QUARTZ_GEM_1 = new GemItem(KinderGemEntities.QUARTZ, GemColors.ORANGE, gemSettings());
+    public static final Item QUARTZ_GEM_2 = new GemItem(KinderGemEntities.QUARTZ, GemColors.MAGENTA, gemSettings());
+    public static final Item QUARTZ_GEM_3 = new GemItem(KinderGemEntities.QUARTZ, GemColors.LIGHT_BLUE, gemSettings());
+    public static final Item QUARTZ_GEM_4 = new GemItem(KinderGemEntities.QUARTZ, GemColors.YELLOW, gemSettings());
+    public static final Item QUARTZ_GEM_5 = new GemItem(KinderGemEntities.QUARTZ, GemColors.LIME, gemSettings());
+    public static final Item QUARTZ_GEM_6 = new GemItem(KinderGemEntities.QUARTZ, GemColors.PINK, gemSettings());
+    public static final Item QUARTZ_GEM_7 = new GemItem(KinderGemEntities.QUARTZ, GemColors.GRAY, gemSettings());
+    public static final Item QUARTZ_GEM_8 = new GemItem(KinderGemEntities.QUARTZ, GemColors.LIGHT_GRAY, gemSettings());
+    public static final Item QUARTZ_GEM_9 = new GemItem(KinderGemEntities.QUARTZ, GemColors.CYAN, gemSettings());
+    public static final Item QUARTZ_GEM_10 = new GemItem(KinderGemEntities.QUARTZ, GemColors.PURPLE, gemSettings());
+    public static final Item QUARTZ_GEM_11 = new GemItem(KinderGemEntities.QUARTZ, GemColors.BLUE, gemSettings());
+    public static final Item QUARTZ_GEM_12 = new GemItem(KinderGemEntities.QUARTZ, GemColors.BROWN, gemSettings());
+    public static final Item QUARTZ_GEM_13 = new GemItem(KinderGemEntities.QUARTZ, GemColors.GREEN, gemSettings());
+    public static final Item QUARTZ_GEM_14 = new GemItem(KinderGemEntities.QUARTZ, GemColors.RED, gemSettings());
+    public static final Item QUARTZ_GEM_15 = new GemItem(KinderGemEntities.QUARTZ, GemColors.BLACK, gemSettings());
+    public static final Item SAPPHIRE_GEM_0 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.WHITE, gemSettings());
+    public static final Item SAPPHIRE_GEM_1 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.ORANGE, gemSettings());
+    public static final Item SAPPHIRE_GEM_2 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.MAGENTA, gemSettings());
+    public static final Item SAPPHIRE_GEM_3 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.LIGHT_BLUE, gemSettings());
+    public static final Item SAPPHIRE_GEM_4 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.YELLOW, gemSettings());
+    public static final Item SAPPHIRE_GEM_5 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.LIME, gemSettings());
+    public static final Item SAPPHIRE_GEM_6 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.PINK, gemSettings());
+    public static final Item SAPPHIRE_GEM_7 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.GRAY, gemSettings());
+    public static final Item SAPPHIRE_GEM_8 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.LIGHT_GRAY, gemSettings());
+    public static final Item SAPPHIRE_GEM_9 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.CYAN, gemSettings());
+    public static final Item SAPPHIRE_GEM_10 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.PURPLE, gemSettings());
+    public static final Item SAPPHIRE_GEM_11 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.BLUE, gemSettings());
+    public static final Item SAPPHIRE_GEM_12 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.BROWN, gemSettings());
+    public static final Item SAPPHIRE_GEM_13 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.GREEN, gemSettings());
+    public static final Item SAPPHIRE_GEM_15 = new GemItem(KinderGemEntities.SAPPHIRE, GemColors.BLACK, gemSettings());
 
-    public static final Item PEARL_GEM_0 = new GemItem (KinderGemEntities.PEARL, GemColors.WHITE, gemSettings ());
-    public static final Item PEARL_GEM_1 = new GemItem (KinderGemEntities.PEARL, GemColors.ORANGE, gemSettings ());
-    public static final Item PEARL_GEM_2 = new GemItem (KinderGemEntities.PEARL, GemColors.MAGENTA, gemSettings ());
-    public static final Item PEARL_GEM_3 = new GemItem (KinderGemEntities.PEARL, GemColors.LIGHT_BLUE, gemSettings ());
-    public static final Item PEARL_GEM_4 = new GemItem (KinderGemEntities.PEARL, GemColors.YELLOW, gemSettings ());
-    public static final Item PEARL_GEM_5 = new GemItem (KinderGemEntities.PEARL, GemColors.LIME, gemSettings ());
-    public static final Item PEARL_GEM_6 = new GemItem (KinderGemEntities.PEARL, GemColors.PINK, gemSettings ());
-    public static final Item PEARL_GEM_7 = new GemItem (KinderGemEntities.PEARL, GemColors.GRAY, gemSettings ());
-    public static final Item PEARL_GEM_8 = new GemItem (KinderGemEntities.PEARL, GemColors.LIGHT_GRAY, gemSettings ());
-    public static final Item PEARL_GEM_9 = new GemItem (KinderGemEntities.PEARL, GemColors.CYAN, gemSettings ());
-    public static final Item PEARL_GEM_10 = new GemItem (KinderGemEntities.PEARL, GemColors.PURPLE, gemSettings ());
-    public static final Item PEARL_GEM_11 = new GemItem (KinderGemEntities.PEARL, GemColors.BLUE, gemSettings ());
-    public static final Item PEARL_GEM_12 = new GemItem (KinderGemEntities.PEARL, GemColors.BROWN, gemSettings ());
-    public static final Item PEARL_GEM_13 = new GemItem (KinderGemEntities.PEARL, GemColors.GREEN, gemSettings ());
-    public static final Item PEARL_GEM_14 = new GemItem (KinderGemEntities.PEARL, GemColors.RED, gemSettings ());
-    public static final Item PEARL_GEM_15 = new GemItem (KinderGemEntities.PEARL, GemColors.BLACK, gemSettings ());
+    public static final Item PEARL_GEM_0 = new GemItem(KinderGemEntities.PEARL, GemColors.WHITE, gemSettings());
+    public static final Item PEARL_GEM_1 = new GemItem(KinderGemEntities.PEARL, GemColors.ORANGE, gemSettings());
+    public static final Item PEARL_GEM_2 = new GemItem(KinderGemEntities.PEARL, GemColors.MAGENTA, gemSettings());
+    public static final Item PEARL_GEM_3 = new GemItem(KinderGemEntities.PEARL, GemColors.LIGHT_BLUE, gemSettings());
+    public static final Item PEARL_GEM_4 = new GemItem(KinderGemEntities.PEARL, GemColors.YELLOW, gemSettings());
+    public static final Item PEARL_GEM_5 = new GemItem(KinderGemEntities.PEARL, GemColors.LIME, gemSettings());
+    public static final Item PEARL_GEM_6 = new GemItem(KinderGemEntities.PEARL, GemColors.PINK, gemSettings());
+    public static final Item PEARL_GEM_7 = new GemItem(KinderGemEntities.PEARL, GemColors.GRAY, gemSettings());
+    public static final Item PEARL_GEM_8 = new GemItem(KinderGemEntities.PEARL, GemColors.LIGHT_GRAY, gemSettings());
+    public static final Item PEARL_GEM_9 = new GemItem(KinderGemEntities.PEARL, GemColors.CYAN, gemSettings());
+    public static final Item PEARL_GEM_10 = new GemItem(KinderGemEntities.PEARL, GemColors.PURPLE, gemSettings());
+    public static final Item PEARL_GEM_11 = new GemItem(KinderGemEntities.PEARL, GemColors.BLUE, gemSettings());
+    public static final Item PEARL_GEM_12 = new GemItem(KinderGemEntities.PEARL, GemColors.BROWN, gemSettings());
+    public static final Item PEARL_GEM_13 = new GemItem(KinderGemEntities.PEARL, GemColors.GREEN, gemSettings());
+    public static final Item PEARL_GEM_14 = new GemItem(KinderGemEntities.PEARL, GemColors.RED, gemSettings());
+    public static final Item PEARL_GEM_15 = new GemItem(KinderGemEntities.PEARL, GemColors.BLACK, gemSettings());
 
-    public static final Item WHITE_ESSENCE_BOTTLE = new Item (essenceBottleSettings ());
-    public static final Item WHITE_ESSENCE_BUCKET = new BucketItem(KinderFluidHandling.STILL_WHITE_ESSENCE, essenceBucketSettings ());
-    public static final Item PINK_ESSENCE_BOTTLE = new Item (essenceBottleSettings ());
-    public static final Item PINK_ESSENCE_BUCKET = new BucketItem(KinderFluidHandling.STILL_PINK_ESSENCE, essenceBucketSettings ());
+    public static final Item WHITE_ESSENCE_BOTTLE = new Item(essenceBottleSettings());
+    public static final Item WHITE_ESSENCE_BUCKET = new BucketItem(KinderFluidHandling.STILL_WHITE_ESSENCE, essenceBucketSettings());
+    public static final Item PINK_ESSENCE_BOTTLE = new Item(essenceBottleSettings());
+    public static final Item PINK_ESSENCE_BUCKET = new BucketItem(KinderFluidHandling.STILL_PINK_ESSENCE, essenceBucketSettings());
 
-    public static final Item BLUE_ESSENCE_BOTTLE = new Item (essenceBottleSettings ());
-    public static final Item BLUE_ESSENCE_BUCKET = new BucketItem(KinderFluidHandling.STILL_BLUE_ESSENCE, essenceBucketSettings ());
+    public static final Item BLUE_ESSENCE_BOTTLE = new Item(essenceBottleSettings());
+    public static final Item BLUE_ESSENCE_BUCKET = new BucketItem(KinderFluidHandling.STILL_BLUE_ESSENCE, essenceBucketSettings());
 
-    public static final Item YELLOW_ESSENCE_BOTTLE = new Item (essenceBottleSettings ());
-    public static final Item YELLOW_ESSENCE_BUCKET = new BucketItem(KinderFluidHandling.STILL_YELLOW_ESSENCE, essenceBucketSettings ());
+    public static final Item YELLOW_ESSENCE_BOTTLE = new Item(essenceBottleSettings());
+    public static final Item YELLOW_ESSENCE_BUCKET = new BucketItem(KinderFluidHandling.STILL_YELLOW_ESSENCE, essenceBucketSettings());
+    public static final Item PEARL_SHUCK = new Item(new FabricItemSettings().maxCount(1).maxDamage(64));
+    public static final Item DRIED_GEM_SEEDS = new Item(new FabricItemSettings().maxCount(1));
+    public static final Item WHITE_GEM_SEEDS = new AliasedBlockItem(KinderBlocks.WHITE_GEM_CROP_BLOCK, new FabricItemSettings());
+    public static final Item YELLOW_GEM_SEEDS = new AliasedBlockItem(KinderBlocks.YELLOW_GEM_CROP_BLOCK, new FabricItemSettings());
+    public static final Item BLUE_GEM_SEEDS = new AliasedBlockItem(KinderBlocks.BLUE_GEM_CROP_BLOCK, new FabricItemSettings());
+    public static final Item PINK_GEM_SEEDS = new AliasedBlockItem(KinderBlocks.PINK_GEM_CROP_BLOCK, new FabricItemSettings());
+    public static final Item PEARL_CUSTOMIZER = new PearlCustomizerItem(new FabricItemSettings().maxCount(1));
+    public static final Item REJUVENATOR = new DestabItem(new FabricItemSettings().maxCount(1).maxDamage(64));
+    public static final Item LIGHT_REACTOR_BLUEPRINT = new Item(new FabricItemSettings());
+    public static final Item LIGHT_REACTOR = new Item(new FabricItemSettings());
 
-    public static void registerFluidItems()
-    {
+    public static void registerFluidItems() {
         FluidStorage.combinedItemApiProvider(GLASS_BOTTLE).register(context ->
                 new EmptyItemFluidStorage(context, bucket -> ItemVariant.of(WHITE_ESSENCE_BOTTLE), KinderFluidHandling.STILL_WHITE_ESSENCE, FluidConstants.BOTTLE)
         );
@@ -115,31 +125,19 @@ public class KinderItems {
                 new FullItemFluidStorage(context, bucket -> ItemVariant.of(GLASS_BOTTLE), FluidVariant.of(KinderFluidHandling.STILL_BLUE_ESSENCE), FluidConstants.BOTTLE)
         );
     }
-    public static final Item PEARL_SHUCK = new Item (new FabricItemSettings ().maxCount (1).maxDamage (64));
 
-    public static final Item DRIED_GEM_SEEDS = new Item (new FabricItemSettings ().maxCount (1));
-
-    public static final Item WHITE_GEM_SEEDS = new AliasedBlockItem (KinderBlocks.WHITE_GEM_CROP_BLOCK, new FabricItemSettings ());
-    public static final Item YELLOW_GEM_SEEDS = new AliasedBlockItem (KinderBlocks.YELLOW_GEM_CROP_BLOCK, new FabricItemSettings ());
-    public static final Item BLUE_GEM_SEEDS = new AliasedBlockItem (KinderBlocks.BLUE_GEM_CROP_BLOCK, new FabricItemSettings ());
-    public static final Item PINK_GEM_SEEDS = new AliasedBlockItem (KinderBlocks.PINK_GEM_CROP_BLOCK, new FabricItemSettings ());
-    public static final Item PEARL_CUSTOMIZER = new PearlCustomizerItem (new FabricItemSettings ().maxCount (1));
-
-    public static final Item REJUVENATOR = new DestabItem(new FabricItemSettings ().maxCount (1).maxDamage(64));
-
-    public static final Item LIGHT_REACTOR_BLUEPRINT = new Item(new FabricItemSettings());
-    public static final Item LIGHT_REACTOR = new Item(new FabricItemSettings());
-
-    public static FabricItemSettings gemSettings (){
-        return new FabricItemSettings ().maxCount (1).fireproof ();
+    public static FabricItemSettings gemSettings() {
+        return new FabricItemSettings().maxCount(1).fireproof();
     }
 
-    public static FabricItemSettings essenceBottleSettings (){
-        return new FabricItemSettings ().maxCount (16).recipeRemainder (GLASS_BOTTLE);
+    public static FabricItemSettings essenceBottleSettings() {
+        return new FabricItemSettings().maxCount(16).recipeRemainder(GLASS_BOTTLE);
     }
-    public static FabricItemSettings essenceBucketSettings (){
-        return new FabricItemSettings ().maxCount (1).recipeRemainder (BUCKET);
+
+    public static FabricItemSettings essenceBucketSettings() {
+        return new FabricItemSettings().maxCount(1).recipeRemainder(BUCKET);
     }
+
     public static ArrayList<RegistryUtil.ItemData> itemData() {
         ArrayList<RegistryUtil.ItemData> itemData = new ArrayList<>();
 
@@ -221,9 +219,9 @@ public class KinderItems {
         return itemData;
     }
 
-    public static void registerItems(){
+    public static void registerItems() {
         for (RegistryUtil.ItemData itemData : itemData()) {
-            Registry.register (Registries.ITEM, new Identifier (KinderMod.MOD_ID, itemData.item_id()), itemData.item());
+            Registry.register(Registries.ITEM, new Identifier(KinderMod.MOD_ID, itemData.item_id()), itemData.item());
         }
     }
 }

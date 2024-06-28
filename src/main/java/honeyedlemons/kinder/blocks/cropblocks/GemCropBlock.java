@@ -10,16 +10,17 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
 abstract public class GemCropBlock extends CropBlock {
-    protected static final VoxelShape SHAPE = Block.createCuboidShape (5.0, 0.0, 5.0, 11.0, 10.0, 11.0);
+    protected static final VoxelShape SHAPE = Block.createCuboidShape(5.0, 0.0, 5.0, 11.0, 10.0, 11.0);
 
-    public GemCropBlock (Settings settings){
-        super (settings);
+    public GemCropBlock(Settings settings) {
+        super(settings);
     }
 
-    @Override public VoxelShape getOutlineShape (BlockState state, BlockView world, BlockPos pos, ShapeContext context){
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return SHAPE;
     }
 
-    abstract public ItemConvertible getSeedsItem ();
+    abstract public ItemConvertible getSeedsItem();
 
 }

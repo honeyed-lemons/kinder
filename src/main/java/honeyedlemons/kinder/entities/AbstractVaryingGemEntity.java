@@ -5,11 +5,12 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.world.World;
 
 public abstract class AbstractVaryingGemEntity extends AbstractGemEntity {
-    public AbstractVaryingGemEntity (EntityType<? extends TameableEntity> entityType, World world){
-        super (entityType, world);
+    public AbstractVaryingGemEntity(EntityType<? extends TameableEntity> entityType, World world) {
+        super(entityType, world);
     }
 
-    public abstract boolean UsesUniqueNames ();
+    public abstract boolean UsesUniqueNames();
+
     public abstract int[] neglectedColors();
 
     public boolean isValid(int color) {
@@ -22,6 +23,7 @@ public abstract class AbstractVaryingGemEntity extends AbstractGemEntity {
         }
         return true;
     }
+
     public int generateGemColorVariant() {
         int color;
         do {

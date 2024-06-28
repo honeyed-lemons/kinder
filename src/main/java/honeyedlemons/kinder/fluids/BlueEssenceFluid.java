@@ -9,7 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 
-public abstract class BlueEssenceFluid extends EssenceFluid{
+public abstract class BlueEssenceFluid extends EssenceFluid {
     @Override
     public Fluid getFlowing() {
         return KinderFluidHandling.FLOWING_BLUE_ESSENCE;

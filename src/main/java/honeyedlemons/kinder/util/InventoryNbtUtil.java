@@ -8,40 +8,40 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 
 public class InventoryNbtUtil {
-    public static void readInventoryNbt (NbtCompound nbt, String key, Inventory stacks){
-        var inventoryNbt = nbt.getList (key, NbtElement.COMPOUND_TYPE);
+    public static void readInventoryNbt(NbtCompound nbt, String key, Inventory stacks) {
+        var inventoryNbt = nbt.getList(key, NbtElement.COMPOUND_TYPE);
         KinderMod.LOGGER.info("Reading");
-        for (int i = 0; i < inventoryNbt.size (); ++i) {
-            var slotNbt = inventoryNbt.getCompound (i);
-            int slotId = slotNbt.getByte ("slot") & 255;
-            if (slotId < stacks.size ()) {
-                stacks.setStack (slotId, ItemStack.fromNbt (slotNbt));
+        for (int i = 0; i < inventoryNbt.size(); ++i) {
+            var slotNbt = inventoryNbt.getCompound(i);
+            int slotId = slotNbt.getByte("slot") & 255;
+            if (slotId < stacks.size()) {
+                stacks.setStack(slotId, ItemStack.fromNbt(slotNbt));
             }
         }
     }
 
-    @SuppressWarnings("UnusedReturnValue")
-    public static NbtCompound writeInventoryNbt (NbtCompound nbt, String key, Inventory stacks, int end){
+    @SuppressWarnings ("UnusedReturnValue")
+    public static NbtCompound writeInventoryNbt(NbtCompound nbt, String key, Inventory stacks, int end) {
         KinderMod.LOGGER.info("Writing");
-        return writeInventoryNbt (nbt, key, stacks, end, true);
+        return writeInventoryNbt(nbt, key, stacks, end, true);
     }
 
-    public static NbtCompound writeInventoryNbt (NbtCompound nbt, String key, Inventory stacks, int end, boolean setIfEmpty){
+    public static NbtCompound writeInventoryNbt(NbtCompound nbt, String key, Inventory stacks, int end, boolean setIfEmpty) {
         KinderMod.LOGGER.info("Writing");
-        var inventoryNbt = new NbtList ();
+        var inventoryNbt = new NbtList();
 
         for (int i = 0; i < end; ++i) {
-            var slotStack = stacks.getStack (i);
-            if (!slotStack.isEmpty ()) {
-                var slotNbt = new NbtCompound ();
-                slotNbt.putByte ("slot", (byte) (i));
-                slotStack.writeNbt (slotNbt);
-                inventoryNbt.add (slotNbt);
+            var slotStack = stacks.getStack(i);
+            if (!slotStack.isEmpty()) {
+                var slotNbt = new NbtCompound();
+                slotNbt.putByte("slot", (byte) (i));
+                slotStack.writeNbt(slotNbt);
+                inventoryNbt.add(slotNbt);
             }
         }
 
-        if (!inventoryNbt.isEmpty () || setIfEmpty) {
-            nbt.put (key, inventoryNbt);
+        if (!inventoryNbt.isEmpty() || setIfEmpty) {
+            nbt.put(key, inventoryNbt);
         }
 
         return nbt;

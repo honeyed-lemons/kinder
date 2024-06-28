@@ -18,7 +18,7 @@ import net.minecraft.world.WorldView;
 
 import java.util.Optional;
 
-public abstract class EssenceFluid extends FlowableFluid{
+public abstract class EssenceFluid extends FlowableFluid {
     @Override
     public abstract Fluid getFlowing();
 
@@ -29,6 +29,7 @@ public abstract class EssenceFluid extends FlowableFluid{
     protected boolean isInfinite(World world) {
         return false;
     }
+
     @Override
     public boolean matchesType(Fluid fluid) {
         return fluid == getStill() || fluid == getFlowing();
@@ -44,10 +45,12 @@ public abstract class EssenceFluid extends FlowableFluid{
         final BlockEntity blockEntity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
         Block.dropStacks(state, world, pos, blockEntity);
     }
+
     @Override
     protected int getFlowSpeed(WorldView worldView) {
         return 2;
     }
+
     @Override
     protected int getLevelDecreasePerBlock(WorldView world) {
         return 1;
@@ -70,6 +73,7 @@ public abstract class EssenceFluid extends FlowableFluid{
     protected float getBlastResistance() {
         return 100.0F;
     }
+
     @Override
     protected abstract BlockState toBlockState(FluidState state);
 

@@ -15,12 +15,13 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@SuppressWarnings("AmbiguousMixinReference")
-@Mixin(ItemRenderer.class)
+@SuppressWarnings ("AmbiguousMixinReference")
+@Mixin (ItemRenderer.class)
 public abstract class ItemRendererMixin {
-    @Shadow public abstract ItemModels getModels();
+    @Shadow
+    public abstract ItemModels getModels();
 
-    @ModifyVariable(method = "renderItem", at = @At(value = "HEAD"), argsOnly = true)
+    @ModifyVariable (method = "renderItem", at = @At (value = "HEAD"), argsOnly = true)
     public BakedModel useRejuv(BakedModel value, ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         if (stack.isOf(KinderItems.REJUVENATOR) && renderMode != ModelTransformationMode.GUI) {
             return this.getModels().getModelManager().getModel(new ModelIdentifier(KinderMod.MOD_ID, "rejuvenator_held", "inventory"));

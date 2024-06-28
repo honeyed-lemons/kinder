@@ -28,7 +28,7 @@ public class GemConditions {
     pink blue = 7
     */
 
-    public GemConditions (Float baseRarity, Float tempMin, Float tempIdeal, Float tempMax, Float depthMin, Float depthMax, HashMap<String, Float> biome, HashMap<Item, GemColors> gems){
+    public GemConditions(Float baseRarity, Float tempMin, Float tempIdeal, Float tempMax, Float depthMin, Float depthMax, HashMap<String, Float> biome, HashMap<Item, GemColors> gems) {
         this.baseRarity = baseRarity;
         this.tempMin = tempMin;
         this.tempIdeal = tempIdeal;

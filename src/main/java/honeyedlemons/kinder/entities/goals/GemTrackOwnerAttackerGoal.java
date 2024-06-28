@@ -18,37 +18,37 @@ public class GemTrackOwnerAttackerGoal extends TrackTargetGoal {
     private LivingEntity attacker;
     private int lastAttackedTime;
 
-    public GemTrackOwnerAttackerGoal (AbstractGemEntity tameable, boolean canFight){
-        super (tameable, false);
+    public GemTrackOwnerAttackerGoal(AbstractGemEntity tameable, boolean canFight) {
+        super(tameable, false);
         this.tameable = tameable;
         this.canFight = canFight;
-        this.setControls (EnumSet.of (Goal.Control.TARGET));
+        this.setControls(EnumSet.of(Goal.Control.TARGET));
     }
 
-    public boolean canStart (){
-        if (this.tameable.isTamed () && !this.tameable.isRebel()) {
-            LivingEntity livingEntity = this.tameable.getOwner ();
+    public boolean canStart() {
+        if (this.tameable.isTamed() && !this.tameable.isRebel()) {
+            LivingEntity livingEntity = this.tameable.getOwner();
             if (livingEntity == null) {
                 return false;
             }
             if (!canFight) {
                 return false;
             } else {
-                this.attacker = livingEntity.getAttacker ();
-                int i = livingEntity.getLastAttackedTime ();
-                return i != this.lastAttackedTime && this.canTrack (this.attacker, TargetPredicate.DEFAULT) && this.tameable.canAttackWithOwner (this.attacker, livingEntity);
+                this.attacker = livingEntity.getAttacker();
+                int i = livingEntity.getLastAttackedTime();
+                return i != this.lastAttackedTime && this.canTrack(this.attacker, TargetPredicate.DEFAULT) && this.tameable.canAttackWithOwner(this.attacker, livingEntity);
             }
         } else {
             return false;
         }
     }
 
-    public void start (){
-        this.mob.setTarget (this.attacker);
-        LivingEntity livingEntity = this.tameable.getOwner ();
+    public void start() {
+        this.mob.setTarget(this.attacker);
+        LivingEntity livingEntity = this.tameable.getOwner();
         if (livingEntity != null) {
-            this.lastAttackedTime = livingEntity.getLastAttackedTime ();
+            this.lastAttackedTime = livingEntity.getLastAttackedTime();
         }
-        super.start ();
+        super.start();
     }
 }

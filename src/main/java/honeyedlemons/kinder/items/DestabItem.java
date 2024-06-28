@@ -10,7 +10,8 @@ import net.minecraft.item.Item;
 
 public class DestabItem extends Item {
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
-    public DestabItem(Settings settings){
+
+    public DestabItem(Settings settings) {
         super(settings);
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", -3, EntityAttributeModifier.Operation.ADDITION));

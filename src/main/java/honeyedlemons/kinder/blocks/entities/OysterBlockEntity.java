@@ -20,14 +20,14 @@ public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
     public int ticksElapsed;
     public float breakChance = 1f;
 
-    public OysterBlockEntity (BlockPos pos, BlockState state){
-        super (KinderBlocks.OYSTER_BLOCK_ENTITY, pos, state);
+    public OysterBlockEntity(BlockPos pos, BlockState state) {
+        super(KinderBlocks.OYSTER_BLOCK_ENTITY, pos, state);
     }
 
-    public static void tick (World world, BlockPos pos, BlockState state, OysterBlockEntity blockEntity){
-        if (state.get (OysterBlock.COOKING).equals (true) && state.get (OysterBlock.WATERLOGGED)) {
-            if (blockEntity.ticksElapsed >= (KinderMod.config.oystertime / (getDownfall (world, pos) + 0.5))) {
-                world.setBlockState (pos, state.with (OysterBlock.COOKED, true).with (OysterBlock.COOKING, false));
+    public static void tick(World world, BlockPos pos, BlockState state, OysterBlockEntity blockEntity) {
+        if (state.get(OysterBlock.COOKING).equals(true) && state.get(OysterBlock.WATERLOGGED)) {
+            if (blockEntity.ticksElapsed >= (KinderMod.config.oystertime / (getDownfall(world, pos) + 0.5))) {
+                world.setBlockState(pos, state.with(OysterBlock.COOKED, true).with(OysterBlock.COOKING, false));
                 blockEntity.ticksElapsed = 0;
             } else {
                 blockEntity.ticksElapsed++;
@@ -35,16 +35,18 @@ public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
         }
     }
 
-    @Override public void writeNbt (NbtCompound nbt){
-        super.writeNbt (nbt);
-        nbt.putInt ("te", ticksElapsed);
-        nbt.putFloat ("breakChance", breakChance);
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        nbt.putInt("te", ticksElapsed);
+        nbt.putFloat("breakChance", breakChance);
     }
 
-    @Override public void readNbt (NbtCompound nbt){
-        super.readNbt (nbt);
-        ticksElapsed = nbt.getInt ("te");
-        breakChance = nbt.getFloat ("breakChance");
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        ticksElapsed = nbt.getInt("te");
+        breakChance = nbt.getFloat("breakChance");
     }
 
     public ItemStack getPearl(World world, BlockPos blockPos) {
@@ -111,28 +113,28 @@ public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
     }
 
 
-    public ArrayList<Item> genPearlSet (int pearlSet){
-        ArrayList<Item> pearls = new ArrayList<> ();
+    public ArrayList<Item> genPearlSet(int pearlSet) {
+        ArrayList<Item> pearls = new ArrayList<>();
 
         switch (pearlSet) {
             case 4 ->
-                    pearls.addAll (Arrays.asList (KinderItems.PEARL_GEM_0, KinderItems.PEARL_GEM_14, KinderItems.PEARL_GEM_2, KinderItems.PEARL_GEM_6));
+                    pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_0, KinderItems.PEARL_GEM_14, KinderItems.PEARL_GEM_2, KinderItems.PEARL_GEM_6));
             case 3 ->
-                    pearls.addAll (Arrays.asList (KinderItems.PEARL_GEM_1, KinderItems.PEARL_GEM_2, KinderItems.PEARL_GEM_7, KinderItems.PEARL_GEM_8));
+                    pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_1, KinderItems.PEARL_GEM_2, KinderItems.PEARL_GEM_7, KinderItems.PEARL_GEM_8));
             case 2 ->
-                    pearls.addAll (Arrays.asList (KinderItems.PEARL_GEM_4, KinderItems.PEARL_GEM_5, KinderItems.PEARL_GEM_13, KinderItems.PEARL_GEM_3));
+                    pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_4, KinderItems.PEARL_GEM_5, KinderItems.PEARL_GEM_13, KinderItems.PEARL_GEM_3));
             case 1 ->
-                    pearls.addAll (Arrays.asList (KinderItems.PEARL_GEM_11, KinderItems.PEARL_GEM_9, KinderItems.PEARL_GEM_15, KinderItems.PEARL_GEM_10));
+                    pearls.addAll(Arrays.asList(KinderItems.PEARL_GEM_11, KinderItems.PEARL_GEM_9, KinderItems.PEARL_GEM_15, KinderItems.PEARL_GEM_10));
         }
 
         return pearls;
     }
 
-    public float getBreakChance (){
+    public float getBreakChance() {
         return breakChance;
     }
 
-    public void setBreakChance (float nbreakChance){
+    public void setBreakChance(float nbreakChance) {
         breakChance = nbreakChance;
     }
 }

@@ -9,15 +9,14 @@ import net.minecraft.village.VillagerProfession;
 
 public class KinderVillagerTrades {
 
-    public static void registerCustomTrades()
-    {
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER,3,
+    public static void registerCustomTrades() {
+        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FARMER, 3,
                 factories -> {
-            factories.add((entity, random) -> new TradeOffer(
-                    new ItemStack(Items.EMERALD, KinderMod.config.driedGemSeedConfig.price),
-                    new ItemStack(KinderItems.DRIED_GEM_SEEDS, 1),
-                    8,5,0.05f
-            ));
-        });
+                    factories.add((entity, random) -> new TradeOffer(
+                            new ItemStack(Items.EMERALD, KinderMod.config.driedGemSeedConfig.price),
+                            new ItemStack(KinderItems.DRIED_GEM_SEEDS, 1),
+                            8, 5, 0.05f
+                    ));
+                });
     }
 }

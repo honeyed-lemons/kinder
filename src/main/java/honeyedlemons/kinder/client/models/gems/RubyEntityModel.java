@@ -7,9 +7,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
-@Environment(EnvType.CLIENT) public class RubyEntityModel extends DefaultedEntityGeoModel<RubyEntity> {
+@Environment (EnvType.CLIENT)
+public class RubyEntityModel extends DefaultedEntityGeoModel<RubyEntity> {
 
-    public RubyEntityModel (){
-        super (new Identifier (KinderMod.MOD_ID, "gems/ruby/ruby"), true);
+    public RubyEntityModel() {
+        super(new Identifier(KinderMod.MOD_ID, "gems/ruby/ruby"), true);
     }
 }

@@ -31,41 +31,54 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class SapphireEntity extends AbstractVaryingGemEntity {
-    public SapphireEntity(EntityType<? extends TameableEntity> entityType, World world){
-        super (entityType, world);
-    }
-    private static final TrackedData<Integer> PREDICTION_TICKS = DataTracker.registerData (SapphireEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> PREDICTION_TICKS = DataTracker.registerData(SapphireEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-    public static DefaultAttributeContainer.@NotNull Builder createGemAttributes (){
-        return createDefaultGemAttributes ().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.75);
+    public SapphireEntity(EntityType<? extends TameableEntity> entityType, World world) {
+        super(entityType, world);
     }
-    @Override public int maxHealth (){
+
+    public static DefaultAttributeContainer.@NotNull Builder createGemAttributes() {
+        return createDefaultGemAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.75);
+    }
+
+    @Override
+    public int maxHealth() {
         return KinderMod.config.sapphireConfig.max_health;
     }
 
-    @Override public int attackDamage (){
+    @Override
+    public int attackDamage() {
         return KinderMod.config.sapphireConfig.attack_damage;
     }
-    @Override public boolean isSolider (){
+
+    @Override
+    public boolean isSolider() {
         return false;
     }
 
-    @Override public int hairVariantCount (){
+    @Override
+    public int hairVariantCount() {
         return 6;
     }
 
-    @Override public int outfitVariantCount (){
-        return 3;
+    @Override
+    public int outfitVariantCount() {
+        return 4;
     }
 
-    @Override public boolean hasOutfitPlacementVariant (){
+    @Override
+    public boolean hasOutfitPlacementVariant() {
         return false;
     }
 
-    @Override public int defaultOutfitColor (){
+    @Override
+    public int defaultOutfitColor() {
         return -1;
     }
-    @Override public int defaultInsigniaColor (){ return -1;
+
+    @Override
+    public int defaultInsigniaColor() {
+        return 0;
     }
 
     @Override
@@ -74,7 +87,8 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
         this.goalSelector.add(1, new EscapeDangerGoal(this, getSpeed()));
     }
 
-    @Override public GemPlacements[] getPlacements (){
+    @Override
+    public GemPlacements[] getPlacements() {
         return new GemPlacements[]{
                 GemPlacements.CHEST,
                 GemPlacements.BELLY,
@@ -85,38 +99,41 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
                 GemPlacements.RIGHT_HAND,
                 GemPlacements.LEFT_HAND};
     }
-    @Override public ItemStack gemItem (){
-        return switch (getGemColorVariant ()) {
-            case 1 -> KinderItems.SAPPHIRE_GEM_1.getDefaultStack ();
-            case 2 -> KinderItems.SAPPHIRE_GEM_2.getDefaultStack ();
-            case 3 -> KinderItems.SAPPHIRE_GEM_3.getDefaultStack ();
-            case 4 -> KinderItems.SAPPHIRE_GEM_4.getDefaultStack ();
-            case 5 -> KinderItems.SAPPHIRE_GEM_5.getDefaultStack ();
-            case 6 -> KinderItems.SAPPHIRE_GEM_6.getDefaultStack ();
-            case 7 -> KinderItems.SAPPHIRE_GEM_7.getDefaultStack ();
-            case 8 -> KinderItems.SAPPHIRE_GEM_8.getDefaultStack ();
-            case 9 -> KinderItems.SAPPHIRE_GEM_9.getDefaultStack ();
-            case 10 -> KinderItems.SAPPHIRE_GEM_10.getDefaultStack ();
-            case 11 -> KinderItems.SAPPHIRE_GEM_11.getDefaultStack ();
-            case 12 -> KinderItems.SAPPHIRE_GEM_12.getDefaultStack ();
-            case 13 -> KinderItems.SAPPHIRE_GEM_13.getDefaultStack ();
-            case 15 -> KinderItems.SAPPHIRE_GEM_15.getDefaultStack ();
-            default -> KinderItems.SAPPHIRE_GEM_0.getDefaultStack ();
+
+    @Override
+    public ItemStack gemItem() {
+        return switch (getGemColorVariant()) {
+            case 1 -> KinderItems.SAPPHIRE_GEM_1.getDefaultStack();
+            case 2 -> KinderItems.SAPPHIRE_GEM_2.getDefaultStack();
+            case 3 -> KinderItems.SAPPHIRE_GEM_3.getDefaultStack();
+            case 4 -> KinderItems.SAPPHIRE_GEM_4.getDefaultStack();
+            case 5 -> KinderItems.SAPPHIRE_GEM_5.getDefaultStack();
+            case 6 -> KinderItems.SAPPHIRE_GEM_6.getDefaultStack();
+            case 7 -> KinderItems.SAPPHIRE_GEM_7.getDefaultStack();
+            case 8 -> KinderItems.SAPPHIRE_GEM_8.getDefaultStack();
+            case 9 -> KinderItems.SAPPHIRE_GEM_9.getDefaultStack();
+            case 10 -> KinderItems.SAPPHIRE_GEM_10.getDefaultStack();
+            case 11 -> KinderItems.SAPPHIRE_GEM_11.getDefaultStack();
+            case 12 -> KinderItems.SAPPHIRE_GEM_12.getDefaultStack();
+            case 13 -> KinderItems.SAPPHIRE_GEM_13.getDefaultStack();
+            case 15 -> KinderItems.SAPPHIRE_GEM_15.getDefaultStack();
+            default -> KinderItems.SAPPHIRE_GEM_0.getDefaultStack();
         };
     }
-    public void initDataTracker (){
-        super.initDataTracker ();
-        this.dataTracker.startTracking (PREDICTION_TICKS, 0);
+
+    public void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(PREDICTION_TICKS, 0);
     }
 
-    public void writeCustomDataToNbt (NbtCompound nbt){
-        super.writeCustomDataToNbt (nbt);
-        nbt.putInt ("PredictionTicks", this.dataTracker.get (PREDICTION_TICKS));
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putInt("PredictionTicks", this.dataTracker.get(PREDICTION_TICKS));
     }
 
-    public void readCustomDataFromNbt (NbtCompound nbt){
-        super.readCustomDataFromNbt (nbt);
-        this.dataTracker.set (PREDICTION_TICKS, nbt.getInt ("PredictionTicks"));
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.dataTracker.set(PREDICTION_TICKS, nbt.getInt("PredictionTicks"));
     }
 
     @Override
@@ -131,22 +148,21 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
         }
     }
 
-    public void tick (){
+    public void tick() {
         super.tick();
-        if (getPredictionTicks() > 0)
-        {
+        if (getPredictionTicks() > 0) {
             setPredictionTicks(getPredictionTicks() - 1);
         }
     }
 
-    public int getPredictionTicks()
-    {
+    public int getPredictionTicks() {
         return this.getDataTracker().get(PREDICTION_TICKS);
     }
-    public void setPredictionTicks(int perfectionTicks)
-    {
-        this.getDataTracker().set(PREDICTION_TICKS,perfectionTicks);
+
+    public void setPredictionTicks(int perfectionTicks) {
+        this.getDataTracker().set(PREDICTION_TICKS, perfectionTicks);
     }
+
     public boolean predictionQuality() {
         int val = (int) (getPerfection() * 2 * (random.nextFloat() * 1.25f));
         val = Math.min(6, Math.max(1, val));
@@ -159,10 +175,8 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
         }
     }
 
-    public void getPrediction(boolean bool)
-    {
-        if (bool)
-        {
+    public void getPrediction(boolean bool) {
+        if (bool) {
             switch (random.nextInt(7)) {
                 case 0 -> grantPrediction(true, StatusEffects.STRENGTH);
                 case 1 -> grantPrediction(true, StatusEffects.SPEED);
@@ -172,61 +186,62 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
                 case 5 -> grantPrediction(true, StatusEffects.NIGHT_VISION);
                 case 6 -> grantPrediction(true, StatusEffects.LUCK);
             }
-        }
-        else {
+        } else {
             switch (random.nextInt(7)) {
-                case 0-> grantPrediction(true, StatusEffects.WEAKNESS);
-                case 1-> grantPrediction(true, StatusEffects.SLOWNESS);
-                case 2-> grantPrediction(true, StatusEffects.BAD_OMEN);
-                case 3-> grantPrediction(true, StatusEffects.MINING_FATIGUE);
-                case 4-> grantPrediction(true, StatusEffects.NAUSEA);
-                case 5-> grantPrediction(true, StatusEffects.BLINDNESS);
-                case 6-> grantPrediction(true, StatusEffects.LEVITATION);
-                case 7-> grantPrediction(true, StatusEffects.UNLUCK);
+                case 0 -> grantPrediction(true, StatusEffects.WEAKNESS);
+                case 1 -> grantPrediction(true, StatusEffects.SLOWNESS);
+                case 2 -> grantPrediction(true, StatusEffects.BAD_OMEN);
+                case 3 -> grantPrediction(true, StatusEffects.MINING_FATIGUE);
+                case 4 -> grantPrediction(true, StatusEffects.NAUSEA);
+                case 5 -> grantPrediction(true, StatusEffects.BLINDNESS);
+                case 6 -> grantPrediction(true, StatusEffects.LEVITATION);
+                case 7 -> grantPrediction(true, StatusEffects.UNLUCK);
             }
         }
     }
 
-    public void grantPrediction(boolean morality, StatusEffect statusEffect)
-    {
+    public void grantPrediction(boolean morality, StatusEffect statusEffect) {
         float duration = 3600;
         if (morality) {
             duration *= (getPerfection() >= 3) ? ((float) getPerfection() / 3) : getPerfection() * 2;
         } else {
             duration *= (getPerfection() >= 3) ? getPerfection() * 2 : ((float) getPerfection() / 3);
         }
-        List<Entity> list = this.getWorld().getEntitiesByClass(Entity.class,this.getBoundingBox().expand(16,16,16), EntityPredicates.VALID_LIVING_ENTITY);
-        for (Entity entity : list)
-        {
+        List<Entity> list = this.getWorld().getEntitiesByClass(Entity.class, this.getBoundingBox().expand(16, 16, 16), EntityPredicates.VALID_LIVING_ENTITY);
+        for (Entity entity : list) {
             if (entity instanceof TameableEntity tameableEntity) {
                 if (tameableEntity.getOwnerUuid() == this.getOwnerUuid()) {
-                    tameableEntity.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration),0,false,false), this);
+                    tameableEntity.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration), 0, false, false), this);
                 }
             }
-            if (entity instanceof PlayerEntity player)
-            {
+            if (entity instanceof PlayerEntity player) {
                 if (isOwner(player)) {
-                    player.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration),0,false,false), this);
-                    player.sendMessage(Text.literal(this.getName().getString()+": ").append(Text.translatable("kinder.sapphire.prediction.base").append(Text.translatable("kinder.sapphire.prediction."+statusEffect.getTranslationKey()))));
+                    player.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration), 0, false, false), this);
+                    player.sendMessage(Text.literal(this.getName().getString() + ": ").append(Text.translatable("kinder.sapphire.prediction.base").append(Text.translatable("kinder.sapphire.prediction." + statusEffect.getTranslationKey()))));
                 }
             }
         }
     }
 
-    @Override public int[] outfitPlacementVariants (){
+    @Override
+    public int[] outfitPlacementVariants() {
         return null;
     }
 
-    @Override public @NotNull SoundEvent gemInstrument(){
+    @Override
+    public @NotNull SoundEvent gemInstrument() {
         return SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value();
     }
 
-    @Override public boolean UsesUniqueNames (){
+    @Override
+    public boolean UsesUniqueNames() {
         return true;
     }
 
-    @Override public void onInventoryChanged (Inventory sender){
+    @Override
+    public void onInventoryChanged(Inventory sender) {
     }
+
     @Override
     public int[] neglectedColors() {
         return new int[14];
