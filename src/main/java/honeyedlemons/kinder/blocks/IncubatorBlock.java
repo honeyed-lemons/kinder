@@ -4,52 +4,58 @@ import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.blocks.entities.IncubatorBlockEntity;
 import honeyedlemons.kinder.init.KinderBlocks;
 import honeyedlemons.kinder.init.KinderItems;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.*;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class IncubatorBlock extends BlockWithEntity {
+public class IncubatorBlock extends BaseEntityBlock {
 
-    public static final BooleanProperty COOKED = BooleanProperty.of("cooked");
-    public static final BooleanProperty COOKING = BooleanProperty.of("cooking");
-    public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
-    public static final BooleanProperty LIT = BooleanProperty.of("lit");
-    protected static final VoxelShape BOTTOM_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
-    protected static final VoxelShape TOP_SHAPE = Block.createCuboidShape(4.0, 0.0, 4.0, 12.0, 13.0, 12.0);
+    public static final BooleanProperty COOKED = BooleanProperty.create("cooked");
+    public static final BooleanProperty COOKING = BooleanProperty.create("cooking");
+    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+    public static final BooleanProperty LIT = BooleanProperty.create("lit");
+    protected static final VoxelShape BOTTOM_SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
+    protected static final VoxelShape TOP_SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 13.0, 12.0);
 
-    public IncubatorBlock(Settings settings) {
+    public IncubatorBlock(Properties settings) {
         super(settings);
-        setDefaultState(getDefaultState().with(COOKED, false).with(COOKING, false).with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(HALF, DoubleBlockHalf.LOWER).with(LIT, false));
+        registerDefaultState(defaultBlockState().setValue(COOKED, false).setValue(COOKING, false).setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(HALF, DoubleBlockHalf.LOWER).setValue(LIT, false));
     }
 
     public static HashMap<Integer, Item> essenceHash() {
@@ -61,25 +67,25 @@ public class IncubatorBlock extends BlockWithEntity {
         return hash;
     }
 
-    protected static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
+    protected static void onBreakInCreative(Level world, BlockPos pos, net.minecraft.world.level.block.state.BlockState state, Player player) {
+        DoubleBlockHalf doubleBlockHalf = state.getValue(HALF);
         if (doubleBlockHalf == DoubleBlockHalf.UPPER) {
-            BlockPos blockPos = pos.down();
-            BlockState blockState = world.getBlockState(blockPos);
-            if (blockState.isOf(state.getBlock()) && blockState.get(HALF) == DoubleBlockHalf.LOWER) {
-                BlockState blockState2 = blockState.getFluidState().isOf(Fluids.WATER) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-                world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-                world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+            BlockPos blockPos = pos.below();
+            net.minecraft.world.level.block.state.BlockState blockState = world.getBlockState(blockPos);
+            if (blockState.is(state.getBlock()) && blockState.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                net.minecraft.world.level.block.state.BlockState blockState2 = blockState.getFluidState().is(Fluids.WATER) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
+                world.setBlock(blockPos, blockState2, Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+                world.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos, Block.getId(blockState));
             }
         }
 
     }
 
-    public static void explode(World world, BlockPos pos) {
+    public static void explode(Level world, BlockPos pos) {
         double x = pos.getX();
         double y = pos.getY();
         double z = pos.getZ();
-        world.createExplosion(null, x, y, z, 3.0F, World.ExplosionSourceType.BLOCK);
+        world.explode(null, x, y, z, 3.0F, Level.ExplosionInteraction.BLOCK);
     }
 
     public static int combineEssences(int essence1, int essence2) {
@@ -96,19 +102,19 @@ public class IncubatorBlock extends BlockWithEntity {
         }
     }
 
-    public static void FlushEssence(BlockState state, World world, BlockPos pos) {
+    public static void FlushEssence(net.minecraft.world.level.block.state.BlockState state, Level world, BlockPos pos) {
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof IncubatorBlockEntity) {
             ((IncubatorBlockEntity) be).setEssenceSlot(0, 0);
             ((IncubatorBlockEntity) be).setEssenceSlot(1, 0);
         }
-        world.setBlockState(pos, state.with(COOKING, false).with(COOKED, false));
+        world.setBlockAndUpdate(pos, state.setValue(COOKING, false).setValue(COOKED, false));
     }
 
     @Override
     @SuppressWarnings ("deprecation")
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        if (state.get(HALF).equals(DoubleBlockHalf.LOWER)) {
+    public VoxelShape getShape(net.minecraft.world.level.block.state.BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        if (state.getValue(HALF).equals(DoubleBlockHalf.LOWER)) {
             return BOTTOM_SHAPE;
         } else {
             return TOP_SHAPE;
@@ -116,116 +122,116 @@ public class IncubatorBlock extends BlockWithEntity {
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.HORIZONTAL_FACING, COOKED, COOKING, HALF, LIT);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, net.minecraft.world.level.block.state.BlockState> builder) {
+        builder.add(BlockStateProperties.HORIZONTAL_FACING, COOKED, COOKING, HALF, LIT);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(net.minecraft.world.level.block.state.BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient ? checkType(type, KinderBlocks.INCUBATOR_BLOCK_ENTITY, IncubatorBlockEntity::clientTick) : checkType(type, KinderBlocks.INCUBATOR_BLOCK_ENTITY, IncubatorBlockEntity::serverTick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, net.minecraft.world.level.block.state.BlockState state, BlockEntityType<T> type) {
+        return world.isClientSide ? createTickerHelper(type, KinderBlocks.INCUBATOR_BLOCK_ENTITY, IncubatorBlockEntity::clientTick) : createTickerHelper(type, KinderBlocks.INCUBATOR_BLOCK_ENTITY, IncubatorBlockEntity::serverTick);
     }
 
     @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockPos blockPos = ctx.getBlockPos();
-        World world = ctx.getWorld();
-        if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
-            return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing()).with(HALF, DoubleBlockHalf.LOWER);
+    public net.minecraft.world.level.block.state.BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockPos blockPos = ctx.getClickedPos();
+        Level world = ctx.getLevel();
+        if (blockPos.getY() < world.getMaxBuildHeight() - 1 && world.getBlockState(blockPos.above()).canBeReplaced(ctx)) {
+            return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, ctx.getHorizontalDirection()).setValue(HALF, DoubleBlockHalf.LOWER);
         } else {
             return null;
         }
     }
 
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-        world.setBlockState(pos.up(), state.with(HALF, DoubleBlockHalf.UPPER), Block.NOTIFY_ALL);
+    public void setPlacedBy(Level world, BlockPos pos, net.minecraft.world.level.block.state.BlockState state, LivingEntity placer, ItemStack itemStack) {
+        world.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER), Block.UPDATE_ALL);
     }
 
     @SuppressWarnings ("deprecation")
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        BlockPos blockPos = pos.down();
-        BlockState blockState = world.getBlockState(blockPos);
-        return state.get(HALF) == DoubleBlockHalf.LOWER ? blockState.isSideSolidFullSquare(world, blockPos, Direction.UP) : blockState.isOf(this);
+    public boolean canSurvive(net.minecraft.world.level.block.state.BlockState state, LevelReader world, BlockPos pos) {
+        BlockPos blockPos = pos.below();
+        net.minecraft.world.level.block.state.BlockState blockState = world.getBlockState(blockPos);
+        return state.getValue(HALF) == DoubleBlockHalf.LOWER ? blockState.isFaceSturdy(world, blockPos, Direction.UP) : blockState.is(this);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        if (state.get(HALF).equals(DoubleBlockHalf.LOWER)) {
+    public BlockEntity newBlockEntity(BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+        if (state.getValue(HALF).equals(DoubleBlockHalf.LOWER)) {
             return new IncubatorBlockEntity(pos, state);
         } else {
             return null;
         }
     }
 
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient && player.isCreative()) {
+    public void playerWillDestroy(Level world, BlockPos pos, net.minecraft.world.level.block.state.BlockState state, Player player) {
+        if (!world.isClientSide && player.isCreative()) {
             onBreakInCreative(world, pos, state, player);
         }
 
-        super.onBreak(world, pos, state, player);
+        super.playerWillDestroy(world, pos, state, player);
     }
 
     @SuppressWarnings ("deprecation")
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
-        if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP) && (!neighborState.isOf(this) || neighborState.get(HALF) == doubleBlockHalf)) {
-            return Blocks.AIR.getDefaultState();
+    public net.minecraft.world.level.block.state.BlockState updateShape(net.minecraft.world.level.block.state.BlockState state, Direction direction, net.minecraft.world.level.block.state.BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        DoubleBlockHalf doubleBlockHalf = state.getValue(HALF);
+        if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP) && (!neighborState.is(this) || neighborState.getValue(HALF) == doubleBlockHalf)) {
+            return Blocks.AIR.defaultBlockState();
         } else {
-            return doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+            return doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
         }
     }
 
     @Override
     @SuppressWarnings ("deprecation")
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public InteractionResult use(net.minecraft.world.level.block.state.BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         BlockEntity be = world.getBlockEntity(pos);
         if (!(be instanceof IncubatorBlockEntity incubator)) {
-            return super.onUse(state, world, pos, player, hand, hit);
+            return super.use(state, world, pos, player, hand, hit);
         }
 
-        ItemStack itemStack = player.getStackInHand(hand);
+        ItemStack itemStack = player.getItemInHand(hand);
 
-        if (hand != Hand.MAIN_HAND || !state.get(HALF).equals(DoubleBlockHalf.LOWER)) {
-            return super.onUse(state, world, pos, player, hand, hit);
+        if (hand != InteractionHand.MAIN_HAND || !state.getValue(HALF).equals(DoubleBlockHalf.LOWER)) {
+            return super.use(state, world, pos, player, hand, hit);
         }
 
-        boolean isCooking = state.get(COOKING);
-        boolean isCooked = state.get(COOKED);
+        boolean isCooking = state.getValue(COOKING);
+        boolean isCooked = state.getValue(COOKED);
 
         if (!isCooking && !isCooked) {
             return handleNotCookingState(state, world, pos, player, hand, itemStack, incubator);
         }
 
-        if (isCooking && !isCooked && player.isCreative() && player.isSneaky()) {
-            world.setBlockState(pos, state.with(COOKED, true).with(COOKING, false));
-            return ActionResult.success(world.isClient);
+        if (isCooking && !isCooked && player.isCreative() && player.isDiscrete()) {
+            world.setBlockAndUpdate(pos, state.setValue(COOKED, true).setValue(COOKING, false));
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
 
         if (isCooked) {
-            world.scheduleBlockTick(pos, this, 1);
-            world.setBlockState(pos.up(), world.getBlockState(pos.up()).with(LIT, false));
-            return ActionResult.success(world.isClient);
+            world.scheduleTick(pos, this, 1);
+            world.setBlockAndUpdate(pos.above(), world.getBlockState(pos.above()).setValue(LIT, false));
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
 
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.use(state, world, pos, player, hand, hit);
     }
 
-    private ActionResult handleNotCookingState(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, ItemStack itemStack, IncubatorBlockEntity incubator) {
+    private InteractionResult handleNotCookingState(net.minecraft.world.level.block.state.BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, ItemStack itemStack, IncubatorBlockEntity incubator) {
         if (incubator.essenceSlot2 != 0 && incubator.essenceSlot1 != 0 && itemStack.isEmpty()) {
             startCooking(state, world, pos);
-            return ActionResult.success(world.isClient);
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
 
         if (itemStack.getItem() == Items.GLASS_BOTTLE && incubator.essenceSlot1 != 0) {
             KinderMod.LOGGER.info("Draining");
-            drainEssence(incubator, state, world, pos, player, hand);
-            world.emitGameEvent(null, GameEvent.FLUID_PICKUP, pos);
-            return ActionResult.success(world.isClient);
+            drainEssence(incubator, world, player, hand);
+            world.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
 
         for (Map.Entry<Integer, Item> map : essenceHash().entrySet()) {
@@ -233,37 +239,37 @@ public class IncubatorBlock extends BlockWithEntity {
                 KinderMod.LOGGER.info("Knows you're holding essence");
                 if (incubator.essenceSlot1 == 0 || incubator.essenceSlot2 == 0) {
                     fillEssence(incubator, map.getKey());
-                    itemStack.decrement(1);
-                    world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
-                    world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                    itemStack.shrink(1);
+                    world.gameEvent(null, GameEvent.FLUID_PLACE, pos);
+                    world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
                     handleEmptyItemStack(player, hand, itemStack);
-                    return ActionResult.success(world.isClient);
+                    return InteractionResult.sidedSuccess(world.isClientSide);
                 }
             }
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
-    private void startCooking(BlockState state, World world, BlockPos pos) {
-        world.setBlockState(pos, state.with(COOKING, true));
-        world.setBlockState(pos.up(), world.getBlockState(pos.up()).with(LIT, true));
+    private void startCooking(net.minecraft.world.level.block.state.BlockState state, Level world, BlockPos pos) {
+        world.setBlockAndUpdate(pos, state.setValue(COOKING, true));
+        world.setBlockAndUpdate(pos.above(), world.getBlockState(pos.above()).setValue(LIT, true));
     }
 
-    private void handleEmptyItemStack(PlayerEntity player, Hand hand, ItemStack itemStack) {
+    private void handleEmptyItemStack(Player player, InteractionHand hand, ItemStack itemStack) {
         if (itemStack.isEmpty()) {
-            player.setStackInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
-        } else if (!player.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE))) {
-            player.dropItem(new ItemStack(Items.GLASS_BOTTLE), false);
+            player.setItemInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
+        } else if (!player.getInventory().add(new ItemStack(Items.GLASS_BOTTLE))) {
+            player.drop(new ItemStack(Items.GLASS_BOTTLE), false);
         }
     }
 
     @SuppressWarnings ("deprecation")
-    public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void tick(net.minecraft.world.level.block.state.BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof IncubatorBlockEntity) {
             ItemStack is = IncubatorBlockEntity.GemItemStack(world, pos, ((IncubatorBlockEntity) be));
             if (is != null) {
-                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), is);
+                Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), is);
                 FlushEssence(state, world, pos);
             }
         }
@@ -277,21 +283,21 @@ public class IncubatorBlock extends BlockWithEntity {
         }
     }
 
-    public void drainEssence(IncubatorBlockEntity be, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
-        ItemStack itemStack = player.getStackInHand(hand);
+    public void drainEssence(IncubatorBlockEntity be, Level world, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
         int essenceSlot = be.essenceSlot2 != 0 ? 2 : (be.essenceSlot1 != 0 ? 1 : 0);
 
         if (essenceSlot != 0) {
-            itemStack.decrement(1);
-            world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            itemStack.shrink(1);
+            world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             Item essenceBottle = essenceHash().get(essenceSlot == 2 ? be.essenceSlot2 : be.essenceSlot1);
             ItemStack essenceStack = new ItemStack(essenceBottle);
 
             if (itemStack.isEmpty()) {
-                player.setStackInHand(hand, essenceStack);
-            } else if (!player.getInventory().insertStack(essenceStack)) {
-                player.dropItem(essenceStack, false);
+                player.setItemInHand(hand, essenceStack);
+            } else if (!player.getInventory().add(essenceStack)) {
+                player.drop(essenceStack, false);
             }
 
             be.setEssenceSlot(essenceSlot - 1, 0);

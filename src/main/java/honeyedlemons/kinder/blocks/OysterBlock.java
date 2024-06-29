@@ -4,120 +4,124 @@ import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.blocks.entities.OysterBlockEntity;
 import honeyedlemons.kinder.init.KinderBlocks;
 import honeyedlemons.kinder.init.KinderItems;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class OysterBlock extends BlockWithEntity implements Waterloggable {
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    public static final BooleanProperty COOKED = BooleanProperty.of("cooked");
-    public static final BooleanProperty COOKING = BooleanProperty.of("cooking");
+public class OysterBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final BooleanProperty COOKED = BooleanProperty.create("cooked");
+    public static final BooleanProperty COOKING = BooleanProperty.create("cooking");
 
 
-    protected static final VoxelShape BOTTOM_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
+    protected static final VoxelShape BOTTOM_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
 
-    public OysterBlock(Settings settings) {
+    public OysterBlock(Properties settings) {
         super(settings);
-        setDefaultState(getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(COOKED, false).with(COOKING, false));
+        registerDefaultState(defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(COOKED, false).setValue(COOKING, false));
     }
 
     @SuppressWarnings ("deprecation")
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(net.minecraft.world.level.block.state.BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return BOTTOM_SHAPE;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(net.minecraft.world.level.block.state.BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.HORIZONTAL_FACING, WATERLOGGED, COOKED, COOKING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, net.minecraft.world.level.block.state.BlockState> builder) {
+        builder.add(BlockStateProperties.HORIZONTAL_FACING, WATERLOGGED, COOKED, COOKING);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing().getOpposite()).with(WATERLOGGED, fluidState.isIn(FluidTags.WATER) && fluidState.getLevel() == 8);
+    public net.minecraft.world.level.block.state.BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
+        return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, ctx.getHorizontalDirection().getOpposite()).setValue(WATERLOGGED, fluidState.is(FluidTags.WATER) && fluidState.getAmount() == 8);
     }
 
     @SuppressWarnings ("deprecation")
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    public FluidState getFluidState(net.minecraft.world.level.block.state.BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @SuppressWarnings ("deprecation")
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    public net.minecraft.world.level.block.state.BlockState updateShape(net.minecraft.world.level.block.state.BlockState state, Direction direction, net.minecraft.world.level.block.state.BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        if (state.getValue(WATERLOGGED)) {
+            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
         return new OysterBlockEntity(pos, state);
     }
 
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return world.isClient ? null : checkType(type, KinderBlocks.OYSTER_BLOCK_ENTITY, OysterBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, net.minecraft.world.level.block.state.BlockState state, BlockEntityType<T> type) {
+        return world.isClientSide ? null : createTickerHelper(type, KinderBlocks.OYSTER_BLOCK_ENTITY, OysterBlockEntity::tick);
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void playerWillDestroy(Level world, BlockPos pos, net.minecraft.world.level.block.state.BlockState state, Player player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof OysterBlockEntity && state.get(WATERLOGGED) && state.get(COOKED) && !world.isClient) {
-            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), ((OysterBlockEntity) blockEntity).getPearl(world, pos));
+        if (blockEntity instanceof OysterBlockEntity && state.getValue(WATERLOGGED) && state.getValue(COOKED) && !world.isClientSide) {
+            Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((OysterBlockEntity) blockEntity).getPearl(world, pos));
         }
-        super.onBreak(world, pos, state, player);
+        super.playerWillDestroy(world, pos, state, player);
     }
 
     @SuppressWarnings ("deprecation")
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
+    public InteractionResult use(net.minecraft.world.level.block.state.BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack itemStack = player.getItemInHand(hand);
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (!(blockEntity instanceof OysterBlockEntity oyster)) {
-            return super.onUse(state, world, pos, player, hand, hit);
+            return super.use(state, world, pos, player, hand, hit);
         }
 
-        boolean cooked = state.get(COOKED);
-        boolean cooking = state.get(COOKING);
-        boolean waterlogged = state.get(WATERLOGGED);
+        boolean cooked = state.getValue(COOKED);
+        boolean cooking = state.getValue(COOKING);
+        boolean waterlogged = state.getValue(WATERLOGGED);
 
         if (!cooked && !cooking && waterlogged) {
             return handleWaterloggedState(world, pos, player, hand, itemStack, state);
@@ -127,59 +131,59 @@ public class OysterBlock extends BlockWithEntity implements Waterloggable {
             return handlePearlShuck(world, pos, player, hand, oyster, state, itemStack);
         }
 
-        if (player.isSneaking() && player.isCreative() && !cooked && cooking) {
-            world.setBlockState(pos, state.with(COOKING, false).with(COOKED, true));
-            return ActionResult.success(world.isClient);
+        if (player.isShiftKeyDown() && player.isCreative() && !cooked && cooking) {
+            world.setBlockAndUpdate(pos, state.setValue(COOKING, false).setValue(COOKED, true));
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
 
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.use(state, world, pos, player, hand, hit);
     }
 
-    private ActionResult handleWaterloggedState(World world, BlockPos pos, PlayerEntity player, Hand hand, ItemStack itemStack, BlockState state) {
+    private InteractionResult handleWaterloggedState(Level world, BlockPos pos, Player player, InteractionHand hand, ItemStack itemStack, net.minecraft.world.level.block.state.BlockState state) {
         Item item = itemStack.getItem();
         if (item == KinderItems.WHITE_ESSENCE_BOTTLE) {
-            world.setBlockState(pos, state.with(COOKING, true), Block.NOTIFY_ALL);
-            itemStack.decrement(1);
-            world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
-            world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            world.setBlock(pos, state.setValue(COOKING, true), Block.UPDATE_ALL);
+            itemStack.shrink(1);
+            world.gameEvent(null, GameEvent.FLUID_PLACE, pos);
+            world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
 
             handleEmptyItemStack(player, hand, itemStack);
-            return ActionResult.success(world.isClient);
+            return InteractionResult.sidedSuccess(world.isClientSide);
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
-    private ActionResult handlePearlShuck(World world, BlockPos pos, PlayerEntity player, Hand hand, OysterBlockEntity oyster, BlockState state, ItemStack itemStack) {
+    private InteractionResult handlePearlShuck(Level world, BlockPos pos, Player player, InteractionHand hand, OysterBlockEntity oyster, net.minecraft.world.level.block.state.BlockState state, ItemStack itemStack) {
         float randomWeight = world.random.nextFloat();
-        float luckWeight = player.getStatusEffect(StatusEffects.LUCK) != null ? 0.2f : 0f;
+        float luckWeight = player.getEffect(MobEffects.LUCK) != null ? 0.2f : 0f;
         float breakChance = oyster.getBreakChance();
 
         KinderMod.LOGGER.info("Random Weight is " + randomWeight + ", luck weight is " + luckWeight + ", break chance is " + breakChance);
 
         if (randomWeight <= (luckWeight + breakChance)) {
             oyster.setBreakChance(breakChance - 0.2f);
-            world.setBlockState(pos, state.with(COOKED, false));
+            world.setBlockAndUpdate(pos, state.setValue(COOKED, false));
         } else {
-            world.breakBlock(pos, true);
+            world.destroyBlock(pos, true);
         }
 
-        itemStack.damage(1, player, p -> p.sendToolBreakStatus(hand));
-        ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), oyster.getPearl(world, pos));
-        return ActionResult.success(world.isClient);
+        itemStack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+        Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), oyster.getPearl(world, pos));
+        return InteractionResult.sidedSuccess(world.isClientSide);
     }
 
-    private void handleEmptyItemStack(PlayerEntity player, Hand hand, ItemStack itemStack) {
+    private void handleEmptyItemStack(Player player, InteractionHand hand, ItemStack itemStack) {
         if (itemStack.isEmpty()) {
-            player.setStackInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
-        } else if (!player.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE))) {
-            player.dropItem(new ItemStack(Items.GLASS_BOTTLE), false);
+            player.setItemInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
+        } else if (!player.getInventory().add(new ItemStack(Items.GLASS_BOTTLE))) {
+            player.drop(new ItemStack(Items.GLASS_BOTTLE), false);
         }
     }
 
 
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.randomDisplayTick(state, world, pos, random);
-        if (state.get(COOKED).equals(true)) {
+    public void animateTick(net.minecraft.world.level.block.state.BlockState state, Level world, BlockPos pos, RandomSource random) {
+        super.animateTick(state, world, pos, random);
+        if (state.getValue(COOKED).equals(true)) {
             world.addParticle(ParticleTypes.ELECTRIC_SPARK, pos.getX() + world.random.nextFloat(), pos.getY() + world.random.nextFloat() + 0.2, pos.getZ() + world.random.nextFloat(), world.random.nextFloat() / 3, world.random.nextFloat() / 3, world.random.nextFloat() / 3);
         }
     }

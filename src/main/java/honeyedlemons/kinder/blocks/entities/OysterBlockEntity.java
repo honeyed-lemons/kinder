@@ -4,16 +4,15 @@ import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.blocks.OysterBlock;
 import honeyedlemons.kinder.init.KinderBlocks;
 import honeyedlemons.kinder.init.KinderItems;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
 
@@ -24,10 +23,10 @@ public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
         super(KinderBlocks.OYSTER_BLOCK_ENTITY, pos, state);
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, OysterBlockEntity blockEntity) {
-        if (state.get(OysterBlock.COOKING).equals(true) && state.get(OysterBlock.WATERLOGGED)) {
+    public static void tick(Level world, BlockPos pos, BlockState state, OysterBlockEntity blockEntity) {
+        if (state.getValue(OysterBlock.COOKING).equals(true) && state.getValue(OysterBlock.WATERLOGGED)) {
             if (blockEntity.ticksElapsed >= (KinderMod.config.oystertime / (getDownfall(world, pos) + 0.5))) {
-                world.setBlockState(pos, state.with(OysterBlock.COOKED, true).with(OysterBlock.COOKING, false));
+                world.setBlockAndUpdate(pos, state.setValue(OysterBlock.COOKED, true).setValue(OysterBlock.COOKING, false));
                 blockEntity.ticksElapsed = 0;
             } else {
                 blockEntity.ticksElapsed++;
@@ -36,20 +35,20 @@ public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putInt("te", ticksElapsed);
         nbt.putFloat("breakChance", breakChance);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         ticksElapsed = nbt.getInt("te");
         breakChance = nbt.getFloat("breakChance");
     }
 
-    public ItemStack getPearl(World world, BlockPos blockPos) {
+    public ItemStack getPearl(Level world, BlockPos blockPos) {
         float biomeTemp = getBiomeTemp(world, blockPos);
         int pearlSet;
         float weighting;
@@ -81,12 +80,12 @@ public class OysterBlockEntity extends AbstractIncubatingBlockEntity {
 
         Item finalPearlItem = (world.random.nextFloat() >= 0.5) ? finalTwo.get(0) : finalTwo.get(1);
         ItemStack finalPearlItemStack = new ItemStack(finalPearlItem);
-        finalPearlItemStack.getOrCreateNbt().putInt("Perfection", getPerfection(world, blockPos));
+        finalPearlItemStack.getOrCreateTag().putInt("Perfection", getPerfection(world, blockPos));
 
         return finalPearlItemStack;
     }
 
-    public int getPerfection(World world, BlockPos blockPos) {
+    public int getPerfection(Level world, BlockPos blockPos) {
         int ylevel = blockPos.getY();
         int val;
 

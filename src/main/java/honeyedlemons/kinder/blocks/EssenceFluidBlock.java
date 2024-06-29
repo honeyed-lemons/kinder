@@ -1,10 +1,10 @@
 package honeyedlemons.kinder.blocks;
 
-import net.minecraft.block.FluidBlock;
-import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.material.FlowingFluid;
 
-public class EssenceFluidBlock extends FluidBlock {
-    public EssenceFluidBlock(FlowableFluid fluid, Settings settings) {
+public class EssenceFluidBlock extends LiquidBlock {
+    public EssenceFluidBlock(FlowingFluid fluid, Properties settings) {
         super(fluid, settings);
     }
 }

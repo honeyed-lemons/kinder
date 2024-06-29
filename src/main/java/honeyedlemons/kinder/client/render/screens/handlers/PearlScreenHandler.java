@@ -4,38 +4,38 @@ import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.init.KinderScreens;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.InventoryChangedListener;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.ShulkerBoxSlot;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerListener;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ShulkerBoxSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 @Environment (value = EnvType.CLIENT)
-public class PearlScreenHandler extends ScreenHandler implements InventoryChangedListener {
-    public final SimpleInventory inventory;
+public class PearlScreenHandler extends AbstractContainerMenu implements ContainerListener {
+    public final SimpleContainer inventory;
     public final AbstractGemEntity entity;
 
-    public PearlScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, playerInventory.player.getWorld().getEntityById(buf.readVarInt()) instanceof AbstractGemEntity gem ? gem : null);
+    public PearlScreenHandler(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
+        this(syncId, playerInventory, playerInventory.player.level().getEntity(buf.readVarInt()) instanceof AbstractGemEntity gem ? gem : null);
     }
 
-    public PearlScreenHandler(int syncId, PlayerInventory playerInventory, AbstractGemEntity entity) {
-        this(syncId, playerInventory, new SimpleInventory(entity.getPerfection() * 9), entity, entity.getPerfection());
+    public PearlScreenHandler(int syncId, Inventory playerInventory, AbstractGemEntity entity) {
+        this(syncId, playerInventory, new SimpleContainer(entity.getPerfection() * 9), entity, entity.getPerfection());
     }
 
-    public PearlScreenHandler(int syncId, PlayerInventory playerInventory, SimpleInventory inventory, AbstractGemEntity entity, int perfection) {
+    public PearlScreenHandler(int syncId, Inventory playerInventory, SimpleContainer inventory, AbstractGemEntity entity, int perfection) {
         super(KinderScreens.PEARL_SCREEN_HANDLER, syncId);
         int k;
         int j;
         this.inventory = inventory;
         this.entity = entity;
-        checkSize(inventory, entity.getInventorySize());
-        inventory.onOpen(playerInventory.player);
+        checkContainerSize(inventory, entity.getInventorySize());
+        inventory.startOpen(playerInventory.player);
         int i = (perfection - 4) * 18;
         for (j = 0; j < perfection; ++j) {
             for (k = 0; k < 9; ++k) {
@@ -53,32 +53,32 @@ public class PearlScreenHandler extends ScreenHandler implements InventoryChange
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
-        return this.inventory.canPlayerUse(player);
+    public boolean stillValid(Player player) {
+        return this.inventory.stillValid(player);
     }
 
     // Shift + Player Inv Slot
     @Override
-    public ItemStack quickMove(PlayerEntity player, int slot) {
+    public ItemStack quickMoveStack(Player player, int slot) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot2 = this.slots.get(slot);
-        if (slot2.hasStack()) {
-            ItemStack itemStack2 = slot2.getStack();
+        if (slot2.hasItem()) {
+            ItemStack itemStack2 = slot2.getItem();
             itemStack = itemStack2.copy();
-            if (slot < entity.getInventorySize() ? !this.insertItem(itemStack2, entity.getInventorySize(), this.slots.size(), true) : !this.insertItem(itemStack2, 0, entity.getInventorySize(), false)) {
+            if (slot < entity.getInventorySize() ? !this.moveItemStackTo(itemStack2, entity.getInventorySize(), this.slots.size(), true) : !this.moveItemStackTo(itemStack2, 0, entity.getInventorySize(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack2.isEmpty()) {
-                slot2.setStack(ItemStack.EMPTY);
+                slot2.setByPlayer(ItemStack.EMPTY);
             } else {
-                slot2.markDirty();
+                slot2.setChanged();
             }
         }
         return itemStack;
     }
 
     @Override
-    public void onInventoryChanged(Inventory sender) {
+    public void containerChanged(Container sender) {
         entity.playAmbientSound();
     }
 }

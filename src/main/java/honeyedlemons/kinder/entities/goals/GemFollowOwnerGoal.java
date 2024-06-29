@@ -1,21 +1,25 @@
 package honeyedlemons.kinder.entities.goals;
 
 import honeyedlemons.kinder.entities.AbstractGemEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.pathing.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
 
 public class GemFollowOwnerGoal extends Goal {
     private final AbstractGemEntity gem;
-    private final World world;
+    private final Level world;
     private final double speed;
-    private final EntityNavigation navigation;
+    private final PathNavigation navigation;
     private final float maxDistance;
     private final float minDistance;
     private final boolean leavesAllowed;
@@ -25,24 +29,24 @@ public class GemFollowOwnerGoal extends Goal {
 
     public GemFollowOwnerGoal(AbstractGemEntity gem, double speed, float minDistance, float maxDistance, boolean leavesAllowed) {
         this.gem = gem;
-        this.world = gem.getWorld();
+        this.world = gem.level();
         this.speed = speed;
         this.navigation = gem.getNavigation();
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
         this.leavesAllowed = leavesAllowed;
-        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
-        if (!(gem.getNavigation() instanceof MobNavigation) && !(gem.getNavigation() instanceof BirdNavigation)) {
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        if (!(gem.getNavigation() instanceof GroundPathNavigation) && !(gem.getNavigation() instanceof FlyingPathNavigation)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         if (gem.getFollowId() == null) {
             return false;
         }
-        LivingEntity livingEntity = this.world.getPlayerByUuid(this.gem.getFollowId());
+        LivingEntity livingEntity = this.world.getPlayerByUUID(this.gem.getFollowId());
         if (livingEntity == null) {
             return false;
         }
@@ -52,7 +56,7 @@ public class GemFollowOwnerGoal extends Goal {
         if (this.cannotFollow()) {
             return false;
         }
-        if (this.gem.squaredDistanceTo(livingEntity) < (double) (this.minDistance * this.minDistance)) {
+        if (this.gem.distanceToSqr(livingEntity) < (double) (this.minDistance * this.minDistance)) {
             return false;
         }
         this.owner = livingEntity;
@@ -60,50 +64,50 @@ public class GemFollowOwnerGoal extends Goal {
     }
 
     @Override
-    public boolean shouldContinue() {
-        if (this.navigation.isIdle()) {
+    public boolean canContinueToUse() {
+        if (this.navigation.isDone()) {
             return false;
         }
         if (this.cannotFollow()) {
             return false;
         }
-        return !(this.gem.squaredDistanceTo(this.owner) <= (double) (this.maxDistance * this.maxDistance));
+        return !(this.gem.distanceToSqr(this.owner) <= (double) (this.maxDistance * this.maxDistance));
     }
 
     private boolean cannotFollow() {
-        return this.gem.hasVehicle() || this.gem.isLeashed() || this.gem.getMovementType() != 2 || this.gem.getFollowId() == null;
+        return this.gem.isPassenger() || this.gem.isLeashed() || this.gem.getMovementType() != 2 || this.gem.getFollowId() == null;
     }
 
     @Override
     public void start() {
         this.updateCountdownTicks = 0;
-        this.oldWaterPathfindingPenalty = this.gem.getPathfindingPenalty(PathNodeType.WATER);
-        this.gem.setPathfindingPenalty(PathNodeType.WATER, 0.0f);
+        this.oldWaterPathfindingPenalty = this.gem.getPathfindingMalus(BlockPathTypes.WATER);
+        this.gem.setPathfindingMalus(BlockPathTypes.WATER, 0.0f);
     }
 
     @Override
     public void stop() {
         this.owner = null;
         this.navigation.stop();
-        this.gem.setPathfindingPenalty(PathNodeType.WATER, this.oldWaterPathfindingPenalty);
+        this.gem.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterPathfindingPenalty);
     }
 
     @Override
     public void tick() {
-        this.gem.getLookControl().lookAt(this.owner, 10.0f, this.gem.getMaxLookPitchChange());
+        this.gem.getLookControl().setLookAt(this.owner, 10.0f, this.gem.getMaxHeadXRot());
         if (--this.updateCountdownTicks > 0) {
             return;
         }
-        this.updateCountdownTicks = this.getTickCount(10);
-        if (this.gem.squaredDistanceTo(this.owner) >= 144.0) {
+        this.updateCountdownTicks = this.adjustedTickDelay(10);
+        if (this.gem.distanceToSqr(this.owner) >= 144.0) {
             this.tryTeleport();
         } else {
-            this.navigation.startMovingTo(this.owner, this.speed);
+            this.navigation.moveTo(this.owner, this.speed);
         }
     }
 
     private void tryTeleport() {
-        BlockPos blockPos = this.owner.getBlockPos();
+        BlockPos blockPos = this.owner.blockPosition();
         for (int i = 0; i < 10; ++i) {
             int j = this.getRandomInt(-3, 3);
             int k = this.getRandomInt(-1, 1);
@@ -121,22 +125,22 @@ public class GemFollowOwnerGoal extends Goal {
         if (!this.canTeleportTo(new BlockPos(x, y, z))) {
             return false;
         }
-        this.gem.refreshPositionAndAngles((double) x + 0.5, y, (double) z + 0.5, this.gem.getYaw(), this.gem.getPitch());
+        this.gem.moveTo((double) x + 0.5, y, (double) z + 0.5, this.gem.getYRot(), this.gem.getXRot());
         this.navigation.stop();
         return true;
     }
 
     private boolean canTeleportTo(BlockPos pos) {
-        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(this.world, pos.mutableCopy());
-        if (pathNodeType != PathNodeType.WALKABLE) {
+        BlockPathTypes pathNodeType = WalkNodeEvaluator.getBlockPathTypeStatic(this.world, pos.mutable());
+        if (pathNodeType != BlockPathTypes.WALKABLE) {
             return false;
         }
-        BlockState blockState = this.world.getBlockState(pos.down());
+        BlockState blockState = this.world.getBlockState(pos.below());
         if (!this.leavesAllowed && blockState.getBlock() instanceof LeavesBlock) {
             return false;
         }
-        BlockPos blockPos = pos.subtract(this.gem.getBlockPos());
-        return this.world.isSpaceEmpty(this.gem, this.gem.getBoundingBox().offset(blockPos));
+        BlockPos blockPos = pos.subtract(this.gem.blockPosition());
+        return this.world.noCollision(this.gem, this.gem.getBoundingBox().move(blockPos));
     }
 
     private int getRandomInt(int min, int max) {

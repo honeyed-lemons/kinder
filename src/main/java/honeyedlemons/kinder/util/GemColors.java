@@ -1,13 +1,12 @@
 package honeyedlemons.kinder.util;
 
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.function.ValueLists;
-
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.IntFunction;
+import net.minecraft.util.ByIdMap;
+import net.minecraft.util.StringRepresentable;
 
-public enum GemColors implements StringIdentifiable {
+public enum GemColors implements StringRepresentable {
     //
     WHITE(0, "white", 16777215),
     ORANGE(1, "orange", 16745775),
@@ -26,7 +25,7 @@ public enum GemColors implements StringIdentifiable {
     RED(14, "red", 16711760),
     BLACK(15, "black", 1973790);
 
-    private static final IntFunction<GemColors> BY_ID = ValueLists.createIdToValueFunction(GemColors::getId, values(), ValueLists.OutOfBoundsHandling.ZERO);
+    private static final IntFunction<GemColors> BY_ID = ByIdMap.continuous(GemColors::getId, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
     private final int id;
     private final String name;
     private final float[] colorComponents;
@@ -115,7 +114,7 @@ public enum GemColors implements StringIdentifiable {
         return this.name;
     }
 
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

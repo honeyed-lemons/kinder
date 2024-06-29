@@ -4,29 +4,29 @@ import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.pathing.PathNodeType;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class RubyEntity extends AbstractGemEntity {
-    public RubyEntity(EntityType<? extends AbstractGemEntity> entityType, World world) {
+    public RubyEntity(EntityType<? extends AbstractGemEntity> entityType, Level world) {
         super(entityType, world);
-        this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, 8.0F);
-        this.setPathfindingPenalty(PathNodeType.LAVA, 8.0F);
-        this.setPathfindingPenalty(PathNodeType.DAMAGE_FIRE, 8.0F);
+        this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 8.0F);
+        this.setPathfindingMalus(BlockPathTypes.LAVA, 8.0F);
+        this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 8.0F);
     }
 
-    public static DefaultAttributeContainer.@NotNull Builder createGemAttributes() {
-        return createDefaultGemAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.6);
+    public static AttributeSupplier.@NotNull Builder createGemAttributes() {
+        return createDefaultGemAttributes().add(Attributes.MOVEMENT_SPEED, 0.6);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class RubyEntity extends AbstractGemEntity {
     @Override
     @NotNull
     public SoundEvent gemInstrument() {
-        return SoundEvents.BLOCK_NOTE_BLOCK_BASS.value();
+        return SoundEvents.NOTE_BLOCK_BASS.value();
     }
 
     @Override
@@ -114,7 +114,7 @@ public class RubyEntity extends AbstractGemEntity {
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         return true;
     }
 
@@ -129,12 +129,12 @@ public class RubyEntity extends AbstractGemEntity {
     @Override
     public void doEnemyThings(Entity target) {
         if ((0.045 * getPerfection()) - 0.035 > random.nextFloat()) {
-            target.setOnFireFor(getPerfection() * 2);
+            target.setSecondsOnFire(getPerfection() * 2);
         }
     }
 
     @Override
-    public void onInventoryChanged(Inventory sender) {
+    public void containerChanged(Container sender) {
 
     }
 }

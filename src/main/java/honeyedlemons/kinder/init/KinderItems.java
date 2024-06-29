@@ -13,17 +13,16 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.minecraft.item.AliasedBlockItem;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import java.util.ArrayList;
 
-import static net.minecraft.item.Items.BUCKET;
-import static net.minecraft.item.Items.GLASS_BOTTLE;
+import static net.minecraft.world.item.Items.BUCKET;
+import static net.minecraft.world.item.Items.GLASS_BOTTLE;
 
 @SuppressWarnings ("UnstableApiUsage")
 public class KinderItems {
@@ -88,14 +87,14 @@ public class KinderItems {
 
     public static final Item YELLOW_ESSENCE_BOTTLE = new Item(essenceBottleSettings());
     public static final Item YELLOW_ESSENCE_BUCKET = new BucketItem(KinderFluidHandling.STILL_YELLOW_ESSENCE, essenceBucketSettings());
-    public static final Item PEARL_SHUCK = new Item(new FabricItemSettings().maxCount(1).maxDamage(64));
-    public static final Item DRIED_GEM_SEEDS = new Item(new FabricItemSettings().maxCount(1));
-    public static final Item WHITE_GEM_SEEDS = new AliasedBlockItem(KinderBlocks.WHITE_GEM_CROP_BLOCK, new FabricItemSettings());
-    public static final Item YELLOW_GEM_SEEDS = new AliasedBlockItem(KinderBlocks.YELLOW_GEM_CROP_BLOCK, new FabricItemSettings());
-    public static final Item BLUE_GEM_SEEDS = new AliasedBlockItem(KinderBlocks.BLUE_GEM_CROP_BLOCK, new FabricItemSettings());
-    public static final Item PINK_GEM_SEEDS = new AliasedBlockItem(KinderBlocks.PINK_GEM_CROP_BLOCK, new FabricItemSettings());
-    public static final Item PEARL_CUSTOMIZER = new PearlCustomizerItem(new FabricItemSettings().maxCount(1));
-    public static final Item REJUVENATOR = new DestabItem(new FabricItemSettings().maxCount(1).maxDamage(64));
+    public static final Item PEARL_SHUCK = new Item(new FabricItemSettings().stacksTo(1).durability(64));
+    public static final Item DRIED_GEM_SEEDS = new Item(new FabricItemSettings().stacksTo(1));
+    public static final Item WHITE_GEM_SEEDS = new ItemNameBlockItem(KinderBlocks.WHITE_GEM_CROP_BLOCK, new FabricItemSettings());
+    public static final Item YELLOW_GEM_SEEDS = new ItemNameBlockItem(KinderBlocks.YELLOW_GEM_CROP_BLOCK, new FabricItemSettings());
+    public static final Item BLUE_GEM_SEEDS = new ItemNameBlockItem(KinderBlocks.BLUE_GEM_CROP_BLOCK, new FabricItemSettings());
+    public static final Item PINK_GEM_SEEDS = new ItemNameBlockItem(KinderBlocks.PINK_GEM_CROP_BLOCK, new FabricItemSettings());
+    public static final Item PEARL_CUSTOMIZER = new PearlCustomizerItem(new FabricItemSettings().stacksTo(1));
+    public static final Item REJUVENATOR = new DestabItem(new FabricItemSettings().stacksTo(1).durability(64));
     public static final Item LIGHT_REACTOR_BLUEPRINT = new Item(new FabricItemSettings());
     public static final Item LIGHT_REACTOR = new Item(new FabricItemSettings());
 
@@ -126,16 +125,16 @@ public class KinderItems {
         );
     }
 
-    public static FabricItemSettings gemSettings() {
-        return new FabricItemSettings().maxCount(1).fireproof();
+    public static Item.Properties gemSettings() {
+        return new FabricItemSettings().stacksTo(1).fireResistant();
     }
 
-    public static FabricItemSettings essenceBottleSettings() {
-        return new FabricItemSettings().maxCount(16).recipeRemainder(GLASS_BOTTLE);
+    public static Item.Properties essenceBottleSettings() {
+        return new FabricItemSettings().stacksTo(16).craftRemainder(GLASS_BOTTLE);
     }
 
-    public static FabricItemSettings essenceBucketSettings() {
-        return new FabricItemSettings().maxCount(1).recipeRemainder(BUCKET);
+    public static Item.Properties essenceBucketSettings() {
+        return new FabricItemSettings().stacksTo(1).craftRemainder(BUCKET);
     }
 
     public static ArrayList<RegistryUtil.ItemData> itemData() {
@@ -221,7 +220,7 @@ public class KinderItems {
 
     public static void registerItems() {
         for (RegistryUtil.ItemData itemData : itemData()) {
-            Registry.register(Registries.ITEM, new Identifier(KinderMod.MOD_ID, itemData.item_id()), itemData.item());
+            Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(KinderMod.MOD_ID, itemData.item_id()), itemData.item());
         }
     }
 }

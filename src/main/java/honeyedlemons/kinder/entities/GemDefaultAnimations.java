@@ -1,6 +1,7 @@
 package honeyedlemons.kinder.entities;
 
-import net.minecraft.entity.LivingEntity;
+import honeyedlemons.kinder.KinderMod;
+import net.minecraft.world.entity.LivingEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -27,7 +28,7 @@ public final class GemDefaultAnimations {
 
     public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericGemSittingController(T animatable) {
         return new AnimationController<>(animatable, "GemSitting", 5, state -> {
-            if (animatable.hasVehicle()) {
+            if (animatable.isPassenger()) {
                 return state.setAndContinue(SITTING);
             } else {
                 return PlayState.STOP;
@@ -42,6 +43,16 @@ public final class GemDefaultAnimations {
             } else {
                 return state.setAndContinue(ARMS_WALK);
             }
+        });
+    }
+    public static <T extends LivingEntity & GeoAnimatable> AnimationController<T> genericAttackAnimation(T animatable, RawAnimation attackAnimation) {
+        return new AnimationController<>(animatable, "Attack", 0, state -> {
+            if (animatable.swinging) {
+                KinderMod.LOGGER.info("killmyself");
+                return state.setAndContinue(attackAnimation);
+            }
+            state.getController().forceAnimationReset();
+            return PlayState.STOP;
         });
     }
 

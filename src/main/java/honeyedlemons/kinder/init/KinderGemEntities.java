@@ -12,27 +12,26 @@ import honeyedlemons.kinder.entities.gems.SapphireEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
 import java.util.ArrayList;
 import java.util.List;
 
 public class KinderGemEntities {
-    public static final EntityType<RubyEntity> RUBY = FabricEntityTypeBuilder.create().entityFactory(RubyEntity::new).dimensions(EntityDimensions.changing(0.6F, 1.2F)).build();
-    public static final EntityType<QuartzEntity> QUARTZ = FabricEntityTypeBuilder.create().entityFactory(QuartzEntity::new).dimensions(EntityDimensions.changing(0.8F, 2F)).build();
-    public static final EntityType<PearlEntity> PEARL = FabricEntityTypeBuilder.create().entityFactory(PearlEntity::new).dimensions(EntityDimensions.changing(0.6F, 1.75F)).build();
+    public static final EntityType<RubyEntity> RUBY = FabricEntityTypeBuilder.create().entityFactory(RubyEntity::new).dimensions(EntityDimensions.scalable(0.6F, 1.2F)).build();
+    public static final EntityType<QuartzEntity> QUARTZ = FabricEntityTypeBuilder.create().entityFactory(QuartzEntity::new).dimensions(EntityDimensions.scalable(0.8F, 2F)).build();
+    public static final EntityType<PearlEntity> PEARL = FabricEntityTypeBuilder.create().entityFactory(PearlEntity::new).dimensions(EntityDimensions.scalable(0.6F, 1.75F)).build();
 
-    public static final EntityType<SapphireEntity> SAPPHIRE = FabricEntityTypeBuilder.create().entityFactory(SapphireEntity::new).dimensions(EntityDimensions.changing(0.6F, 1.0F)).build();
+    public static final EntityType<SapphireEntity> SAPPHIRE = FabricEntityTypeBuilder.create().entityFactory(SapphireEntity::new).dimensions(EntityDimensions.scalable(0.6F, 1.0F)).build();
 
     public static List<EntityType<?>> GEMS = new ArrayList<>();
 
     private static void register(String name, EntityType<?> type) {
         GEMS.add(type);
-        Registry.register(Registries.ENTITY_TYPE, new Identifier(KinderMod.MOD_ID, name), type);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(KinderMod.MOD_ID, name), type);
     }
 
     public static void registerEntities() {

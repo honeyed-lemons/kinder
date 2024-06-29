@@ -55,6 +55,7 @@ public class KinderConfig implements ConfigData {
     }
 
     public static class SapphireConfig {
+        public int prediction_cooldown = 12000;
         public boolean incubatable = true;
         public int attack_damage = 1;
         public int max_health = 50;

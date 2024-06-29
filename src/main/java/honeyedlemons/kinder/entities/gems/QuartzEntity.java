@@ -4,24 +4,24 @@ import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractVaryingGemEntity;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class QuartzEntity extends AbstractVaryingGemEntity {
-    public QuartzEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    public QuartzEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
     }
 
-    public static DefaultAttributeContainer.@NotNull Builder createGemAttributes() {
-        return createDefaultGemAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.6);
+    public static AttributeSupplier.@NotNull Builder createGemAttributes() {
+        return createDefaultGemAttributes().add(Attributes.MOVEMENT_SPEED, 0.6);
     }
 
     @Override
@@ -89,22 +89,22 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
     @Override
     public ItemStack gemItem() {
         return switch (getGemColorVariant()) {
-            case 1 -> KinderItems.QUARTZ_GEM_1.getDefaultStack();
-            case 2 -> KinderItems.QUARTZ_GEM_2.getDefaultStack();
-            case 3 -> KinderItems.QUARTZ_GEM_3.getDefaultStack();
-            case 4 -> KinderItems.QUARTZ_GEM_4.getDefaultStack();
-            case 5 -> KinderItems.QUARTZ_GEM_5.getDefaultStack();
-            case 6 -> KinderItems.QUARTZ_GEM_6.getDefaultStack();
-            case 7 -> KinderItems.QUARTZ_GEM_7.getDefaultStack();
-            case 8 -> KinderItems.QUARTZ_GEM_8.getDefaultStack();
-            case 9 -> KinderItems.QUARTZ_GEM_9.getDefaultStack();
-            case 10 -> KinderItems.QUARTZ_GEM_10.getDefaultStack();
-            case 11 -> KinderItems.QUARTZ_GEM_11.getDefaultStack();
-            case 12 -> KinderItems.QUARTZ_GEM_12.getDefaultStack();
-            case 13 -> KinderItems.QUARTZ_GEM_13.getDefaultStack();
-            case 14 -> KinderItems.QUARTZ_GEM_14.getDefaultStack();
-            case 15 -> KinderItems.QUARTZ_GEM_15.getDefaultStack();
-            default -> KinderItems.QUARTZ_GEM_0.getDefaultStack();
+            case 1 -> KinderItems.QUARTZ_GEM_1.getDefaultInstance();
+            case 2 -> KinderItems.QUARTZ_GEM_2.getDefaultInstance();
+            case 3 -> KinderItems.QUARTZ_GEM_3.getDefaultInstance();
+            case 4 -> KinderItems.QUARTZ_GEM_4.getDefaultInstance();
+            case 5 -> KinderItems.QUARTZ_GEM_5.getDefaultInstance();
+            case 6 -> KinderItems.QUARTZ_GEM_6.getDefaultInstance();
+            case 7 -> KinderItems.QUARTZ_GEM_7.getDefaultInstance();
+            case 8 -> KinderItems.QUARTZ_GEM_8.getDefaultInstance();
+            case 9 -> KinderItems.QUARTZ_GEM_9.getDefaultInstance();
+            case 10 -> KinderItems.QUARTZ_GEM_10.getDefaultInstance();
+            case 11 -> KinderItems.QUARTZ_GEM_11.getDefaultInstance();
+            case 12 -> KinderItems.QUARTZ_GEM_12.getDefaultInstance();
+            case 13 -> KinderItems.QUARTZ_GEM_13.getDefaultInstance();
+            case 14 -> KinderItems.QUARTZ_GEM_14.getDefaultInstance();
+            case 15 -> KinderItems.QUARTZ_GEM_15.getDefaultInstance();
+            default -> KinderItems.QUARTZ_GEM_0.getDefaultInstance();
         };
     }
 
@@ -115,7 +115,7 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
 
     @Override
     public @NotNull SoundEvent gemInstrument() {
-        return SoundEvents.BLOCK_NOTE_BLOCK_BASS.value();
+        return SoundEvents.NOTE_BLOCK_BASS.value();
     }
 
     @Override
@@ -129,6 +129,6 @@ public class QuartzEntity extends AbstractVaryingGemEntity {
     }
 
     @Override
-    public void onInventoryChanged(Inventory sender) {
+    public void containerChanged(Container sender) {
     }
 }

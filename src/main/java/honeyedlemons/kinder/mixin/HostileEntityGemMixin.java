@@ -1,26 +1,26 @@
 package honeyedlemons.kinder.mixin;
 
 import honeyedlemons.kinder.entities.AbstractGemEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.boss.WitherEntity;
-import net.minecraft.entity.mob.*;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin ({ZombieEntity.class, AbstractSkeletonEntity.class, SpiderEntity.class, EvokerEntity.class, PillagerEntity.class, BlazeEntity.class, CreeperEntity.class, SilverfishEntity.class,
-        VexEntity.class, GuardianEntity.class, BlazeEntity.class, WitherEntity.class, WitchEntity.class})
-public class HostileEntityGemMixin extends HostileEntity {
-    protected HostileEntityGemMixin(EntityType<? extends HostileEntity> entityType, World world) {
+@Mixin ({Zombie.class, AbstractSkeleton.class, Spider.class, Evoker.class, Pillager.class, Blaze.class, Creeper.class, Silverfish.class,
+        Vex.class, Guardian.class, Blaze.class, WitherBoss.class, Witch.class})
+public class HostileEntityGemMixin extends Monster {
+    protected HostileEntityGemMixin(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
     }
 
-    @Inject (at = @At ("HEAD"), method = "initGoals()V")
+    @Inject (at = @At ("HEAD"), method = "registerGoals()V")
     public void initGoals(CallbackInfo ci) {
-        this.targetSelector.add(3, new ActiveTargetGoal(this, AbstractGemEntity.class, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, AbstractGemEntity.class, true));
         ;
     }
 }

@@ -5,19 +5,18 @@ import honeyedlemons.kinder.blocks.IncubatorBlock;
 import honeyedlemons.kinder.init.*;
 import honeyedlemons.kinder.util.GemColors;
 import honeyedlemons.kinder.util.GemConditions;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
-
 import java.util.Map;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
     public int ticksElapsed;
@@ -30,14 +29,14 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
         super(KinderBlocks.INCUBATOR_BLOCK_ENTITY, pos, state);
     }
 
-    public static void serverTick(World world, BlockPos pos, BlockState state, IncubatorBlockEntity blockEntity) {
-        if (state.get(IncubatorBlock.COOKING).equals(true)) {
+    public static void serverTick(Level world, BlockPos pos, BlockState state, IncubatorBlockEntity blockEntity) {
+        if (state.getValue(IncubatorBlock.COOKING).equals(true)) {
             if (blockEntity.ticksElapsed >= KinderMod.config.incubationtime) {
-                world.setBlockState(pos, state.with(IncubatorBlock.COOKED, true).with(IncubatorBlock.COOKING, false));
+                world.setBlockAndUpdate(pos, state.setValue(IncubatorBlock.COOKED, true).setValue(IncubatorBlock.COOKING, false));
                 blockEntity.ticksElapsed = 0;
             }
             if (blockEntity.ticksToSound <= 0) {
-                world.emitGameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
+                world.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
             }
             if (blockEntity.ticksElapsed % 24 == 0) {
                 drainBlock(world, pos, blockEntity);
@@ -47,18 +46,18 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
         }
     }
 
-    public static void clientTick(World world, BlockPos pos, BlockState state, IncubatorBlockEntity blockEntity) {
-        if (state.get(IncubatorBlock.COOKING).equals(true)) {
+    public static void clientTick(Level world, BlockPos pos, BlockState state, IncubatorBlockEntity blockEntity) {
+        if (state.getValue(IncubatorBlock.COOKING).equals(true)) {
             if (blockEntity.ticksToSound <= 0) {
                 KinderMod.LOGGER.info("Playing Sound");
-                world.playSoundAtBlockCenter(pos, KinderSounds.INCUBATOR_SOUND, SoundCategory.BLOCKS, 1f, 1f, false);
+                world.playLocalSound(pos, KinderSounds.INCUBATOR_SOUND, SoundSource.BLOCKS, 1f, 1f, false);
                 blockEntity.ticksToSound = 42;
             }
             blockEntity.ticksToSound--;
         }
     }
 
-    public static ItemStack GemItemStack(World world, BlockPos blockPos, IncubatorBlockEntity blockEntity) {
+    public static ItemStack GemItemStack(Level world, BlockPos blockPos, IncubatorBlockEntity blockEntity) {
         BlockState bs = world.getBlockState(blockPos);
         int essenceColor = IncubatorBlock.combineEssences(blockEntity.essenceSlot1, blockEntity.essenceSlot2);
         float highestScore = 0;
@@ -69,7 +68,7 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
                 if (score >= highestScore) {
                     highestScore = score;
                     highestScorerItem = map.getKey();
-                    KinderMod.LOGGER.info(map.getKey().getTranslationKey() + " Score: " + score);
+                    KinderMod.LOGGER.info(map.getKey().getDescriptionId() + " Score: " + score);
                 }
             }
         }
@@ -77,20 +76,20 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
             blockEntity.explosion(bs, blockPos, world);
             return null;
         }
-        ItemStack highestScorerItemStack = highestScorerItem.getDefaultStack();
+        ItemStack highestScorerItemStack = highestScorerItem.getDefaultInstance();
         KinderMod.LOGGER.info("Essence Color is " + essenceColor);
         int defectivity = blockEntity.getDefectivity();
         if (defectivity == 69) {
             blockEntity.explosion(bs, blockPos, world);
             return null;
         }
-        KinderMod.LOGGER.info("Winmer is " + highestScorerItemStack.getTranslationKey() + ", with a defectivity of " + defectivity);
-        highestScorerItemStack.getOrCreateNbt().putInt("Perfection", defectivity);
+        KinderMod.LOGGER.info("Winmer is " + highestScorerItemStack.getDescriptionId() + ", with a defectivity of " + defectivity);
+        highestScorerItemStack.getOrCreateTag().putInt("Perfection", defectivity);
         blockEntity.defectivityModifier = 3;
         return highestScorerItemStack;
     }
 
-    public static float scoreGem(GemConditions conditions, World world, BlockPos blockPos, int essenceColor, int gemColor) {
+    public static float scoreGem(GemConditions conditions, Level world, BlockPos blockPos, int essenceColor, int gemColor) {
         float score = conditions.baseRarity;
         if (conditions.biome != null) {
             String biomeName = getBiomeName(world, blockPos);
@@ -117,34 +116,34 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
     }
 
 
-    public static void drainBlock(World world, BlockPos pos, IncubatorBlockEntity blockEntity) {
-        int randx = pos.getX() + world.random.nextBetween(-3, 3);
-        int randy = pos.getY() + world.random.nextBetween(-3, 3);
-        int randz = pos.getZ() + world.random.nextBetween(-3, 3);
+    public static void drainBlock(Level world, BlockPos pos, IncubatorBlockEntity blockEntity) {
+        int randx = pos.getX() + world.random.nextIntBetweenInclusive(-3, 3);
+        int randy = pos.getY() + world.random.nextIntBetweenInclusive(-3, 3);
+        int randz = pos.getZ() + world.random.nextIntBetweenInclusive(-3, 3);
         BlockPos newBlockPos = new BlockPos(randx, randy, randz);
         BlockState blockState = world.getBlockState(newBlockPos);
-        if (blockState.isIn(KinderBlockTags.DRAINABLE)) {
+        if (blockState.is(KinderBlockTags.DRAINABLE)) {
             BlockState drainedBlockState;
             float temp = getBiomeTemp(world, pos);
             if (temp >= 0.95f) {
-                drainedBlockState = KinderBlocks.HOT_DRAINED_BLOCK.getDefaultState();
+                drainedBlockState = KinderBlocks.HOT_DRAINED_BLOCK.defaultBlockState();
             } else if (temp >= 0.45f) {
-                drainedBlockState = KinderBlocks.TEMP_DRAINED_BLOCK.getDefaultState();
+                drainedBlockState = KinderBlocks.TEMP_DRAINED_BLOCK.defaultBlockState();
             } else if (temp >= -1) {
-                drainedBlockState = KinderBlocks.COLD_DRAINED_BLOCK.getDefaultState();
+                drainedBlockState = KinderBlocks.COLD_DRAINED_BLOCK.defaultBlockState();
             } else {
-                drainedBlockState = KinderBlocks.TEMP_DRAINED_BLOCK.getDefaultState();
+                drainedBlockState = KinderBlocks.TEMP_DRAINED_BLOCK.defaultBlockState();
             }
-            KinderMod.LOGGER.info(world.getDimension().toString());
-            world.setBlockState(newBlockPos, drainedBlockState);
+            KinderMod.LOGGER.info(world.dimensionType().toString());
+            world.setBlockAndUpdate(newBlockPos, drainedBlockState);
             if (world.random.nextFloat() > 0.3) {
                 for (Map.Entry<Block, Float> map1 : KinderConditions.cruxblocks().entrySet()) {
-                    if (blockState.isOf(map1.getKey())) {
+                    if (blockState.is(map1.getKey())) {
                         blockEntity.defectivityModifier += map1.getValue();
                     }
                 }
                 for (Map.Entry<TagKey<Block>, Float> map2 : KinderConditions.cruxtags().entrySet()) {
-                    if (blockState.isIn(map2.getKey())) {
+                    if (blockState.is(map2.getKey())) {
                         blockEntity.defectivityModifier += map2.getValue();
                     }
                 }
@@ -197,8 +196,8 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
     pink blue = 7
     */
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putInt("te", ticksElapsed);
         nbt.putInt("es1", essenceSlot1);
         nbt.putInt("es2", essenceSlot2);
@@ -214,22 +213,22 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         ticksElapsed = nbt.getInt("te");
         essenceSlot1 = nbt.getInt("es1");
         essenceSlot2 = nbt.getInt("es2");
         defectivityModifier = nbt.getFloat("dm");
     }
 
-    public void explosion(BlockState blockState, BlockPos blockPos, World world) {
+    public void explosion(BlockState blockState, BlockPos blockPos, Level world) {
         IncubatorBlock.FlushEssence(blockState, world, blockPos);
         IncubatorBlock.explode(world, blockPos);
-        if (blockState.get(IncubatorBlock.HALF).equals(DoubleBlockHalf.LOWER)) {
+        if (blockState.getValue(IncubatorBlock.HALF).equals(DoubleBlockHalf.LOWER)) {
             world.removeBlock(blockPos, false);
-            world.removeBlock(blockPos.up(), false);
+            world.removeBlock(blockPos.above(), false);
         }
-        world.emitGameEvent(null, GameEvent.EXPLODE, pos);
+        world.gameEvent(null, GameEvent.EXPLODE, worldPosition);
     }
     /*
     white = 1

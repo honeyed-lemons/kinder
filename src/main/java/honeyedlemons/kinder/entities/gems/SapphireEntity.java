@@ -4,41 +4,41 @@ import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractVaryingGemEntity;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.EscapeDangerGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class SapphireEntity extends AbstractVaryingGemEntity {
-    private static final TrackedData<Integer> PREDICTION_TICKS = DataTracker.registerData(SapphireEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final EntityDataAccessor<Integer> PREDICTION_TICKS = SynchedEntityData.defineId(SapphireEntity.class, EntityDataSerializers.INT);
 
-    public SapphireEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    public SapphireEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
     }
 
-    public static DefaultAttributeContainer.@NotNull Builder createGemAttributes() {
-        return createDefaultGemAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.75);
+    public static AttributeSupplier.@NotNull Builder createGemAttributes() {
+        return createDefaultGemAttributes().add(Attributes.MOVEMENT_SPEED, 0.75);
     }
 
     @Override
@@ -58,12 +58,12 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
 
     @Override
     public int hairVariantCount() {
-        return 6;
+        return 9;
     }
 
     @Override
     public int outfitVariantCount() {
-        return 4;
+        return 13;
     }
 
     @Override
@@ -82,9 +82,9 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
     }
 
     @Override
-    public void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(1, new EscapeDangerGoal(this, getSpeed()));
+    public void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new PanicGoal(this, getSpeed()));
     }
 
     @Override
@@ -103,47 +103,47 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
     @Override
     public ItemStack gemItem() {
         return switch (getGemColorVariant()) {
-            case 1 -> KinderItems.SAPPHIRE_GEM_1.getDefaultStack();
-            case 2 -> KinderItems.SAPPHIRE_GEM_2.getDefaultStack();
-            case 3 -> KinderItems.SAPPHIRE_GEM_3.getDefaultStack();
-            case 4 -> KinderItems.SAPPHIRE_GEM_4.getDefaultStack();
-            case 5 -> KinderItems.SAPPHIRE_GEM_5.getDefaultStack();
-            case 6 -> KinderItems.SAPPHIRE_GEM_6.getDefaultStack();
-            case 7 -> KinderItems.SAPPHIRE_GEM_7.getDefaultStack();
-            case 8 -> KinderItems.SAPPHIRE_GEM_8.getDefaultStack();
-            case 9 -> KinderItems.SAPPHIRE_GEM_9.getDefaultStack();
-            case 10 -> KinderItems.SAPPHIRE_GEM_10.getDefaultStack();
-            case 11 -> KinderItems.SAPPHIRE_GEM_11.getDefaultStack();
-            case 12 -> KinderItems.SAPPHIRE_GEM_12.getDefaultStack();
-            case 13 -> KinderItems.SAPPHIRE_GEM_13.getDefaultStack();
-            case 15 -> KinderItems.SAPPHIRE_GEM_15.getDefaultStack();
-            default -> KinderItems.SAPPHIRE_GEM_0.getDefaultStack();
+            case 1 -> KinderItems.SAPPHIRE_GEM_1.getDefaultInstance();
+            case 2 -> KinderItems.SAPPHIRE_GEM_2.getDefaultInstance();
+            case 3 -> KinderItems.SAPPHIRE_GEM_3.getDefaultInstance();
+            case 4 -> KinderItems.SAPPHIRE_GEM_4.getDefaultInstance();
+            case 5 -> KinderItems.SAPPHIRE_GEM_5.getDefaultInstance();
+            case 6 -> KinderItems.SAPPHIRE_GEM_6.getDefaultInstance();
+            case 7 -> KinderItems.SAPPHIRE_GEM_7.getDefaultInstance();
+            case 8 -> KinderItems.SAPPHIRE_GEM_8.getDefaultInstance();
+            case 9 -> KinderItems.SAPPHIRE_GEM_9.getDefaultInstance();
+            case 10 -> KinderItems.SAPPHIRE_GEM_10.getDefaultInstance();
+            case 11 -> KinderItems.SAPPHIRE_GEM_11.getDefaultInstance();
+            case 12 -> KinderItems.SAPPHIRE_GEM_12.getDefaultInstance();
+            case 13 -> KinderItems.SAPPHIRE_GEM_13.getDefaultInstance();
+            case 15 -> KinderItems.SAPPHIRE_GEM_15.getDefaultInstance();
+            default -> KinderItems.SAPPHIRE_GEM_0.getDefaultInstance();
         };
     }
 
-    public void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(PREDICTION_TICKS, 0);
+    public void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(PREDICTION_TICKS, 0);
     }
 
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
-        nbt.putInt("PredictionTicks", this.dataTracker.get(PREDICTION_TICKS));
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putInt("PredictionTicks", this.entityData.get(PREDICTION_TICKS));
     }
 
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        this.dataTracker.set(PREDICTION_TICKS, nbt.getInt("PredictionTicks"));
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
+        this.entityData.set(PREDICTION_TICKS, nbt.getInt("PredictionTicks"));
     }
 
     @Override
-    public void interactGem(PlayerEntity player) {
-        if (player.getStackInHand(Hand.MAIN_HAND).isEmpty()) {
+    public void interactGem(Player player) {
+        if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()) {
             if (getPredictionTicks() <= 0) {
                 getPrediction(predictionQuality());
-                setPredictionTicks(12000);
+                setPredictionTicks(KinderMod.config.sapphireConfig.prediction_cooldown);
             } else {
-                player.sendMessage(Text.literal(this.getName().getString() + ": ").append(Text.translatable("kinder.sapphire.prediction.fail")));
+                player.sendSystemMessage(Component.literal(this.getName().getString() + ": ").append(Component.translatable("kinder.sapphire.prediction.fail")));
             }
         }
     }
@@ -156,11 +156,11 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
     }
 
     public int getPredictionTicks() {
-        return this.getDataTracker().get(PREDICTION_TICKS);
+        return this.getEntityData().get(PREDICTION_TICKS);
     }
 
     public void setPredictionTicks(int perfectionTicks) {
-        this.getDataTracker().set(PREDICTION_TICKS, perfectionTicks);
+        this.getEntityData().set(PREDICTION_TICKS, perfectionTicks);
     }
 
     public boolean predictionQuality() {
@@ -178,46 +178,46 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
     public void getPrediction(boolean bool) {
         if (bool) {
             switch (random.nextInt(7)) {
-                case 0 -> grantPrediction(true, StatusEffects.STRENGTH);
-                case 1 -> grantPrediction(true, StatusEffects.SPEED);
-                case 2 -> grantPrediction(true, StatusEffects.RESISTANCE);
-                case 3 -> grantPrediction(true, StatusEffects.HASTE);
-                case 4 -> grantPrediction(true, StatusEffects.ABSORPTION);
-                case 5 -> grantPrediction(true, StatusEffects.NIGHT_VISION);
-                case 6 -> grantPrediction(true, StatusEffects.LUCK);
+                case 0 -> grantPrediction(true, MobEffects.DAMAGE_BOOST);
+                case 1 -> grantPrediction(true, MobEffects.MOVEMENT_SPEED);
+                case 2 -> grantPrediction(true, MobEffects.DAMAGE_RESISTANCE);
+                case 3 -> grantPrediction(true, MobEffects.DIG_SPEED);
+                case 4 -> grantPrediction(true, MobEffects.ABSORPTION);
+                case 5 -> grantPrediction(true, MobEffects.NIGHT_VISION);
+                case 6 -> grantPrediction(true, MobEffects.LUCK);
             }
         } else {
             switch (random.nextInt(7)) {
-                case 0 -> grantPrediction(true, StatusEffects.WEAKNESS);
-                case 1 -> grantPrediction(true, StatusEffects.SLOWNESS);
-                case 2 -> grantPrediction(true, StatusEffects.BAD_OMEN);
-                case 3 -> grantPrediction(true, StatusEffects.MINING_FATIGUE);
-                case 4 -> grantPrediction(true, StatusEffects.NAUSEA);
-                case 5 -> grantPrediction(true, StatusEffects.BLINDNESS);
-                case 6 -> grantPrediction(true, StatusEffects.LEVITATION);
-                case 7 -> grantPrediction(true, StatusEffects.UNLUCK);
+                case 0 -> grantPrediction(true, MobEffects.WEAKNESS);
+                case 1 -> grantPrediction(true, MobEffects.MOVEMENT_SLOWDOWN);
+                case 2 -> grantPrediction(true, MobEffects.BAD_OMEN);
+                case 3 -> grantPrediction(true, MobEffects.DIG_SLOWDOWN);
+                case 4 -> grantPrediction(true, MobEffects.CONFUSION);
+                case 5 -> grantPrediction(true, MobEffects.BLINDNESS);
+                case 6 -> grantPrediction(true, MobEffects.LEVITATION);
+                case 7 -> grantPrediction(true, MobEffects.UNLUCK);
             }
         }
     }
 
-    public void grantPrediction(boolean morality, StatusEffect statusEffect) {
+    public void grantPrediction(boolean morality, MobEffect statusEffect) {
         float duration = 3600;
         if (morality) {
             duration *= (getPerfection() >= 3) ? ((float) getPerfection() / 3) : getPerfection() * 2;
         } else {
             duration *= (getPerfection() >= 3) ? getPerfection() * 2 : ((float) getPerfection() / 3);
         }
-        List<Entity> list = this.getWorld().getEntitiesByClass(Entity.class, this.getBoundingBox().expand(16, 16, 16), EntityPredicates.VALID_LIVING_ENTITY);
+        List<Entity> list = this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(16, 16, 16), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
         for (Entity entity : list) {
-            if (entity instanceof TameableEntity tameableEntity) {
-                if (tameableEntity.getOwnerUuid() == this.getOwnerUuid()) {
-                    tameableEntity.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration), 0, false, false), this);
+            if (entity instanceof TamableAnimal tameableEntity) {
+                if (tameableEntity.getOwnerUUID() == this.getOwnerUUID()) {
+                    tameableEntity.addEffect(new MobEffectInstance(statusEffect, ((int) duration), 0, false, false), this);
                 }
             }
-            if (entity instanceof PlayerEntity player) {
-                if (isOwner(player)) {
-                    player.addStatusEffect(new StatusEffectInstance(statusEffect, ((int) duration), 0, false, false), this);
-                    player.sendMessage(Text.literal(this.getName().getString() + ": ").append(Text.translatable("kinder.sapphire.prediction.base").append(Text.translatable("kinder.sapphire.prediction." + statusEffect.getTranslationKey()))));
+            if (entity instanceof Player player) {
+                if (isOwnedBy(player)) {
+                    player.addEffect(new MobEffectInstance(statusEffect, ((int) duration), 0, false, false), this);
+                    player.sendSystemMessage(Component.literal(this.getName().getString() + ": ").append(Component.translatable("kinder.sapphire.prediction.base").append(Component.translatable("kinder.sapphire.prediction." + statusEffect.getDescriptionId()))));
                 }
             }
         }
@@ -230,7 +230,7 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
 
     @Override
     public @NotNull SoundEvent gemInstrument() {
-        return SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value();
+        return SoundEvents.NOTE_BLOCK_CHIME.value();
     }
 
     @Override
@@ -239,7 +239,7 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
     }
 
     @Override
-    public void onInventoryChanged(Inventory sender) {
+    public void containerChanged(Container sender) {
     }
 
     @Override

@@ -3,14 +3,13 @@ package honeyedlemons.kinder.init;
 import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.util.GemColors;
 import honeyedlemons.kinder.util.GemConditions;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.TagKey;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 public class KinderConditions {
     public static ArrayList<GemConditions> conditions() {

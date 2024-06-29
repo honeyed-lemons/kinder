@@ -1,11 +1,11 @@
 package honeyedlemons.kinder.entities;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.level.Level;
 
 public abstract class AbstractVaryingGemEntity extends AbstractGemEntity {
-    public AbstractVaryingGemEntity(EntityType<? extends TameableEntity> entityType, World world) {
+    public AbstractVaryingGemEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
     }
 

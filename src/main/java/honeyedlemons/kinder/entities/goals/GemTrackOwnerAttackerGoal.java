@@ -4,14 +4,13 @@
 package honeyedlemons.kinder.entities.goals;
 
 import honeyedlemons.kinder.entities.AbstractGemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.TrackTargetGoal;
-
 import java.util.EnumSet;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
-public class GemTrackOwnerAttackerGoal extends TrackTargetGoal {
+public class GemTrackOwnerAttackerGoal extends TargetGoal {
 
     private final AbstractGemEntity tameable;
     private final boolean canFight;
@@ -22,11 +21,11 @@ public class GemTrackOwnerAttackerGoal extends TrackTargetGoal {
         super(tameable, false);
         this.tameable = tameable;
         this.canFight = canFight;
-        this.setControls(EnumSet.of(Goal.Control.TARGET));
+        this.setFlags(EnumSet.of(Goal.Flag.TARGET));
     }
 
-    public boolean canStart() {
-        if (this.tameable.isTamed() && !this.tameable.isRebel()) {
+    public boolean canUse() {
+        if (this.tameable.isTame() && !this.tameable.isRebel()) {
             LivingEntity livingEntity = this.tameable.getOwner();
             if (livingEntity == null) {
                 return false;
@@ -34,9 +33,9 @@ public class GemTrackOwnerAttackerGoal extends TrackTargetGoal {
             if (!canFight) {
                 return false;
             } else {
-                this.attacker = livingEntity.getAttacker();
-                int i = livingEntity.getLastAttackedTime();
-                return i != this.lastAttackedTime && this.canTrack(this.attacker, TargetPredicate.DEFAULT) && this.tameable.canAttackWithOwner(this.attacker, livingEntity);
+                this.attacker = livingEntity.getLastHurtByMob();
+                int i = livingEntity.getLastHurtByMobTimestamp();
+                return i != this.lastAttackedTime && this.canAttack(this.attacker, TargetingConditions.DEFAULT) && this.tameable.wantsToAttack(this.attacker, livingEntity);
             }
         } else {
             return false;
@@ -47,7 +46,7 @@ public class GemTrackOwnerAttackerGoal extends TrackTargetGoal {
         this.mob.setTarget(this.attacker);
         LivingEntity livingEntity = this.tameable.getOwner();
         if (livingEntity != null) {
-            this.lastAttackedTime = livingEntity.getLastAttackedTime();
+            this.lastAttackedTime = livingEntity.getLastHurtByMobTimestamp();
         }
         super.start();
     }

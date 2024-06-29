@@ -1,7 +1,7 @@
 package honeyedlemons.kinder.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 public class RegistryUtil {
     public record ItemData(Item item, String item_id, boolean datagen) {

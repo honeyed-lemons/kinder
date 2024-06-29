@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " q ",
+    "wqw",
     "qoq",
     "wrw"
   ],
@@ -13,7 +13,7 @@
       "item": "kinder:light_reactor"
     },
     "w": {
-      "item": "kinder:white_gem_seeds"
+      "item": "minecraft:bone_block"
     },
     "r": {
       "item": "minecraft:redstone"

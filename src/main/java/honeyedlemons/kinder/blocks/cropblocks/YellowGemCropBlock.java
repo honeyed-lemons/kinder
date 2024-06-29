@@ -1,15 +1,15 @@
 package honeyedlemons.kinder.blocks.cropblocks;
 
 import honeyedlemons.kinder.init.KinderItems;
-import net.minecraft.item.ItemConvertible;
+import net.minecraft.world.level.ItemLike;
 
 public class YellowGemCropBlock extends GemCropBlock {
-    public YellowGemCropBlock(Settings settings) {
+    public YellowGemCropBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    public ItemConvertible getSeedsItem() {
+    public ItemLike getBaseSeedId() {
         return KinderItems.YELLOW_GEM_SEEDS;
     }
 

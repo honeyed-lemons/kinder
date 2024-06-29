@@ -168,6 +168,7 @@
   "text.autoconfig.kinder.option.rubyConfig.attack_damage": "Attack Damage",
   "text.autoconfig.kinder.option.rubyConfig.max_health": "Max Health",
   "text.autoconfig.kinder.option.sapphireConfig": "Sapphire Config",
+  "text.autoconfig.kinder.option.sapphireConfig.prediction_cooldown": "Cooldown between prediction (Ticks)",
   "text.autoconfig.kinder.option.sapphireConfig.incubatable": "Incubatable",
   "text.autoconfig.kinder.option.sapphireConfig.attack_damage": "Attack Damage",
   "text.autoconfig.kinder.option.sapphireConfig.max_health": "Max Health",

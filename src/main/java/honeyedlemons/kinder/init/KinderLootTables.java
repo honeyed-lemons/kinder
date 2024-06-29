@@ -2,21 +2,20 @@ package honeyedlemons.kinder.init;
 
 import honeyedlemons.kinder.KinderMod;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.condition.RandomChanceLootCondition;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import java.util.ArrayList;
 import java.util.List;
 
 public class KinderLootTables {
-    private static final Identifier DESERT_TEMPLE_CHEST = new Identifier("chests/desert_pyramid");
-    private static final Identifier BURIED_TREASURE_CHEST = new Identifier("chests/buried_treasure");
-    private static final Identifier JUNGLE_TEMPLE_CHEST = new Identifier("chests/jungle_temple");
-    private static final Identifier ABANDONED_MINESHAFT_CHEST = new Identifier("chests/abandoned_mineshaft");
+    private static final ResourceLocation DESERT_TEMPLE_CHEST = new ResourceLocation("chests/desert_pyramid");
+    private static final ResourceLocation BURIED_TREASURE_CHEST = new ResourceLocation("chests/buried_treasure");
+    private static final ResourceLocation JUNGLE_TEMPLE_CHEST = new ResourceLocation("chests/jungle_temple");
+    private static final ResourceLocation ABANDONED_MINESHAFT_CHEST = new ResourceLocation("chests/abandoned_mineshaft");
 
-    public static List<Identifier> tables_to_add_seeds = new ArrayList<>();
+    public static List<ResourceLocation> tables_to_add_seeds = new ArrayList<>();
 
     public static void modifyTables() {
         tables_to_add_seeds.add(DESERT_TEMPLE_CHEST);
@@ -25,12 +24,12 @@ public class KinderLootTables {
         tables_to_add_seeds.add(ABANDONED_MINESHAFT_CHEST);
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
-            for (Identifier identifier : tables_to_add_seeds) {
+            for (ResourceLocation identifier : tables_to_add_seeds) {
                 if (source.isBuiltin() && identifier.equals(id) && KinderMod.config.driedGemSeedConfig.addtostructure) {
-                    LootPool.Builder poolBuilder = LootPool.builder()
-                            .with(ItemEntry.builder(KinderItems.DRIED_GEM_SEEDS).conditionally(RandomChanceLootCondition.builder(KinderMod.config.driedGemSeedConfig.chance)));
+                    LootPool.Builder poolBuilder = LootPool.lootPool()
+                            .add(LootItem.lootTableItem(KinderItems.DRIED_GEM_SEEDS).when(LootItemRandomChanceCondition.randomChance(KinderMod.config.driedGemSeedConfig.chance)));
 
-                    tableBuilder.pool(poolBuilder);
+                    tableBuilder.withPool(poolBuilder);
                 }
             }
         });

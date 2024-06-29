@@ -1,14 +1,14 @@
 package honeyedlemons.kinder.client.render.layers;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractGemEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
@@ -22,18 +22,18 @@ public class GemGemLayer<T extends AbstractGemEntity> extends GeoRenderLayer<T> 
     }
 
     @Override
-    public void render(MatrixStack poseStack, T gem, BakedGeoModel bakedModel, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        Identifier texture;
+    public void render(PoseStack poseStack, T gem, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+        ResourceLocation texture;
         if (gem.getGemPlacement() != null) {
-            texture = new Identifier(KinderMod.MOD_ID, "textures/entity/gems/" + gem.getType().getUntranslatedName() + "/gems/gem_" + gem.getGemPlacement().name().toLowerCase() + ".png");
+            texture = new ResourceLocation(KinderMod.MOD_ID, "textures/entity/gems/" + gem.getType().toShortString() + "/gems/gem_" + gem.getGemPlacement().name().toLowerCase() + ".png");
         } else {
-            texture = new Identifier(KinderMod.MOD_ID, "textures/entity/blank.png");
+            texture = new ResourceLocation(KinderMod.MOD_ID, "textures/entity/blank.png");
         }
         Color gemColor = new Color(gem.getGemColor());
         float r = (float) gemColor.getRed() / 255;
         float b = (float) gemColor.getBlue() / 255;
         float g = (float) gemColor.getGreen() / 255;
-        RenderLayer armorRenderType = RenderLayer.getEntityCutoutNoCull(texture);
+        RenderType armorRenderType = RenderType.entityCutoutNoCull(texture);
         getRenderer().reRender(getDefaultBakedModel(gem), poseStack, bufferSource, gem, armorRenderType, bufferSource.getBuffer(armorRenderType), partialTick, packedLight, packedOverlay, r, g, b, 1);
     }
 }
