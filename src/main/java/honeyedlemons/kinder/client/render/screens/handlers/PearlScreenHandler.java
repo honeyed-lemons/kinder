@@ -2,8 +2,6 @@ package honeyedlemons.kinder.client.render.screens.handlers;
 
 import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.init.KinderScreens;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
@@ -15,7 +13,6 @@ import net.minecraft.world.inventory.ShulkerBoxSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-@Environment (value = EnvType.CLIENT)
 public class PearlScreenHandler extends AbstractContainerMenu implements ContainerListener {
     public final SimpleContainer inventory;
     public final AbstractGemEntity entity;

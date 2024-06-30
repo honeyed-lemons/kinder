@@ -28,7 +28,7 @@ public class RubyEntityRenderer extends GeoEntityRenderer<RubyEntity> {
 
     @Override
     public void scaleModelForRender(float widthScale, float heightScale, PoseStack poseStack, RubyEntity animatable, BakedGeoModel model, boolean isReRender, float partialTick, int packedLight, int packedOverlay) {
-        float scaler = animatable.getPerfectionScaler(animatable.getPerfection());
+        float scaler = animatable.getPerfectionScalar(animatable.getPerfection());
         super.scaleModelForRender(baseWidth * scaler, baseHeight * scaler, poseStack, animatable, model, isReRender, partialTick, packedLight, packedOverlay);
     }
 }

@@ -35,10 +35,10 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     }
 
     public static AttributeSupplier.@NotNull Builder createGemAttributes() {
-        return createDefaultGemAttributes().add(Attributes.MOVEMENT_SPEED, 0.625);
+        return createDefaultGemAttributes().add(Attributes.MOVEMENT_SPEED, 0.585);
     }
 
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
         this.setHairExtraVariant(generateHairExtraVariant());
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
     }
@@ -86,7 +86,7 @@ public class PearlEntity extends AbstractVaryingGemEntity {
         this.entityData.define(HAIR_EXTRA_VARIANT, 0);
     }
 
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         nbt.putInt("HairExtraVariant", this.entityData.get(HAIR_EXTRA_VARIANT));
         super.addAdditionalSaveData(nbt);
     }

@@ -19,6 +19,7 @@ public class KinderMod implements ModInitializer {
         config = AutoConfig.getConfigHolder(KinderConfig.class).getConfig();
         KinderBlocks.registerBlocks();
         KinderItems.registerItems();
+        KinderScreens.init();
         KinderGemEntities.registerEntities();
         KinderGemEntities.registerAttributes();
         KinderFluidHandling.registerFluids();

@@ -39,14 +39,14 @@ public class KinderConfig implements ConfigData {
 
     public static class RubyConfig {
         public boolean incubatable = true;
-        public int attack_damage = 3;
-        public int max_health = 30;
+        public int attack_damage = 4;
+        public int max_health = 45;
     }
 
     public static class QuartzConfig {
         public boolean incubatable = true;
         public int attack_damage = 6;
-        public int max_health = 50;
+        public int max_health = 60;
     }
 
     public static class PearlConfig {

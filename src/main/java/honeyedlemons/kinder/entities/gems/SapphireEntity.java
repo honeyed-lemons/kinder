@@ -126,7 +126,7 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
         this.entityData.define(PREDICTION_TICKS, 0);
     }
 
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("PredictionTicks", this.entityData.get(PREDICTION_TICKS));
     }
@@ -166,13 +166,7 @@ public class SapphireEntity extends AbstractVaryingGemEntity {
     public boolean predictionQuality() {
         int val = (int) (getPerfection() * 2 * (random.nextFloat() * 1.25f));
         val = Math.min(6, Math.max(1, val));
-        if (val >= 4) {
-            return true;
-        } else if (val <= 2) {
-            return false;
-        } else {
-            return random.nextFloat() > 0.5;
-        }
+        return val >= 3;
     }
 
     public void getPrediction(boolean bool) {

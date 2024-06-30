@@ -40,6 +40,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation "software.bernie.geckolib:geckolib-fabric-${project.geckolib_version}"
+    modImplementation("maven.modrinth:auth-me:${project.authme_version}")
 
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.clothconfig_version}") {

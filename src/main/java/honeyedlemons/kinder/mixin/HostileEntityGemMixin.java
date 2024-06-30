@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin ({Zombie.class, AbstractSkeleton.class, Spider.class, Evoker.class, Pillager.class, Blaze.class, Creeper.class, Silverfish.class,
+@Mixin ({Zombie.class, AbstractSkeleton.class, Evoker.class, Pillager.class, Blaze.class, Creeper.class, Silverfish.class,
         Vex.class, Guardian.class, Blaze.class, WitherBoss.class, Witch.class})
 public class HostileEntityGemMixin extends Monster {
     protected HostileEntityGemMixin(EntityType<? extends Monster> entityType, Level world) {

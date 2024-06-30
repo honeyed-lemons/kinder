@@ -15,7 +15,6 @@ public class KinderModClient implements ClientModInitializer {
     public void onInitializeClient() {
         KinderGemEntities.registerEntityRenderers();
         KinderScreens.clientint();
-        KinderScreens.init();
         KinderBlocks.setBlockRender();
         KinderFluidHandling.fluidRendering();
     }

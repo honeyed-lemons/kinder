@@ -46,6 +46,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +64,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-@SuppressWarnings ("unchecked")
 public abstract class AbstractGemEntity extends TamableAnimal implements GeoEntity, ContainerListener, OwnableEntity {
     protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(AbstractGemEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Byte> TAMABLE_FLAGS = SynchedEntityData.defineId(AbstractGemEntity.class, EntityDataSerializers.BYTE);
@@ -85,7 +85,7 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
     private static final EntityDataAccessor<Integer> GEM_COLOR = SynchedEntityData.defineId(AbstractGemEntity.class, EntityDataSerializers.INT);
     private static UUID FOLLOW_ID;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public int initalGemColorVariant = 0;
+    public int initialGemColorVariant = 0;
     public boolean setGemVariantOnInitialSpawn = true;
     public SimpleContainer inventory;
 
@@ -161,7 +161,7 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         if (this.getOwnerUUID() != null) {
             nbt.putUUID("Owner", this.getOwnerUUID());
@@ -192,19 +192,18 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         UUID uuid;
-        this.setPerfectionThings(nbt.getInt("Perfection"));
         super.readAdditionalSaveData(nbt);
         if (nbt.hasUUID("Owner")) {
             uuid = nbt.getUUID("Owner");
         } else {
             String string = nbt.getString("Owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), string);
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), string);
         }
         if (uuid != null) {
             try {
                 this.setOwnerUUID(uuid);
                 this.setTame(true);
-            } catch (Throwable throwable) {
+            } catch (Throwable var4) {
                 this.setTame(false);
             }
         }
@@ -378,9 +377,8 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
         this.setPersistenceRequired();
-        setPerfectionThings(getPerfection());
         setHairVariant(generateHairVariant());
         if (defaultOutfitColor() != -1) {
             setOutfitColor(defaultOutfitColor());
@@ -388,7 +386,7 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
         if (defaultInsigniaColor() != -1) {
             setInsigniaColor(defaultInsigniaColor());
         }
-        this.setGemColorVariant(this.setGemVariantOnInitialSpawn ? generateGemColorVariant() : this.initalGemColorVariant);
+        this.setGemColorVariant(this.setGemVariantOnInitialSpawn ? generateGemColorVariant() : this.initialGemColorVariant);
         if (this.setGemVariantOnInitialSpawn) {
             generateColors();
         }
@@ -398,7 +396,7 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
-    public float getPerfectionScaler(int perfection) {
+    public float getPerfectionScalar(int perfection) {
         if (perfection >= 1 && perfection <= 3) {
             return 0.7f + (perfection * 0.1f);
         } else if (perfection >= 4 && perfection <= 6) {
@@ -411,34 +409,41 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
     public float damageModifier(Entity target) {
         return 1;
     }
-
-    public void doEnemyThings(Entity target) {
-    }
-
     @Override
-    public boolean doHurtTarget(Entity target) {
-        float f = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float g = (float) this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
-        f *= damageModifier(target);
-        doEnemyThings(target);
-        boolean bl = target.hurt(this.damageSources().mobAttack(this), f);
+    public boolean doHurtTarget(@NotNull Entity entity) {
+        float f = (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        f *= damageModifier(entity);
+        float g = (float)this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
+        if (entity instanceof LivingEntity) {
+            f += EnchantmentHelper.getDamageBonus(this.getMainHandItem(), ((LivingEntity)entity).getMobType());
+            g += (float)EnchantmentHelper.getKnockbackBonus(this);
+        }
+        doEnemyThings(entity);
+        int i = EnchantmentHelper.getFireAspect(this);
+        if (i > 0) {
+            entity.setSecondsOnFire(i * 4);
+        }
+
+        boolean bl = entity.hurt(this.damageSources().mobAttack(this), f);
         if (bl) {
-            if (g > 0.0F && target instanceof LivingEntity) {
-                ((LivingEntity) target)
-                        .knockback(
-                                g * 0.5F,
-                                Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)),
-                                -Mth.cos(this.getYRot() * (float) (Math.PI / 180.0))
-                        );
+            if (g > 0.0F && entity instanceof LivingEntity) {
+                ((LivingEntity)entity)
+                        .knockback(g * 0.5F, Mth.sin(this.getYRot() * (float) (Math.PI / 180.0)), -Mth.cos(this.getYRot() * (float) (Math.PI / 180.0)));
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 1.0, 0.6));
             }
 
-            this.doEnchantDamageEffects(this, target);
-            this.setLastHurtMob(target);
+            if (entity instanceof Player player) {
+                this.maybeDisableShield(player, this.getMainHandItem(), player.isUsingItem() ? player.getUseItem() : ItemStack.EMPTY);
+            }
+
+            this.doEnchantDamageEffects(this, entity);
+            this.setLastHurtMob(entity);
         }
 
         return bl;
     }
+
+    public void doEnemyThings(Entity target) {}
 
     @SuppressWarnings ("DataFlowIssue")
     public void setPerfectionThings(int perfection) {
@@ -446,10 +451,10 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
         this.refreshDimensions();
 
         float multiplier = (getPerfection() >= 4) ? 1.25f : (getPerfection() <= 2) ? 0.75f : 1.0f;
-        float perfectionScaler = getPerfectionScaler(perfection) * multiplier;
+        float perfectionScalar = getPerfectionScalar(perfection) * multiplier;
 
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(maxHealth() * perfectionScaler);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(attackDamage() * perfectionScaler);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(maxHealth() * perfectionScalar);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(attackDamage() * perfectionScalar);
     }
 
     public abstract int maxHealth();
@@ -484,7 +489,7 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
     }
 
     @Override
-    public void die(DamageSource source) {
+    public void die(@NotNull DamageSource source) {
         if (!this.level().isClientSide()) {
             ItemStack item = gemItem();
             CompoundTag nbt = new CompoundTag();
@@ -501,9 +506,9 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
 
     abstract public ItemStack gemItem();
 
+    @SuppressWarnings ("OptionalGetWithoutIsPresent")
     public int generatePaletteColor(PaletteType type) {
         String locString = type.type + "_palette";
-        KinderMod.LOGGER.info("[DEBUG] " + locString);
         ArrayList<Integer> colors = new ArrayList<>();
         ResourceLocation loc = new ResourceLocation(KinderMod.MOD_ID + ":gem_palettes/" + this.getType().toShortString() + "/" + locString + ".png");
 
@@ -513,24 +518,23 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
         ResourceManager resourceManager = server.getResourceManager();
         try {
             palette = ImageIO.read(resourceManager.getResource(loc).get().open());
-            KinderMod.LOGGER.info("Palette Read!");
+            int gcv = Math.min(this.getGemColorVariant(), palette.getHeight() - 1);
             for (int x = 0; x < palette.getWidth(); x++) {
-                int color = palette.getRGB(x, this.getGemColorVariant());
-                if ((color >> 24) == 0x00) {
-                    continue;
+                int color = palette.getRGB(x, gcv);
+                if ((color >> 24) != 0x00) {
+                    colors.add(color);
                 }
-                colors.add(color);
             }
         } catch (IOException e) {
             e.printStackTrace();
             colors.add(0xFFFFFF);
         }
-
+        KinderMod.LOGGER.info("Colors Generated!");
         return GemColors.lerpHex(colors);
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         if (this.isInvulnerableTo(source)) {
             return false;
         }
@@ -569,7 +573,7 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
     2 = Follow
     */
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         if (player.level().isClientSide || player.isSpectator()) {
             return super.mobInteract(player, hand);
         }
@@ -693,7 +697,7 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
         this.playSound(gemInstrument(), 1, this.getVoicePitch());
     }
 
-    public boolean wantsToAttack(LivingEntity target, LivingEntity owner) {
+    public boolean wantsToAttack(@NotNull LivingEntity target, @NotNull LivingEntity owner) {
         if (target instanceof OwnableEntity) {
             if (target instanceof AbstractGemEntity && ((AbstractGemEntity) target).isRebel()) {
                 return true;
@@ -706,7 +710,7 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
 
     @Nullable
     @Override
-    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
+    public AgeableMob getBreedOffspring(@NotNull ServerLevel world, @NotNull AgeableMob entity) {
         return null;
     }
 
@@ -717,12 +721,12 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
         }
 
         @Override
-        public Component getDisplayName() {
+        public @NotNull Component getDisplayName() {
             return this.gem().getDisplayName();
         }
 
         @Override
-        public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+        public AbstractContainerMenu createMenu(int syncId, @NotNull Inventory inv, @NotNull Player player) {
             var gemInv = this.gem().inventory;
             return new PearlScreenHandler(syncId, inv, gemInv, this.gem(), this.gem().getPerfection());
         }

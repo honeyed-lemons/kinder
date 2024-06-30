@@ -93,10 +93,11 @@ public class GemItem extends Item {
     }
 
     public void spawnGemWONbt(ItemStack itemStack, Level world, BlockPos pos, UseOnContext context, int perfection) {
-        AbstractGemEntity gem = (AbstractGemEntity) Objects.requireNonNull(type.spawn(Objects.requireNonNull(world.getServer()).getLevel(world.dimension()), pos.above(), MobSpawnType.MOB_SUMMONED));
+        AbstractGemEntity gem = (AbstractGemEntity) Objects.requireNonNull(type.spawn(Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getLevel(world.dimension())), pos.above(), MobSpawnType.MOB_SUMMONED));
         gem.setGemVariantOnInitialSpawn = false;
         gem.setGemColorVariant(color.getId());
         gem.setPerfection(perfection);
+        gem.setPerfectionThings(perfection);
         KinderMod.LOGGER.info("Spawning Gem, Name is " + type.getDescription().getString() + " with a perfection of " + perfection);
         if (!Objects.requireNonNull(context.getPlayer()).isCreative()) {
             itemStack.setCount(0);
@@ -107,9 +108,9 @@ public class GemItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         CompoundTag nbt = stack.getTagElement("gem");
-        if (nbt != null) {
+        if (nbt != null && world != null) {
             Optional<Entity> entity = EntityType.create(nbt, world);
-            entity.ifPresent(value -> tooltip.add(Component.nullToEmpty(String.valueOf(value.getName().getString()))));
+            entity.ifPresent(value -> tooltip.add(Component.nullToEmpty(value.getName().getString())));
         }
     }
 }
