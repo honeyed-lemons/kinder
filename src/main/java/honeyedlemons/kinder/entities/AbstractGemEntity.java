@@ -395,6 +395,10 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
         setGemPlacement(generateGemPlacement());
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
     }
+    @Override
+    public boolean canBreatheUnderwater() {
+        return true;
+    }
 
     public float getPerfectionScalar(int perfection) {
         if (perfection >= 1 && perfection <= 3) {
