@@ -578,7 +578,7 @@ public abstract class AbstractGemEntity extends TamableAnimal implements GeoEnti
     */
     @Override
     public @NotNull InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
-        if (player.level().isClientSide || player.isSpectator()) {
+        if (!(player.level() instanceof ServerLevel) || player.isSpectator()) {
             return super.mobInteract(player, hand);
         }
         if (hand != InteractionHand.MAIN_HAND) {

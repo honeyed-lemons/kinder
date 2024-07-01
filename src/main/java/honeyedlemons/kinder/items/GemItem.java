@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -51,54 +52,69 @@ public class GemItem extends Item {
     }
 
     public void spawnGem(ItemStack itemStack, Level world, BlockPos pos, UseOnContext context) {
+        if (!(world instanceof ServerLevel)) {
+            return;
+        }
+
+        if (context.getPlayer() != null && isAnyGemEntityAlive(context)) {
+            KinderMod.LOGGER.info("Can't spawn gem, entity already present");
+            return;
+        }
+
         CompoundTag nbt = itemStack.getTagElement("gem");
-        if (!world.isClientSide) {
-            if (context.getPlayer() != null) {
-                List<AbstractGemEntity> list = context.getPlayer().level().getEntitiesOfClass(AbstractGemEntity.class, context.getPlayer().getBoundingBox().inflate(4, 4, 4), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
-                for (AbstractGemEntity gem : list) {
-                    if (gem.isDeadOrDying()) {
-                        KinderMod.LOGGER.info("Cant Spawn Gem lmao get rekt");
-                        return;
-                    }
-                }
-            }
-            if (nbt != null) {
-                Optional<Entity> entity = EntityType.create(nbt, world);
-                if (entity.isPresent()) {
-                    AbstractGemEntity gem = (AbstractGemEntity) entity.get();
-                    gem.setPosRaw(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5F);
-                    gem.fallDistance = 0;
-                    gem.flyDist = 0;
-                    gem.setSharedFlagOnFire(false);
-                    gem.setRemainingFireTicks(0);
-                    gem.setHealth(gem.getMaxHealth());
-                    gem.removeAllEffects();
-                    gem.setDeltaMovement(0, 0, 0);
-                    KinderMod.LOGGER.info("Spawning Gem, Name is " + gem.getName().getString());
-                    world.addFreshEntity(gem);
-                    gem.lookAt(context.getPlayer(), 90, 90);
-                    itemStack.setCount(0);
-                }
-            } else {
-                {
-                    if (itemStack.getTag() != null) {
-                        int perf = itemStack.getTag().getInt("Perfection");
-                        spawnGemWONbt(itemStack, world, pos, context, perf);
-                    } else {
-                        spawnGemWONbt(itemStack, world, pos, context, 3);
-                    }
-                }
-            }
+        if (nbt != null) {
+            spawnGemWithNbt(nbt, itemStack, world, pos, context);
+        } else {
+            int perf = itemStack.hasTag() ? itemStack.getTag().getInt("Perfection") : 3;
+            spawnGemWithoutNbt(itemStack, world, pos, context, perf);
         }
     }
 
-    public void spawnGemWONbt(ItemStack itemStack, Level world, BlockPos pos, UseOnContext context, int perfection) {
-        AbstractGemEntity gem = (AbstractGemEntity) Objects.requireNonNull(type.spawn(Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getLevel(world.dimension())), pos.above(), MobSpawnType.MOB_SUMMONED));
+    private boolean isAnyGemEntityAlive(UseOnContext context) {
+        List<AbstractGemEntity> list = context.getPlayer().level().getEntitiesOfClass(AbstractGemEntity.class, context.getPlayer().getBoundingBox().inflate(4, 4, 4), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
+        for (AbstractGemEntity gem : list) {
+            if (gem.isDeadOrDying()) {
+                KinderMod.LOGGER.info("Cant Spawn Gem lmao get rekt");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void spawnGemWithNbt(CompoundTag nbt, ItemStack itemStack, Level world, BlockPos pos, UseOnContext context) {
+        Optional<Entity> entity = EntityType.create(nbt, world);
+        if (entity.isPresent()) {
+            AbstractGemEntity gem = (AbstractGemEntity) entity.get();
+            initializeGem(gem, pos, context);
+            world.addFreshEntity(gem);
+            itemStack.setCount(0);
+            KinderMod.LOGGER.info("Spawning Gem, Name is " + gem.getName().getString());
+        }
+    }
+
+    private void initializeGem(AbstractGemEntity gem, BlockPos pos, UseOnContext context) {
+        gem.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5F);
+        gem.fallDistance = 0;
+        gem.flyDist = 0;
+        gem.setSharedFlagOnFire(false);
+        gem.setRemainingFireTicks(0);
+        gem.setHealth(gem.getMaxHealth());
+        gem.removeAllEffects();
+        gem.setDeltaMovement(0, 0, 0);
+        gem.lookAt(Objects.requireNonNull(context.getPlayer()), 90, 90);
+    }
+
+    private void spawnGemWithoutNbt(ItemStack itemStack, Level world, BlockPos pos, UseOnContext context, int perf) {
+        AbstractGemEntity gem = (AbstractGemEntity) Objects.requireNonNull(type.spawn(
+                Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getLevel(world.dimension())),
+                pos.above(),
+                MobSpawnType.MOB_SUMMONED
+        ));
         gem.setGemVariantOnInitialSpawn = false;
         gem.setGemColorVariant(color.getId());
-        gem.setPerfection(perfection);
-        gem.setPerfectionThings(perfection);
-        KinderMod.LOGGER.info("Spawning Gem, Name is " + type.getDescription().getString() + " with a perfection of " + perfection);
+        gem.setPerfection(perf);
+        gem.setPerfectionThings(perf);
+        KinderMod.LOGGER.info("Spawning Gem, Name is " + type.getDescription().getString() + " with a perfection of " + perf);
         if (!Objects.requireNonNull(context.getPlayer()).isCreative()) {
             itemStack.setCount(0);
         }

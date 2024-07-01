@@ -1,6 +1,7 @@
 package honeyedlemons.kinder.entities.gems;
 
 import honeyedlemons.kinder.KinderMod;
+import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.entities.AbstractVaryingGemEntity;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
@@ -8,7 +9,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class QuartzEntity extends AbstractVaryingGemEntity {
-    public QuartzEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
+    public QuartzEntity(EntityType<? extends AbstractGemEntity> entityType, Level world) {
         super(entityType, world);
     }
 

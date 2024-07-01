@@ -1,6 +1,7 @@
 package honeyedlemons.kinder.entities.gems;
 
 import honeyedlemons.kinder.KinderMod;
+import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.entities.AbstractVaryingGemEntity;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
@@ -33,7 +34,7 @@ import java.util.List;
 public class SapphireEntity extends AbstractVaryingGemEntity {
     private static final EntityDataAccessor<Integer> PREDICTION_TICKS = SynchedEntityData.defineId(SapphireEntity.class, EntityDataSerializers.INT);
 
-    public SapphireEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
+    public SapphireEntity(EntityType<? extends AbstractGemEntity> entityType, Level world) {
         super(entityType, world);
     }
 

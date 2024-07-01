@@ -1,6 +1,7 @@
 package honeyedlemons.kinder.entities.gems;
 
 import honeyedlemons.kinder.KinderMod;
+import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.entities.AbstractVaryingGemEntity;
 import honeyedlemons.kinder.init.KinderItems;
 import honeyedlemons.kinder.util.GemPlacements;
@@ -16,7 +17,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public class PearlEntity extends AbstractVaryingGemEntity {
     private static final EntityDataAccessor<Integer> HAIR_EXTRA_VARIANT = SynchedEntityData.defineId(PearlEntity.class, EntityDataSerializers.INT);
 
-    public PearlEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
+    public PearlEntity(EntityType<? extends AbstractGemEntity> entityType, Level world) {
         super(entityType, world);
     }
 
