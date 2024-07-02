@@ -22,7 +22,6 @@ public class PearlCustomizerItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
         if (user.isDiscrete() && !world.isClientSide() && hand.equals(InteractionHand.MAIN_HAND)) {
-            KinderMod.LOGGER.info("silly");
             mode = (getMode(itemStack) + 1) % 4;
             switch (mode) {
                 case 0 -> user.sendSystemMessage(Component.translatable("kinder.item.pearlcustomizer.hair"));
