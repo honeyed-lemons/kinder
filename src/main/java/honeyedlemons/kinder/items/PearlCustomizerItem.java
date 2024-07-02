@@ -23,13 +23,14 @@ public class PearlCustomizerItem extends Item {
         ItemStack itemStack = user.getItemInHand(hand);
         if (user.isDiscrete() && !world.isClientSide() && hand.equals(InteractionHand.MAIN_HAND)) {
             KinderMod.LOGGER.info("silly");
-            mode = (mode + 1) % 4;
+            mode = (getMode(itemStack) + 1) % 4;
             switch (mode) {
                 case 0 -> user.sendSystemMessage(Component.translatable("kinder.item.pearlcustomizer.hair"));
                 case 1 -> user.sendSystemMessage(Component.translatable("kinder.item.pearlcustomizer.hair_extra"));
                 case 2 -> user.sendSystemMessage(Component.translatable("kinder.item.pearlcustomizer.outfit"));
                 case 3 -> user.sendSystemMessage(Component.translatable("kinder.item.pearlcustomizer.insignia"));
             }
+            setMode(itemStack, mode);
             return InteractionResultHolder.pass(itemStack);
         }
         return InteractionResultHolder.pass(itemStack);
@@ -40,7 +41,11 @@ public class PearlCustomizerItem extends Item {
     public InteractionResult interactLivingEntity(ItemStack stack, Player user, LivingEntity entity, InteractionHand hand) {
         if (entity instanceof PearlEntity pearl && !user.isDiscrete()) {
             if (pearl.getOwner() == user) {
-                switch (this.getMode()) {
+                if (stack.getOrCreateTag().get("mode") != null)
+                {
+                    setMode(stack,0);
+                }
+                switch (this.getMode(stack)) {
                     case 0 -> changeHair((PearlEntity) entity);
                     case 1 -> changeHairExtra((PearlEntity) entity);
                     case 2 -> changeOutfit((PearlEntity) entity);
@@ -86,7 +91,10 @@ public class PearlCustomizerItem extends Item {
         }
     }
 
-    public int getMode() {
-        return mode;
+    public int getMode(ItemStack itemStack) {
+        return itemStack.getOrCreateTag().getInt("mode");
+    }
+    public void setMode(ItemStack itemStack,int mode) {
+        itemStack.getOrCreateTag().putInt("mode",mode);
     }
 }
