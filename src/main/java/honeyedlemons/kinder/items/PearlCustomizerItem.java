@@ -44,7 +44,7 @@ public class PearlCustomizerItem extends Item {
 
     public static void changeHairExtra(PearlEntity gem) {
         if (gem.getHairExtraVariant() == gem.hairExtraVariantCount()) {
-            gem.getEntityData().set(PearlEntity.HAIR_EXTRA_VARIANT,42);
+            gem.setHairExtraVariant(0);
         } else {
             gem.setHairExtraVariant(gem.getHairExtraVariant() + 1);
         }

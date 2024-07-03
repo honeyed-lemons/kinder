@@ -56,7 +56,7 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
             }
             blockEntity.ticksToSound--;
         }
-        if (blockEntity.ticksElapsed >= KinderMod.config.incubationtime) {
+        if (blockEntity.ticksElapsed >= (KinderMod.config.incubationtime - 5)) {
             world.playLocalSound(pos, KinderSounds.INCUBATOR_DONE_SOUND, SoundSource.BLOCKS, 1f, 1f, false);
         }
     }
