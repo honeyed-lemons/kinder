@@ -4,5 +4,11 @@
     "sounds": [
       "kinder:incubator"
     ]
+  },
+  "incubator_done": {
+    "subtitle": "subtitles.kinder.incubator_done",
+    "sounds": [
+      "minecraft:block.note_block.harp"
+    ]
   }
 }

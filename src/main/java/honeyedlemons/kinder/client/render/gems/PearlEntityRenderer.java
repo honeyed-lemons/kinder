@@ -25,6 +25,7 @@ public class PearlEntityRenderer extends GeoEntityRenderer<PearlEntity> {
         addRenderLayer(new GemInsigniaLayer<>(this));
         addRenderLayer(new GemHairLayer<>(this));
         addRenderLayer(new GemGemLayer<>(this));
+        addRenderLayer(new GemHatLayer<>(this));
     }
 
     @Override

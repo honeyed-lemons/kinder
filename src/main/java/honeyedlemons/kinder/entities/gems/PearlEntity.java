@@ -4,6 +4,7 @@ import honeyedlemons.kinder.KinderMod;
 import honeyedlemons.kinder.entities.AbstractGemEntity;
 import honeyedlemons.kinder.entities.AbstractVaryingGemEntity;
 import honeyedlemons.kinder.init.KinderItems;
+import honeyedlemons.kinder.items.PearlCustomizerItem;
 import honeyedlemons.kinder.util.GemPlacements;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -28,7 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PearlEntity extends AbstractVaryingGemEntity {
-    private static final EntityDataAccessor<Integer> HAIR_EXTRA_VARIANT = SynchedEntityData.defineId(PearlEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> HAIR_EXTRA_VARIANT = SynchedEntityData.defineId(PearlEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> HAT_VARIANT = SynchedEntityData.defineId(PearlEntity.class, EntityDataSerializers.INT);
 
     public PearlEntity(EntityType<? extends AbstractGemEntity> entityType, Level world) {
         super(entityType, world);
@@ -40,6 +42,7 @@ public class PearlEntity extends AbstractVaryingGemEntity {
 
     public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor world, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
         this.setHairExtraVariant(generateHairExtraVariant());
+        this.setHatVariant(generateHatVariant());
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
     }
 
@@ -65,6 +68,19 @@ public class PearlEntity extends AbstractVaryingGemEntity {
         if (stack == ItemStack.EMPTY) {
             player.openMenu(new GemScreenHandlerFactory());
         }
+        if (stack.getItem() == KinderItems.PEARL_CUSTOMIZER) {
+            int mode = stack.getOrCreateTag().getInt("mode");
+            if (stack.getOrCreateTag().get("mode") == null) {
+                mode = 0;
+            }
+            switch (mode) {
+                case 0 -> PearlCustomizerItem.changeHair(this);
+                case 1 -> PearlCustomizerItem.changeHairExtra(this);
+                case 2 -> PearlCustomizerItem.changeOutfit(this);
+                case 3 -> PearlCustomizerItem.changeInsignia(this);
+                case 4 -> PearlCustomizerItem.changeHat(this);
+            }
+        }
     }
 
     @Override
@@ -80,19 +96,26 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     public int hairExtraVariantCount() {
         return 5;
     }
+    public int hatVariantCount() {
+        return 2;
+    }
 
     public void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(HAIR_EXTRA_VARIANT, 0);
+        this.getEntityData().define(HAIR_EXTRA_VARIANT, 0);
+        this.getEntityData().define(HAT_VARIANT, 0);
+
     }
 
     public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
         nbt.putInt("HairExtraVariant", this.entityData.get(HAIR_EXTRA_VARIANT));
+        nbt.putInt("HatVariant", this.entityData.get(HAT_VARIANT));
         super.addAdditionalSaveData(nbt);
     }
 
     public void readAdditionalSaveData(CompoundTag nbt) {
-        this.entityData.set(HAIR_EXTRA_VARIANT, nbt.getInt("HairExtraVariant"));
+        this.getEntityData().set(HAIR_EXTRA_VARIANT, nbt.getInt("HairExtraVariant"));
+        this.getEntityData().set(HAT_VARIANT, nbt.getInt("HatVariant"));
         super.readAdditionalSaveData(nbt);
     }
 
@@ -102,17 +125,23 @@ public class PearlEntity extends AbstractVaryingGemEntity {
     }
 
     public int insigniaVariantCount() {
-        return 15;
+        return 11;
     }
 
     public int getHairExtraVariant() {
-        return this.entityData.get(HAIR_EXTRA_VARIANT);
+        return this.getEntityData().get(HAIR_EXTRA_VARIANT);
     }
 
     public void setHairExtraVariant(int hairVariant) {
-        this.entityData.set(HAIR_EXTRA_VARIANT, hairVariant);
+        this.getEntityData().set(HAIR_EXTRA_VARIANT, hairVariant);
+    }
+    public int getHatVariant() {
+        return this.getEntityData().get(HAT_VARIANT);
     }
 
+    public void setHatVariant(int hatVariant) {
+        this.getEntityData().set(HAT_VARIANT, hatVariant);
+    }
     @Override
     public int generateInsigniaVariant() {
         if (insigniaVariantCount() != 0) {
@@ -122,6 +151,15 @@ public class PearlEntity extends AbstractVaryingGemEntity {
 
     public int generateHairExtraVariant() {
         return this.random.nextInt(hairExtraVariantCount());
+    }
+    public int generateHatVariant() {
+        if (random.nextFloat() < 0.25) {
+            return this.random.nextInt(hatVariantCount());
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     @Override

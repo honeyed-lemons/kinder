@@ -5,7 +5,6 @@ import honeyedlemons.kinder.blocks.IncubatorBlock;
 import honeyedlemons.kinder.init.*;
 import honeyedlemons.kinder.util.GemColors;
 import honeyedlemons.kinder.util.GemConditions;
-import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
@@ -17,6 +16,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.gameevent.GameEvent;
+
+import java.util.Map;
 
 public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
     public int ticksElapsed;
@@ -54,6 +55,9 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
                 blockEntity.ticksToSound = 42;
             }
             blockEntity.ticksToSound--;
+        }
+        if (blockEntity.ticksElapsed >= KinderMod.config.incubationtime) {
+            world.playLocalSound(pos, KinderSounds.INCUBATOR_DONE_SOUND, SoundSource.BLOCKS, 1f, 1f, false);
         }
     }
 
@@ -230,15 +234,6 @@ public class IncubatorBlockEntity extends AbstractIncubatingBlockEntity {
         }
         world.gameEvent(null, GameEvent.EXPLODE, worldPosition);
     }
-    /*
-    white = 1
-    yellow = 2
-    blue = 3
-    pink = 4
-    yellow blue = 5
-    yellow pink = 6
-    pink blue = 7
-    */
 
     public int getDefectivity() {
         int defectiveness = Math.round(defectivityModifier);
